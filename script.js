@@ -1,4 +1,4 @@
-// script.js con nombres de ciudades, ríos y montañas dibujados
+// script.js con nombres en blanco (ciudades, ríos y montañas)
 
 const canvas = document.getElementById("mapa");
 const ctx = canvas.getContext("2d");
@@ -92,8 +92,8 @@ function generarMapa(seed) {
       ctx.arc(x, y, 4, 0, Math.PI*2);
       ctx.fill();
 
-      // Nombre de la ciudad
-      ctx.fillStyle = "black";
+      // Nombre en blanco
+      ctx.fillStyle = "white";
       ctx.font = "12px Arial";
       ctx.fillText(nombreCiudad, x+6, y-6);
     }
@@ -112,7 +112,7 @@ function generarMapa(seed) {
       ctx.arc(x, y, 5, 0, Math.PI*2);
       ctx.fill();
 
-      ctx.fillStyle = "black";
+      ctx.fillStyle = "white";
       ctx.font = "12px Arial";
       ctx.fillText(nombreMontana, x+8, y+4);
     }
@@ -173,7 +173,7 @@ function generarMapa(seed) {
   }
 
   // 6️⃣ Dibujar nombres de ríos
-  ctx.fillStyle = "blue";
+  ctx.fillStyle = "white";
   ctx.font = "12px Arial";
   for (let rio of rios) {
     if (rio.camino.length > 0) {
