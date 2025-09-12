@@ -1,4 +1,4 @@
-// perlin.js con soporte de semilla
+// perlin.js con soporte de semillas
 
 let Perlin = {
   permutation: [],
