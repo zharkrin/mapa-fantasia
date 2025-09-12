@@ -1,4 +1,4 @@
-// script.js con nombres de ciudades, ríos y montañas
+// script.js con nombres de ciudades, ríos y montañas dibujados
 
 const canvas = document.getElementById("mapa");
 const ctx = canvas.getContext("2d");
@@ -19,11 +19,12 @@ function generarMapa(seed) {
   const nivelMontana = 0.5;
   const numRios = 5;
   const numCiudades = 10;
+  const numMontanas = 6;
 
   let altura = [];
   let ciudades = [];
-  let nombresRios = [];
-  let nombresMontanas = [];
+  let rios = [];
+  let montanas = [];
 
   // 1️⃣ Generar mapa base y almacenar alturas
   for (let x = 0; x < width; x++) {
@@ -47,11 +48,12 @@ function generarMapa(seed) {
     if (altura[x][y] < nivelMontana) continue;
 
     let nombreRio = generarNombreRio();
-    nombresRios.push({nombre: nombreRio, inicio: {x, y}});
+    let camino = [];
 
     for (let paso = 0; paso < 300; paso++) {
       ctx.fillStyle = "#1ca3ec";
       ctx.fillRect(x, y, 1, 1);
+      camino.push({x, y});
 
       let vecinos = [
         [x+1,y], [x-1,y], [x,y+1], [x,y-1],
@@ -74,6 +76,8 @@ function generarMapa(seed) {
       y = siguiente[1];
       if (altura[x][y] < nivelAgua) break;
     }
+
+    rios.push({nombre: nombreRio, camino});
   }
 
   // 3️⃣ Generar ciudades
@@ -88,14 +92,33 @@ function generarMapa(seed) {
       ctx.arc(x, y, 4, 0, Math.PI*2);
       ctx.fill();
 
-      // dibujar nombre
+      // Nombre de la ciudad
       ctx.fillStyle = "black";
       ctx.font = "12px Arial";
       ctx.fillText(nombreCiudad, x+6, y-6);
     }
   }
 
-  // 4️⃣ Generar rutas adaptativas entre ciudades
+  // 4️⃣ Generar montañas con nombres
+  for (let i = 0; i < numMontanas; i++) {
+    let x = Math.floor(Math.random() * width);
+    let y = Math.floor(Math.random() * height);
+    if (altura[x][y] > nivelMontana) {
+      let nombreMontana = generarNombreMontana();
+      montanas.push({x, y, nombre: nombreMontana});
+
+      ctx.fillStyle = "#444444";
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, Math.PI*2);
+      ctx.fill();
+
+      ctx.fillStyle = "black";
+      ctx.font = "12px Arial";
+      ctx.fillText(nombreMontana, x+8, y+4);
+    }
+  }
+
+  // 5️⃣ Dibujar rutas adaptativas entre ciudades
   function trazarRuta(cityA, cityB) {
     let x = cityA.x;
     let y = cityA.y;
@@ -146,6 +169,16 @@ function generarMapa(seed) {
     otras.sort((c) => Math.hypot(c.x - cityA.x, c.y - cityA.y));
     for (let j = 0; j < 2 && j < otras.length; j++) {
       trazarRuta(cityA, otras[j]);
+    }
+  }
+
+  // 6️⃣ Dibujar nombres de ríos
+  ctx.fillStyle = "blue";
+  ctx.font = "12px Arial";
+  for (let rio of rios) {
+    if (rio.camino.length > 0) {
+      let mid = rio.camino[Math.floor(rio.camino.length / 2)];
+      ctx.fillText(rio.nombre, mid.x+4, mid.y+4);
     }
   }
 
