@@ -1,4 +1,4 @@
-// script.js con nombres en blanco (ciudades, ríos y montañas)
+// script.js con nombres en blanco y borde negro
 
 const canvas = document.getElementById("mapa");
 const ctx = canvas.getContext("2d");
@@ -12,7 +12,7 @@ const infoSemilla = document.getElementById("infoSemilla");
 
 function generarMapa(seed) {
   Perlin.init(seed);
-  Math.seedrandom(seed); // semilla para reproducir nombres
+  Math.seedrandom(seed);
 
   const escala = 0.05;
   const nivelAgua = 0.0;
@@ -26,7 +26,17 @@ function generarMapa(seed) {
   let rios = [];
   let montanas = [];
 
-  // 1️⃣ Generar mapa base y almacenar alturas
+  // Función auxiliar para escribir texto con borde
+  function escribirTexto(texto, x, y) {
+    ctx.font = "12px Arial";
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "black";
+    ctx.strokeText(texto, x, y);
+    ctx.fillStyle = "white";
+    ctx.fillText(texto, x, y);
+  }
+
+  // 1️⃣ Generar mapa base
   for (let x = 0; x < width; x++) {
     altura[x] = [];
     for (let y = 0; y < height; y++) {
@@ -41,7 +51,7 @@ function generarMapa(seed) {
     }
   }
 
-  // 2️⃣ Generar ríos simples
+  // 2️⃣ Generar ríos
   for (let i = 0; i < numRios; i++) {
     let x = Math.floor(Math.random() * width);
     let y = Math.floor(Math.random() * height);
@@ -87,19 +97,17 @@ function generarMapa(seed) {
     if (altura[x][y] > nivelAgua && altura[x][y] < nivelMontana) {
       let nombreCiudad = generarNombreCiudad();
       ciudades.push({x, y, nombre: nombreCiudad});
+
       ctx.fillStyle = "red";
       ctx.beginPath();
       ctx.arc(x, y, 4, 0, Math.PI*2);
       ctx.fill();
 
-      // Nombre en blanco
-      ctx.fillStyle = "white";
-      ctx.font = "12px Arial";
-      ctx.fillText(nombreCiudad, x+6, y-6);
+      escribirTexto(nombreCiudad, x+6, y-6);
     }
   }
 
-  // 4️⃣ Generar montañas con nombres
+  // 4️⃣ Generar montañas
   for (let i = 0; i < numMontanas; i++) {
     let x = Math.floor(Math.random() * width);
     let y = Math.floor(Math.random() * height);
@@ -112,13 +120,11 @@ function generarMapa(seed) {
       ctx.arc(x, y, 5, 0, Math.PI*2);
       ctx.fill();
 
-      ctx.fillStyle = "white";
-      ctx.font = "12px Arial";
-      ctx.fillText(nombreMontana, x+8, y+4);
+      escribirTexto(nombreMontana, x+8, y+4);
     }
   }
 
-  // 5️⃣ Dibujar rutas adaptativas entre ciudades
+  // 5️⃣ Rutas entre ciudades
   function trazarRuta(cityA, cityB) {
     let x = cityA.x;
     let y = cityA.y;
@@ -173,12 +179,10 @@ function generarMapa(seed) {
   }
 
   // 6️⃣ Dibujar nombres de ríos
-  ctx.fillStyle = "white";
-  ctx.font = "12px Arial";
   for (let rio of rios) {
     if (rio.camino.length > 0) {
       let mid = rio.camino[Math.floor(rio.camino.length / 2)];
-      ctx.fillText(rio.nombre, mid.x+4, mid.y+4);
+      escribirTexto(rio.nombre, mid.x+4, mid.y+4);
     }
   }
 
@@ -186,7 +190,7 @@ function generarMapa(seed) {
 }
 
 // ------------------------------------
-// 🔹 Generadores de nombres básicos
+// 🔹 Generadores de nombres
 function generarNombreCiudad() {
   const prefijos = ["El", "An", "Gal", "Fin", "Mor", "Dor"];
   const sufijos = ["dor", "ion", "mir", "wen", "tal"];
@@ -213,7 +217,6 @@ function generarNombreMontana() {
 let semillaInicial = Math.floor(Math.random() * 100000);
 generarMapa(semillaInicial);
 
-// Botones
 btnGenerar.addEventListener("click", () => {
   let s = parseInt(inputSemilla.value);
   if (isNaN(s)) { alert("Introduce un número válido como semilla."); return; }
