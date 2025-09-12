@@ -1,13 +1,18 @@
-// perlin.js
-// Implementación simple de ruido Perlin
+// perlin.js con soporte de semilla
 
 let Perlin = {
   permutation: [],
   p: [],
-  init: function() {
+  seed: 0,
+  init: function(seed = Math.random() * 10000) {
+    this.seed = seed;
+    function randomSeeded(seed) {
+      let x = Math.sin(seed++) * 10000;
+      return x - Math.floor(x);
+    }
     this.permutation = [];
     for (let i = 0; i < 256; i++) {
-      this.permutation[i] = Math.floor(Math.random() * 256);
+      this.permutation[i] = Math.floor(randomSeeded(seed + i) * 256);
     }
     this.p = this.permutation.concat(this.permutation);
   },
@@ -57,5 +62,3 @@ let Perlin = {
     );
   }
 };
-
-Perlin.init();
