@@ -2,23 +2,17 @@
 
 const canvas = document.getElementById("mapa");
 const ctx = canvas.getContext("2d");
-
 const width = canvas.width;
 const height = canvas.height;
 
-// Genera una semilla aleatoria o usa la definida en la URL
-function getSeed() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.has("seed")) {
-    return parseInt(params.get("seed"));
-  }
-  return Math.floor(Math.random() * 100000);
-}
+const inputSemilla = document.getElementById("inputSemilla");
+const btnGenerar = document.getElementById("btnGenerar");
+const btnAleatorio = document.getElementById("btnAleatorio");
+const infoSemilla = document.getElementById("infoSemilla");
 
-const seed = getSeed();
-Perlin.init(seed);
+function generarMapa(seed) {
+  Perlin.init(seed);
 
-function generarMapa() {
   const escala = 0.05;
   const nivelAgua = 0.0;
 
@@ -34,16 +28,27 @@ function generarMapa() {
       ctx.fillRect(x, y, 1, 1);
     }
   }
+
+  infoSemilla.innerHTML = `Semilla usada: <b>${seed}</b>`;
 }
 
-// Mostrar semilla en pantalla
-function mostrarSemilla() {
-  const div = document.createElement("div");
-  div.style.marginTop = "10px";
-  div.innerHTML = `Semilla usada: <b>${seed}</b><br>
-    <small>(Para regenerar este mapa: ?seed=${seed} en la URL)</small>`;
-  document.body.appendChild(div);
-}
+// Generar mapa inicial aleatorio
+let semillaInicial = Math.floor(Math.random() * 100000);
+generarMapa(semillaInicial);
 
-generarMapa();
-mostrarSemilla();
+// Botón: generar con semilla introducida
+btnGenerar.addEventListener("click", () => {
+  let s = parseInt(inputSemilla.value);
+  if (isNaN(s)) {
+    alert("Introduce un número válido como semilla.");
+    return;
+  }
+  generarMapa(s);
+});
+
+// Botón: mapa aleatorio
+btnAleatorio.addEventListener("click", () => {
+  let s = Math.floor(Math.random() * 100000);
+  inputSemilla.value = s;
+  generarMapa(s);
+});
