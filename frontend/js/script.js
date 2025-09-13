@@ -2,82 +2,93 @@
 // Script Principal - Generador de Mapas de Fantasía
 // ===============================
 
-// Importamos el núcleo de la generación procedural
+// Importaciones de módulos
 import { GeneracionProcedural } from "./generacionProcedural.js";
+import { generarNombreMontaña, generarNombreRio } from "./nombresMontañasRios.js";
 
-// Configuración inicial (puede cambiarse según necesidad)
+// Configuración inicial del generador
 const configuracionInicial = {
-  ancho: 250,        // ancho del mapa
-  alto: 250,         // alto del mapa
-  escalaRuido: 60,   // escala de ruido (detalle del terreno)
-  porcentajeAgua: 0.35, // proporción de agua respecto al terreno
-  semilla: Date.now(),  // semilla aleatoria
+  ancho: 300,
+  alto: 300,
+  escalaRuido: 60,
+  porcentajeAgua: 0.35,
+  semilla: Date.now(),
 };
 
-// Inicializamos el generador con la configuración
+// Inicializamos el generador
 GeneracionProcedural.inicializar(configuracionInicial);
 
 // Generamos el mundo
-const mapa = GeneracionProcedural.generarMundo();
+const mundo = GeneracionProcedural.generarMundo();
 
-// Mostramos el resultado en consola (temporal para pruebas)
-console.log("Mapa generado:", mapa);
-
-// ============================================================
-// Renderizado básico en un <canvas> del mapa generado
-// ============================================================
-
-// Buscamos el canvas en el HTML
+// Configuramos el canvas
 const canvas = document.getElementById("mapaCanvas");
 const ctx = canvas.getContext("2d");
-
-// Ajustamos el tamaño del canvas según el mapa
 canvas.width = configuracionInicial.ancho;
 canvas.height = configuracionInicial.alto;
 
-// Función para dibujar el mapa generado
-function dibujarMapa(mapa) {
-  for (let y = 0; y < mapa.length; y++) {
-    for (let x = 0; x < mapa[y].length; x++) {
-      const valor = mapa[y][x];
-
-      // Elegimos colores básicos según el valor del terreno
-      let color;
-      if (valor < 0.3) {
-        color = "#1E90FF"; // agua
-      } else if (valor < 0.5) {
-        color = "#228B22"; // tierra baja
-      } else if (valor < 0.7) {
-        color = "#8B4513"; // colinas
-      } else {
-        color = "#A9A9A9"; // montañas
-      }
-
-      ctx.fillStyle = color;
-      ctx.fillRect(x, y, 1, 1);
-    }
+// Dibujar el mapa con colores según altura
+for (let y = 0; y < mundo.length; y++) {
+  for (let x = 0; x < mundo[y].length; x++) {
+    const valor = mundo[y][x];
+    let color;
+    if (valor < 0.3) color = "#1E90FF"; // agua
+    else if (valor < 0.5) color = "#228B22"; // tierra baja
+    else if (valor < 0.7) color = "#8B4513"; // colinas
+    else color = "#A9A9A9"; // montañas
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, 1, 1);
   }
 }
 
-// Dibujamos el mapa
-dibujarMapa(mapa);
-
-// ============================================================
-// Ejemplo de cálculo de ruta usando A* sobre el mapa
-// ============================================================
-
-// Definimos inicio y destino
+// Ejemplo de cálculo de ruta A* entre dos puntos
 const inicio = { x: 10, y: 10 };
 const destino = { x: 200, y: 200 };
+const ruta = GeneracionProcedural.calcularRuta(mundo, inicio, destino);
 
-// Calculamos ruta con A*
-const ruta = GeneracionProcedural.calcularRuta(mapa, inicio, destino);
-console.log("Ruta calculada:", ruta);
-
-// Pintamos la ruta en rojo sobre el canvas
+// Dibujar la ruta en rojo
 if (ruta && ruta.length > 0) {
   ctx.fillStyle = "red";
-  ruta.forEach(punto => {
-    ctx.fillRect(punto.x, punto.y, 1, 1);
-  });
+  ruta.forEach(punto => ctx.fillRect(punto.x, punto.y, 1, 1));
 }
+
+// ===============================
+// Generación de nombres para montañas y ríos
+// ===============================
+
+// Ejemplo de puntos para montañas y ríos
+const montañas = [
+  { x: 150, y: 50 },
+  { x: 220, y: 180 },
+];
+
+const rios = [
+  { x: 50, y: 250 },
+  { x: 120, y: 100 },
+];
+
+// Preparar etiquetas
+const etiquetas = [];
+
+// Montañas
+montañas.forEach(m => {
+  etiquetas.push({
+    texto: generarNombreMontaña(),
+    x: m.x,
+    y: m.y,
+    tipo: "montaña"
+  });
+});
+
+// Ríos
+rios.forEach(r => {
+  etiquetas.push({
+    texto: generarNombreRio(),
+    x: r.x,
+    y: r.y,
+    tipo: "río"
+  });
+});
+
+// Pintar todas las etiquetas sobre el mapa
+GeneracionProcedural.pintarEtiquetas(ctx, etiquetas);
