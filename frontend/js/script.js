@@ -1,80 +1,139 @@
-import { generarNombreCiudad, generarNombreNacion, generarRutasComerciales } from "./nombresCiudadesNaciones.js";
+// ==========================
+// frontend/js/script.js
+// ==========================
 
-// Generar ciudades y naciones
+import { generarMapa } from "./mapa/generacionProcedural.js";
+import { aStar } from "./mapa/aStar.js";
+import { agregarEtiqueta, dibujarEtiquetas } from "./mapa/etiquetas.js";
+import { generarNombreMontana, generarNombreRio } from "./mapa/nombresGeograficos.js";
+
+// Configuración del canvas
+const canvas = document.getElementById("mapCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let zoom = 1;
+let offsetX = 0;
+let offsetY = 0;
+let isDragging = false;
+let dragStartX, dragStartY;
+
+// =====================
+// Generar el terreno
+// =====================
+const { mapa } = generarMapa(canvas.width, canvas.height);
+
+// =====================
+// Ciudades y rutas
+// =====================
 const ciudades = [
-  { x: 60, y: 80, nombre: generarNombreCiudad() },
-  { x: 200, y: 50, nombre: generarNombreCiudad() },
-  { x: 180, y: 220, nombre: generarNombreCiudad() },
+  { x: 100, y: 200, nombre: "Eldoria" },
+  { x: 400, y: 350, nombre: "Dunrock" },
+  { x: 700, y: 150, nombre: "Silvaris" }
 ];
 
-const naciones = [
-  { nombre: generarNombreNacion() },
-  { nombre: generarNombreNacion() },
+// Añadimos etiquetas de ciudades
+ciudades.forEach(c => agregarEtiqueta(c.nombre, c.x, c.y, "ciudad"));
+
+// =====================
+// Rutas comerciales
+// =====================
+const rutas = [
+  { desde: ciudades[0], hasta: ciudades[1], nombre: "Ruta de Hierro" },
+  { desde: ciudades[1], hasta: ciudades[2], nombre: "Camino de Seda" }
 ];
 
-// Generar rutas comerciales
-const rutasComerciales = generarRutasComerciales(ciudades);
+// Añadimos etiquetas de rutas
+rutas.forEach(r => {
+  let midX = (r.desde.x + r.hasta.x) / 2;
+  let midY = (r.desde.y + r.hasta.y) / 2;
+  agregarEtiqueta(r.nombre, midX, midY, "ruta");
+});
 
-// Dibujar ciudades y rutas sobre el mapa
-function dibujarCiudadesYRutas() {
-  // Dibujar rutas
-  ctx.strokeStyle = "orange";
-  ctx.lineWidth = 2 * escala;
-  rutasComerciales.forEach(ruta => {
+// =====================
+// Montañas y ríos
+// =====================
+for (let i = 0; i < 5; i++) {
+  let x = Math.random() * canvas.width;
+  let y = Math.random() * canvas.height;
+  agregarEtiqueta(generarNombreMontana(), x, y, "montaña");
+}
+
+for (let i = 0; i < 5; i++) {
+  let x = Math.random() * canvas.width;
+  let y = Math.random() * canvas.height;
+  agregarEtiqueta(generarNombreRio(), x, y, "rio");
+}
+
+// =====================
+// Dibujar mapa completo
+// =====================
+function dibujarMapa() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Terreno
+  for (let y = 0; y < mapa.length; y++) {
+    for (let x = 0; x < mapa[0].length; x++) {
+      const altura = mapa[y][x];
+      if (altura < 0.3) ctx.fillStyle = "#1E90FF";
+      else if (altura < 0.5) ctx.fillStyle = "#228B22";
+      else if (altura < 0.7) ctx.fillStyle = "#A0522D";
+      else ctx.fillStyle = "#DCDCDC";
+
+      ctx.fillRect(x * zoom + offsetX, y * zoom + offsetY, zoom, zoom);
+    }
+  }
+
+  // Rutas comerciales (líneas)
+  ctx.strokeStyle = "yellow";
+  ctx.lineWidth = 2 * zoom;
+  rutas.forEach(r => {
     ctx.beginPath();
-    ctx.moveTo(ruta.origen.x * escala + offsetX, ruta.origen.y * escala + offsetY);
-    ctx.lineTo(ruta.destino.x * escala + offsetX, ruta.destino.y * escala + offsetY);
+    ctx.moveTo(r.desde.x * zoom + offsetX, r.desde.y * zoom + offsetY);
+    ctx.lineTo(r.hasta.x * zoom + offsetX, r.hasta.y * zoom + offsetY);
     ctx.stroke();
   });
 
-  // Dibujar ciudades
-  ctx.fillStyle = "purple";
-  ciudades.forEach(c => {
-    const px = c.x * escala + offsetX;
-    const py = c.y * escala + offsetY;
-    ctx.beginPath();
-    ctx.arc(px, py, 4 * escala, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Nombre de la ciudad
-    ctx.fillStyle = "black";
-    ctx.font = `${12 * escala}px Arial`;
-    ctx.fillText(c.nombre, px, py - 6 * escala);
-    ctx.fillStyle = "purple";
-  });
+  // Dibujar etiquetas unificadas
+  dibujarEtiquetas(ctx, zoom, offsetX, offsetY);
 }
 
-// Modificar la función principal de dibujado
-function dibujarTodo() {
-  dibujarMapa();               // terreno + rutas A* + etiquetas
-  dibujarCiudadesYRutas();     // ciudades + rutas comerciales
-}
-
-// Llamar a la nueva función en lugar de dibujarMapa solo
-dibujarTodo();
-
-// Actualizar eventos para zoom y arrastre
-canvas.addEventListener("mousemove", e => {
-  if (!arrastrando) return;
-  offsetX += e.offsetX - lastX;
-  offsetY += e.offsetY - lastY;
-  lastX = e.offsetX;
-  lastY = e.offsetY;
-  dibujarTodo(); // redibujar todo
-});
-
+// =====================
+// Interactividad
+// =====================
 canvas.addEventListener("wheel", e => {
   e.preventDefault();
-  const factorZoom = 0.1;
-  const mouseX = e.offsetX;
-  const mouseY = e.offsetY;
-
-  const zoomAnterior = escala;
-  if (e.deltaY < 0) escala *= 1 + factorZoom;
-  else escala /= 1 + factorZoom;
-
-  offsetX -= (mouseX - offsetX) * (escala / zoomAnterior - 1);
-  offsetY -= (mouseY - offsetY) * (escala / zoomAnterior - 1);
-
-  dibujarTodo(); // redibujar todo
+  const zoomFactor = 1.1;
+  const mouseX = e.clientX;
+  const mouseY = e.clientY;
+  if (e.deltaY < 0) {
+    zoom *= zoomFactor;
+    offsetX = mouseX - (mouseX - offsetX) * zoomFactor;
+    offsetY = mouseY - (mouseY - offsetY) * zoomFactor;
+  } else {
+    zoom /= zoomFactor;
+    offsetX = mouseX - (mouseX - offsetX) / zoomFactor;
+    offsetY = mouseY - (mouseY - offsetY) / zoomFactor;
+  }
+  dibujarMapa();
 });
+
+canvas.addEventListener("mousedown", e => {
+  isDragging = true;
+  dragStartX = e.clientX - offsetX;
+  dragStartY = e.clientY - offsetY;
+});
+canvas.addEventListener("mouseup", () => { isDragging = false; });
+canvas.addEventListener("mousemove", e => {
+  if (isDragging) {
+    offsetX = e.clientX - dragStartX;
+    offsetY = e.clientY - dragStartY;
+    dibujarMapa();
+  }
+});
+
+// =====================
+// Dibujar inicial
+// =====================
+dibujarMapa();
