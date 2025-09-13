@@ -2,11 +2,11 @@
 // Generación Procedural - Módulo Central
 // ===============================
 
-// Importaciones de otros módulos
-import { generarTerreno } from "./generacionTerreno.js";
+// Importamos el módulo de terreno y A*
+import { GeneracionTerreno } from "./mapa/generacionTerreno.js";
 import { aStar } from "./aStar.js";
+import { dibujarEtiquetas } from "./etiquetas.js";
 
-// Objeto principal que orquesta la generación
 export const GeneracionProcedural = {
   configuracion: {
     ancho: 200,
@@ -16,38 +16,44 @@ export const GeneracionProcedural = {
     porcentajeAgua: 0.3,
   },
 
-  // Inicializa la generación del mundo
+  // Inicializa parámetros de generación
   inicializar(config = {}) {
     this.configuracion = { ...this.configuracion, ...config };
     console.log("⚙️ Configuración aplicada:", this.configuracion);
   },
 
-  // Genera un mundo completo (mapa base + características)
+  // Genera el mundo completo
   generarMundo() {
     console.log("🌍 Generando mundo...");
 
     const { ancho, alto, semilla, escalaRuido, porcentajeAgua } =
       this.configuracion;
 
-    // Generar el terreno base
-    const mapaTerreno = generarTerreno(ancho, alto, {
-      semilla,
-      escala: escalaRuido,
-      agua: porcentajeAgua,
-    });
+    // Generar el terreno base usando mapa/generacionTerreno.js
+    const mapaTerreno = GeneracionTerreno.generarMapa(
+      ancho,
+      alto,
+      escalaRuido,
+      semilla
+    );
 
-    // Aquí podemos agregar pasos adicionales:
-    // - generación de biomas
-    // - colocación de recursos
-    // - distribución de ciudades, etc.
-
+    // Podemos agregar pasos extra luego:
+    // - biomas
+    // - ciudades
+    // - ríos
+    // - recursos
     console.log("✅ Mundo generado.");
     return mapaTerreno;
   },
 
-  // Ejemplo de cómo usar el algoritmo de caminos
+  // Calcula ruta con A* entre dos puntos del mapa
   calcularRuta(mapa, inicio, destino) {
     console.log("🧭 Calculando ruta entre", inicio, "y", destino);
     return aStar(mapa, inicio, destino);
+  },
+
+  // Dibuja etiquetas en el mapa (opcional)
+  pintarEtiquetas(ctx, etiquetas) {
+    dibujarEtiquetas(ctx, etiquetas);
   },
 };
