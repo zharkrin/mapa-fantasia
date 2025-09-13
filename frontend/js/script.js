@@ -1,13 +1,13 @@
 // ===============================
-// Script Principal - Generador de Mapas de Fantasía
+// Script Principal - Generador de Mapas de Fantasía con Zoom e Interactividad
 // ===============================
 
 // Importaciones de módulos
 import { GeneracionProcedural } from "./generacionProcedural.js";
 import { generarNombreMontaña, generarNombreRio } from "./nombresMontañasRios.js";
 
-// Configuración inicial del generador
-const configuracionInicial = {
+// Configuración inicial
+const config = {
   ancho: 300,
   alto: 300,
   escalaRuido: 60,
@@ -16,58 +16,52 @@ const configuracionInicial = {
 };
 
 // Inicializamos el generador
-GeneracionProcedural.inicializar(configuracionInicial);
+GeneracionProcedural.inicializar(config);
 
-// Generamos el mundo
-const mundo = GeneracionProcedural.generarMundo();
+// Generamos el mapa
+const mapa = GeneracionProcedural.generarMundo();
 
 // Configuramos el canvas
 const canvas = document.getElementById("mapaCanvas");
 const ctx = canvas.getContext("2d");
-canvas.width = configuracionInicial.ancho;
-canvas.height = configuracionInicial.alto;
+canvas.width = config.ancho;
+canvas.height = config.alto;
 
-// Dibujar el mapa con colores según altura
-for (let y = 0; y < mundo.length; y++) {
-  for (let x = 0; x < mundo[y].length; x++) {
-    const valor = mundo[y][x];
-    let color;
-    if (valor < 0.3) color = "#1E90FF"; // agua
-    else if (valor < 0.5) color = "#228B22"; // tierra baja
-    else if (valor < 0.7) color = "#8B4513"; // colinas
-    else color = "#A9A9A9"; // montañas
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, 1, 1);
+// Variables de zoom y desplazamiento
+let escala = 1;
+let offsetX = 0;
+let offsetY = 0;
+let arrastrando = false;
+let lastX = 0;
+let lastY = 0;
+
+// Dibujar el mapa
+function dibujarMapa() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let y = 0; y < mapa.length; y++) {
+    for (let x = 0; x < mapa[y].length; x++) {
+      const valor = mapa[y][x];
+      let color;
+      if (valor < 0.3) color = "#1E90FF";       // agua
+      else if (valor < 0.5) color = "#228B22";  // tierra baja
+      else if (valor < 0.7) color = "#8B4513";  // colinas
+      else color = "#A9A9A9";                   // montañas
+
+      const px = (x * escala) + offsetX;
+      const py = (y * escala) + offsetY;
+      ctx.fillStyle = color;
+      ctx.fillRect(px, py, escala, escala);
+    }
   }
+
+  // Dibujar etiquetas
+  dibujarEtiquetas();
 }
 
-// Ejemplo de cálculo de ruta A* entre dos puntos
-const inicio = { x: 10, y: 10 };
-const destino = { x: 200, y: 200 };
-const ruta = GeneracionProcedural.calcularRuta(mundo, inicio, destino);
-
-// Dibujar la ruta en rojo
-if (ruta && ruta.length > 0) {
-  ctx.fillStyle = "red";
-  ruta.forEach(punto => ctx.fillRect(punto.x, punto.y, 1, 1));
-}
-
-// ===============================
-// Generación de nombres para montañas y ríos
-// ===============================
-
-// Ejemplo de puntos para montañas y ríos
-const montañas = [
-  { x: 150, y: 50 },
-  { x: 220, y: 180 },
-];
-
-const rios = [
-  { x: 50, y: 250 },
-  { x: 120, y: 100 },
-];
-
-// Preparar etiquetas
+// Generación de nombres de montañas y ríos
+const montañas = [{ x: 150, y: 50 }, { x: 220, y: 180 }];
+const rios = [{ x: 50, y: 250 }, { x: 120, y: 100 }];
 const etiquetas = [];
 
 // Montañas
@@ -90,5 +84,65 @@ rios.forEach(r => {
   });
 });
 
-// Pintar todas las etiquetas sobre el mapa
-GeneracionProcedural.pintarEtiquetas(ctx, etiquetas);
+// Función para dibujar etiquetas
+function dibujarEtiquetas() {
+  ctx.fillStyle = "black";
+  ctx.font = `${12 * escala}px Arial`;
+  ctx.textAlign = "center";
+
+  etiquetas.forEach(e => {
+    const px = (e.x * escala) + offsetX;
+    const py = (e.y * escala) + offsetY;
+    ctx.fillText(e.texto, px, py);
+  });
+}
+
+// Interactividad: arrastrar
+canvas.addEventListener("mousedown", (e) => {
+  arrastrando = true;
+  lastX = e.offsetX;
+  lastY = e.offsetY;
+});
+
+canvas.addEventListener("mouseup", () => {
+  arrastrando = false;
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  if (arrastrando) {
+    offsetX += e.offsetX - lastX;
+    offsetY += e.offsetY - lastY;
+    lastX = e.offsetX;
+    lastY = e.offsetY;
+    dibujarMapa();
+  }
+});
+
+// Interactividad: zoom
+canvas.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const zoomFactor = 0.1;
+  if (e.deltaY < 0) escala *= 1 + zoomFactor;
+  else escala /= 1 + zoomFactor;
+  dibujarMapa();
+});
+
+// ===============================
+// Ejemplo de ruta A*
+// ===============================
+const inicio = { x: 10, y: 10 };
+const destino = { x: 200, y: 200 };
+const ruta = GeneracionProcedural.calcularRuta(mapa, inicio, destino);
+
+// Dibujar ruta en rojo
+if (ruta && ruta.length > 0) {
+  ctx.fillStyle = "red";
+  ruta.forEach(p => {
+    const px = (p.x * escala) + offsetX;
+    const py = (p.y * escala) + offsetY;
+    ctx.fillRect(px, py, escala, escala);
+  });
+}
+
+// Dibujar inicialmente
+dibujarMapa();
