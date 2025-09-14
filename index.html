@@ -2,39 +2,33 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Generador de Mapas de Fantasía</title>
-  <style>
-    body {
-      background: #222;
-      color: white;
-      text-align: center;
-      font-family: sans-serif;
-    }
-    canvas {
-      border: 2px solid #555;
-      display: block;
-      margin: 20px auto;
-    }
-    input, button {
-      margin: 5px;
-      padding: 5px 10px;
-      font-size: 1em;
-    }
-  </style>
+  <link rel="stylesheet" href="frontend/css/estilos.css">
 </head>
 <body>
-  <h1>🌍 Generador de Mapas de Fantasía</h1>
-  <canvas id="mapa" width="800" height="600"></canvas>
+  <header>
+    <h1>🌍 Generador de Mapas de Fantasía</h1>
+  </header>
 
-  <div>
-    <input type="number" id="inputSemilla" placeholder="Introduce semilla">
-    <button id="btnGenerar">Generar mapa</button>
-    <button id="btnAleatorio">Mapa aleatorio</button>
-  </div>
+  <main>
+    <section id="controles">
+      <button id="btnGenerar">🔄 Generar nuevo mapa</button>
+      <button id="btnZoomIn">➕ Zoom +</button>
+      <button id="btnZoomOut">➖ Zoom -</button>
+      <button id="btnReset">⟳ Reset vista</button>
+    </section>
 
-  <div id="infoSemilla" style="margin-top:10px;"></div>
+    <section id="mapa">
+      <canvas id="mapCanvas" width="1200" height="800"></canvas>
+    </section>
+  </main>
 
-  <script src="perlin.js"></script>
-  <script src="script.js"></script>
+  <footer>
+    <p>Proyecto de Generación Procedimental de Mapas | Fantasy</p>
+  </footer>
+
+  <!-- Script principal -->
+  <script type="module" src="frontend/js/script.js"></script>
 </body>
 </html>
