@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generador de Mapas de Fantasía</title>
+  <title>Mapa de Fantasía</title>
+  <!-- Estilos principales -->
   <link rel="stylesheet" href="frontend/css/estilos.css">
 </head>
 <body>
@@ -12,23 +13,21 @@
   </header>
 
   <main>
-    <section id="controles">
-      <button id="btnGenerar">🔄 Generar nuevo mapa</button>
-      <button id="btnZoomIn">➕ Zoom +</button>
-      <button id="btnZoomOut">➖ Zoom -</button>
-      <button id="btnReset">⟳ Reset vista</button>
-    </section>
+    <!-- Contenedor del mapa -->
+    <canvas id="mapaCanvas" width="800" height="600"></canvas>
 
-    <section id="mapa">
-      <canvas id="mapCanvas" width="1200" height="800"></canvas>
-    </section>
+    <!-- Controles -->
+    <div id="controles">
+      <button id="btnGenerar">Generar Terreno</button>
+      <button id="btnGuardar">Guardar Imagen</button>
+    </div>
   </main>
 
   <footer>
-    <p>Proyecto de Generación Procedimental de Mapas | Fantasy</p>
+    <p>Proyecto Generador Procedimental de Mapas © 2025</p>
   </footer>
 
-  <!-- Script principal -->
+  <!-- Scripts principales -->
   <script type="module" src="frontend/js/script.js"></script>
 </body>
 </html>
