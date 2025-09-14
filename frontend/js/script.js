@@ -1,62 +1,87 @@
 // ==============================
-// script.js - Control principal del mapa
+// script.js - Control principal del mapa con guardado
 // ==============================
 
 import { generarTerreno } from "./mapa/generacionTerreno.js";
 import { generarNombreMontaña, generarNombreRio, generarNombreCiudad } from "./mapa/nombresGeograficos.js";
+import { guardarMapa, cargarMapa, listarProyectos } from "./mapa/guardadoMapa.js";
 
-// Selección de canvas
+// Canvas
 const canvas = document.getElementById("mapa");
 const ctx = canvas.getContext("2d");
-
-// Tamaño del mapa
 canvas.width = 800;
 canvas.height = 600;
 
+// Variables globales
+let terreno = [];
+let etiquetas = [];
+
 // ==============================
-// Función principal de generación
+// Generación del mapa
 // ==============================
 function generarMapa() {
-  // Limpiar el canvas
+  terreno = generarTerreno(canvas.width, canvas.height);
+
+  etiquetas = [
+    { tipo: "montaña", nombre: generarNombreMontaña(), x: 200, y: 150 },
+    { tipo: "montaña", nombre: generarNombreMontaña(), x: 600, y: 120 },
+    { tipo: "río", nombre: generarNombreRio(), x: 300, y: 400 },
+    { tipo: "río", nombre: generarNombreRio(), x: 700, y: 350 },
+    { tipo: "ciudad", nombre: generarNombreCiudad(), x: 400, y: 500 },
+    { tipo: "ciudad", nombre: generarNombreCiudad(), x: 650, y: 250 },
+  ];
+
+  dibujarMapa();
+}
+
+// ==============================
+// Dibujar mapa
+// ==============================
+function dibujarMapa() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Generar el terreno procedural
-  const mapa = generarTerreno(canvas.width, canvas.height);
-
-  // Pintar el terreno
   for (let y = 0; y < canvas.height; y++) {
     for (let x = 0; x < canvas.width; x++) {
-      const valor = mapa[y][x];
+      const valor = terreno[y][x];
       ctx.fillStyle = valor < 0.3 ? "#1E90FF" : valor < 0.6 ? "#228B22" : "#A9A9A9";
       ctx.fillRect(x, y, 1, 1);
     }
   }
 
-  // ==============================
-  // Añadir etiquetas geográficas
-  // ==============================
-
   ctx.fillStyle = "white";
   ctx.font = "14px Arial";
   ctx.textAlign = "center";
 
-  // Ejemplo: nombres de montañas
-  ctx.fillText(generarNombreMontaña(), 200, 150);
-  ctx.fillText(generarNombreMontaña(), 600, 120);
-
-  // Ejemplo: nombres de ríos
-  ctx.fillText(generarNombreRio(), 300, 400);
-  ctx.fillText(generarNombreRio(), 700, 350);
-
-  // Ejemplo: nombres de ciudades
-  ctx.fillText(generarNombreCiudad(), 400, 500);
-  ctx.fillText(generarNombreCiudad(), 650, 250);
+  etiquetas.forEach((et) => {
+    ctx.fillText(et.nombre, et.x, et.y);
+  });
 }
 
 // ==============================
-// Botón de generar mapa
+// Botones de control
 // ==============================
 document.getElementById("btnGenerar").addEventListener("click", generarMapa);
 
-// Generar un mapa inicial al cargar
+document.getElementById("btnGuardar").addEventListener("click", () => {
+  const nombre = prompt("Nombre del proyecto:");
+  if (nombre) guardarMapa(nombre, terreno, etiquetas);
+});
+
+document.getElementById("btnCargar").addEventListener("click", () => {
+  const proyectos = listarProyectos();
+  if (proyectos.length === 0) return alert("No hay proyectos guardados.");
+
+  const nombre = prompt(`Proyectos disponibles:\n${proyectos.join("\n")}\nIngrese el nombre a cargar:`);
+  if (!nombre) return;
+  const proyecto = cargarMapa(nombre);
+  if (proyecto) {
+    terreno = proyecto.mapa;
+    etiquetas = proyecto.etiquetas;
+    dibujarMapa();
+  }
+});
+
+// ==============================
+// Inicialización
+// ==============================
 window.onload = generarMapa;
