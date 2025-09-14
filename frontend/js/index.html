@@ -2,24 +2,28 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Generador de Mapas de Fantasía</title>
-  <style>
-    body {
-      background: #222;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    canvas {
-      border: 1px solid white;
-      margin-top: 20px;
-    }
-  </style>
+  <title>Generador de Mapas</title>
+  <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-  <h1>Generador de Mapas de Fantasía</h1>
-  <canvas id="mapa" width="800" height="600"></canvas>
+  <h1>🌍 Generador de Terreno</h1>
 
-  <script type="module" src="./js/script.js"></script>
+  <div id="controles">
+    <label for="tamano">Tamaño del mapa:</label>
+    <select id="tamano">
+      <option value="256">Pequeño (256x256)</option>
+      <option value="512" selected>Medio (512x512)</option>
+      <option value="1024">Grande (1024x1024)</option>
+    </select>
+
+    <label for="detalle">Detalle:</label>
+    <input type="range" id="detalle" min="1" max="10" value="5">
+
+    <button id="generar">Generar mapa</button>
+  </div>
+
+  <canvas id="mapa" width="512" height="512"></canvas>
+
+  <script type="module" src="js/script.js"></script>
 </body>
 </html>
