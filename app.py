@@ -3,12 +3,12 @@ import os
 
 app = Flask(__name__, static_folder="frontend", template_folder="frontend")
 
-# Ruta principal → sirve el index.html
+# Ruta principal → index.html
 @app.route("/")
 def index():
     return send_from_directory(app.template_folder, "index.html")
 
-# Sirve cualquier archivo estático (css, js, imágenes, etc.)
+# Archivos estáticos (js, css, imágenes…)
 @app.route("/<path:path>")
 def static_files(path):
     return send_from_directory(app.static_folder, path)
