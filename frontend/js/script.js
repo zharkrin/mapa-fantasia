@@ -6,9 +6,14 @@ import { generarTerreno } from "./mapa/generacionTerreno.js";
 const canvas = document.getElementById("mapaCanvas");
 const ctx = canvas.getContext("2d");
 
-// Botones
+// Botones y controles
 const btnGenerar = document.getElementById("btnGenerar");
 const btnGuardar = document.getElementById("btnGuardar");
+const sliderEscala = document.getElementById("escala");
+const valorEscala = document.getElementById("valorEscala");
+
+// Escala inicial por defecto
+let escalaActual = parseInt(sliderEscala.value, 10);
 
 // Función para dibujar el mapa en el canvas
 function dibujarMapa(mapa) {
@@ -34,13 +39,14 @@ function dibujarMapa(mapa) {
   }
 }
 
-// Generar mapa inicial al cargar la página (con escala 30)
-let mapaActual = generarTerreno(80, 60, 30);
+// Generar mapa inicial
+let mapaActual = generarTerreno(80, 60, escalaActual);
 dibujarMapa(mapaActual);
 
 // Botón: generar un nuevo terreno
 btnGenerar.addEventListener("click", () => {
-  mapaActual = generarTerreno(80, 60, 30);
+  escalaActual = parseInt(sliderEscala.value, 10);
+  mapaActual = generarTerreno(80, 60, escalaActual);
   dibujarMapa(mapaActual);
 });
 
@@ -50,4 +56,9 @@ btnGuardar.addEventListener("click", () => {
   enlace.download = "mapa_fantasia.png";
   enlace.href = canvas.toDataURL("image/png");
   enlace.click();
+});
+
+// Slider: actualizar valor mostrado
+sliderEscala.addEventListener("input", () => {
+  valorEscala.textContent = sliderEscala.value;
 });
