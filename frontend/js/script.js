@@ -34,13 +34,13 @@ function dibujarMapa(mapa) {
   }
 }
 
-// Generar mapa inicial al cargar la página
-let mapaActual = generarTerreno(80, 60);
+// Generar mapa inicial al cargar la página (con escala 30)
+let mapaActual = generarTerreno(80, 60, 30);
 dibujarMapa(mapaActual);
 
 // Botón: generar un nuevo terreno
 btnGenerar.addEventListener("click", () => {
-  mapaActual = generarTerreno(80, 60);
+  mapaActual = generarTerreno(80, 60, 30);
   dibujarMapa(mapaActual);
 });
 
