@@ -1,5 +1,5 @@
 // script.js
-// Integración de terreno, biomas, ríos, caminos y nombres
+// Integración de terreno, biomas, ríos, caminos y nombres con detección de colisiones
 
 import { generarTerreno } from "./mapa/generacionTerreno.js";
 import { asignarBiomas } from "./mapa/biomas.js";
@@ -33,25 +33,14 @@ let nombres = {
 
 // Buscar ubicaciones y asignar nombres
 function asignarNombres() {
-  // Ríos
   for (let y = 0; y < alto; y++) {
     for (let x = 0; x < ancho; x++) {
       if (mapa[y][x] === "rio" && Math.random() < 0.002) {
         nombres.rios.push({ nombre: generarNombreRio(), x, y });
       }
-    }
-  }
-  // Montañas
-  for (let y = 0; y < alto; y++) {
-    for (let x = 0; x < ancho; x++) {
       if (mapa[y][x] === "montaña" && Math.random() < 0.005) {
         nombres.montanas.push({ nombre: generarNombreMontaña(), x, y });
       }
-    }
-  }
-  // Caminos
-  for (let y = 0; y < alto; y++) {
-    for (let x = 0; x < ancho; x++) {
       if (mapa[y][x] === "camino" && Math.random() < 0.003) {
         nombres.caminos.push({ nombre: generarNombreCamino(), x, y });
       }
@@ -86,21 +75,51 @@ function colorSegunCelda(celda) {
   }
 }
 
-// Dibujar etiquetas de nombres
+// Control de colisiones de texto
+function hayColision(rect, usados) {
+  return usados.some(u =>
+    rect.x < u.x + u.w &&
+    rect.x + rect.w > u.x &&
+    rect.y < u.y + u.h &&
+    rect.y + rect.h > u.y
+  );
+}
+
 function dibujarNombres() {
   ctx.font = "10px Arial";
   ctx.fillStyle = "black";
   ctx.textAlign = "center";
 
-  nombres.rios.forEach(r => {
-    ctx.fillText(r.nombre, r.x * tamCelda, r.y * tamCelda);
-  });
-  nombres.montanas.forEach(m => {
-    ctx.fillText(m.nombre, m.x * tamCelda, m.y * tamCelda);
-  });
-  nombres.caminos.forEach(c => {
-    ctx.fillText(c.nombre, c.x * tamCelda, c.y * tamCelda);
-  });
+  let usados = [];
+
+  function colocarNombre(obj) {
+    const texto = obj.nombre;
+    let posX = obj.x * tamCelda;
+    let posY = obj.y * tamCelda;
+    let anchoTexto = ctx.measureText(texto).width;
+    let altoTexto = 10;
+
+    let intentos = 0;
+    let colocado = false;
+
+    while (intentos < 10 && !colocado) {
+      const rect = { x: posX - anchoTexto / 2, y: posY - altoTexto, w: anchoTexto, h: altoTexto };
+      if (!hayColision(rect, usados)) {
+        ctx.fillText(texto, posX, posY);
+        usados.push(rect);
+        colocado = true;
+      } else {
+        // Probar posiciones cercanas
+        posX += (Math.random() - 0.5) * 20;
+        posY += (Math.random() - 0.5) * 20;
+        intentos++;
+      }
+    }
+  }
+
+  nombres.rios.forEach(colocarNombre);
+  nombres.montanas.forEach(colocarNombre);
+  nombres.caminos.forEach(colocarNombre);
 }
 
 asignarNombres();
