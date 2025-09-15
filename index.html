@@ -2,32 +2,23 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mapa de Fantasía</title>
-  <!-- Estilos principales -->
-  <link rel="stylesheet" href="frontend/css/estilos.css">
+  <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-  <header>
-    <h1>🌍 Generador de Mapas de Fantasía</h1>
-  </header>
+  <h1>Generador de Mapas de Fantasía</h1>
 
-  <main>
-    <!-- Contenedor del mapa -->
-    <canvas id="mapaCanvas" width="800" height="600"></canvas>
+  <canvas id="mapaCanvas" width="800" height="600"></canvas>
 
-    <!-- Controles -->
-    <div id="controles">
-      <button id="btnGenerar">Generar Terreno</button>
-      <button id="btnGuardar">Guardar Imagen</button>
-    </div>
-  </main>
+  <div class="controles">
+    <button id="btnGenerar">Generar Terreno</button>
+    <button id="btnGuardar">Guardar Imagen</button>
 
-  <footer>
-    <p>Proyecto Generador Procedimental de Mapas © 2025</p>
-  </footer>
+    <label for="escala">Escala:</label>
+    <input type="range" id="escala" min="10" max="80" value="30">
+    <span id="valorEscala">30</span>
+  </div>
 
-  <!-- Scripts principales -->
-  <script type="module" src="frontend/js/script.js"></script>
+  <script type="module" src="js/script.js"></script>
 </body>
 </html>
