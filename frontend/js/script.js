@@ -1,47 +1,65 @@
 // script.js
-// Punto de entrada principal para el generador de mapas
+// Archivo principal del proyecto
 
 import { generarTerreno } from "./mapa/generacionTerreno.js";
+import { asignarBiomas } from "./mapa/biomas.js";
 
-const canvas = document.getElementById("mapCanvas");
+// ================================
+// Configuración inicial
+// ================================
+const canvas = document.getElementById("mapa");
 const ctx = canvas.getContext("2d");
 
-const btnGenerar = document.getElementById("btnGenerar");
-const btnLimpiar = document.getElementById("btnLimpiar");
+const ancho = 60; // número de columnas
+const alto = 45;  // número de filas
+const tamCelda = 12; // tamaño en px de cada celda
 
-// Dibujar el terreno generado en el canvas
-function dibujarTerreno(mapa) {
-  const colores = {
-    agua: "#1E90FF",
-    tierra: "#228B22",
-    montaña: "#A9A9A9",
-  };
+canvas.width = ancho * tamCelda;
+canvas.height = alto * tamCelda;
 
-  const anchoCelda = canvas.width / mapa[0].length;
-  const altoCelda = canvas.height / mapa.length;
+// ================================
+// Generación del mapa
+// ================================
+let mapa = generarTerreno(ancho, alto);
+mapa = asignarBiomas(mapa);
 
-  for (let y = 0; y < mapa.length; y++) {
-    for (let x = 0; x < mapa[y].length; x++) {
-      ctx.fillStyle = colores[mapa[y][x]] || "#000";
-      ctx.fillRect(x * anchoCelda, y * altoCelda, anchoCelda, altoCelda);
+// ================================
+// Dibujado del mapa
+// ================================
+function dibujarMapa() {
+  for (let y = 0; y < alto; y++) {
+    for (let x = 0; x < ancho; x++) {
+      const celda = mapa[y][x];
+      ctx.fillStyle = colorSegunCelda(celda);
+      ctx.fillRect(x * tamCelda, y * tamCelda, tamCelda, tamCelda);
     }
   }
 }
 
-// Limpiar el canvas
-function limpiarMapa() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+// ================================
+// Colores según tipo de celda
+// ================================
+function colorSegunCelda(celda) {
+  switch (celda) {
+    case "agua":
+      return "#4f81bd"; // azul
+    case "montaña":
+      return "#7f7f7f"; // gris
+    case "bosque":
+      return "#228B22"; // verde bosque
+    case "pradera":
+      return "#7CFC00"; // verde claro
+    case "desierto":
+      return "#edc9af"; // arena
+    case "tundra":
+      return "#dcdcdc"; // blanco/grisáceo
+    case "tierra":
+    default:
+      return "#deb887"; // marrón tierra
+  }
 }
 
-btnGenerar.addEventListener("click", () => {
-  limpiarMapa();
-  const mapa = generarTerreno(60, 45);
-  dibujarTerreno(mapa);
-});
-
-btnLimpiar.addEventListener("click", limpiarMapa);
-
-window.addEventListener("load", () => {
-  const mapa = generarTerreno(60, 45);
-  dibujarTerreno(mapa);
-});
+// ================================
+// Inicialización
+// ================================
+dibujarMapa();
