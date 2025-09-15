@@ -1,28 +1,105 @@
 // generacionTerreno.js
-// Generación procedimental básica de mapas
+// Generación procedimental mejorada de mapas
+// Versión con agrupación de montañas y agua más coherente
 
 export function generarTerreno(ancho, alto) {
-  const mapa = [];
+  const mapa = crearMapaBase(ancho, alto);
 
-  for (let y = 0; y < alto; y++) {
-    const fila = [];
-    for (let x = 0; x < ancho; x++) {
-      fila.push(generarCelda(x, y, ancho, alto));
-    }
-    mapa.push(fila);
-  }
+  // Generar mares
+  expandirTerreno(mapa, "agua", 0.25, 6);
+
+  // Generar montañas (cordilleras)
+  expandirTerreno(mapa, "montaña", 0.10, 4);
+
+  // El resto se rellena como tierra
+  rellenarTierra(mapa);
 
   return mapa;
 }
 
-function generarCelda(x, y, ancho, alto) {
-  const rand = Math.random();
-
-  if (rand < 0.3) {
-    return "agua"; // 30%
-  } else if (rand < 0.8) {
-    return "tierra"; // 50%
-  } else {
-    return "montaña"; // 20%
+// ================================
+// Crear un mapa vacío inicial
+// ================================
+function crearMapaBase(ancho, alto) {
+  const mapa = [];
+  for (let y = 0; y < alto; y++) {
+    const fila = [];
+    for (let x = 0; x < ancho; x++) {
+      fila.push(null);
+    }
+    mapa.push(fila);
   }
+  return mapa;
+}
+
+// ================================
+// Expansión de manchas de terreno
+// ================================
+// tipo: "agua" o "montaña"
+// probabilidad: proporción de semillas iniciales
+// iteraciones: cuántas veces se expande
+function expandirTerreno(mapa, tipo, probabilidad, iteraciones) {
+  const alto = mapa.length;
+  const ancho = mapa[0].length;
+
+  // 1. Colocar semillas iniciales
+  for (let y = 0; y < alto; y++) {
+    for (let x = 0; x < ancho; x++) {
+      if (Math.random() < probabilidad) {
+        mapa[y][x] = tipo;
+      }
+    }
+  }
+
+  // 2. Expansión iterativa
+  for (let i = 0; i < iteraciones; i++) {
+    const nuevoMapa = JSON.parse(JSON.stringify(mapa));
+    for (let y = 0; y < alto; y++) {
+      for (let x = 0; x < ancho; x++) {
+        if (mapa[y][x] === null) {
+          const vecinos = contarVecinos(mapa, x, y, tipo);
+          if (vecinos >= 3) {
+            nuevoMapa[y][x] = tipo;
+          }
+        }
+      }
+    }
+    mapa = nuevoMapa;
+  }
+}
+
+// ================================
+// Rellenar con tierra lo que quede vacío
+// ================================
+function rellenarTierra(mapa) {
+  for (let y = 0; y < mapa.length; y++) {
+    for (let x = 0; x < mapa[y].length; x++) {
+      if (mapa[y][x] === null) {
+        mapa[y][x] = "tierra";
+      }
+    }
+  }
+}
+
+// ================================
+// Contar vecinos de un tipo
+// ================================
+function contarVecinos(mapa, x, y, tipo) {
+  const dirs = [
+    [-1, -1], [0, -1], [1, -1],
+    [-1, 0],           [1, 0],
+    [-1, 1],  [0, 1],  [1, 1]
+  ];
+
+  let cuenta = 0;
+  for (const [dx, dy] of dirs) {
+    const nx = x + dx;
+    const ny = y + dy;
+    if (ny >= 0 && ny < mapa.length && nx >= 0 && nx < mapa[0].length) {
+      if (mapa[ny][nx] === tipo) {
+        cuenta++;
+      }
+    }
+  }
+  return cuenta;
 }
