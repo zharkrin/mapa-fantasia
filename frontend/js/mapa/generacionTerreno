@@ -1,9 +1,6 @@
 // generacionTerreno.js
-// Módulo encargado de generar mapas de terreno de forma procedimental
+// Generación procedimental básica de mapas
 
-// ================================
-// Función principal
-// ================================
 export function generarTerreno(ancho, alto) {
   const mapa = [];
 
@@ -18,11 +15,7 @@ export function generarTerreno(ancho, alto) {
   return mapa;
 }
 
-// ================================
-// Función auxiliar para celdas
-// ================================
 function generarCelda(x, y, ancho, alto) {
-  // Generación simple basada en probabilidad
   const rand = Math.random();
 
   if (rand < 0.3) {
