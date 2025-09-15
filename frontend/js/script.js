@@ -1,20 +1,13 @@
 // script.js
-// Punto de entrada principal para el generador de mapas de fantasía
+// Punto de entrada principal para el generador de mapas
 
 import { generarTerreno } from "./mapa/generacionTerreno.js";
 
-// ================================
-// Selección de elementos del DOM
-// ================================
 const canvas = document.getElementById("mapCanvas");
 const ctx = canvas.getContext("2d");
 
 const btnGenerar = document.getElementById("btnGenerar");
 const btnLimpiar = document.getElementById("btnLimpiar");
-
-// ================================
-// Funciones principales
-// ================================
 
 // Dibujar el terreno generado en el canvas
 function dibujarTerreno(mapa) {
@@ -40,23 +33,14 @@ function limpiarMapa() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// ================================
-// Eventos
-// ================================
-
 btnGenerar.addEventListener("click", () => {
   limpiarMapa();
-  const mapa = generarTerreno(60, 45); // ancho x alto en celdas
+  const mapa = generarTerreno(60, 45);
   dibujarTerreno(mapa);
 });
 
 btnLimpiar.addEventListener("click", limpiarMapa);
 
-// ================================
-// Inicialización automática
-// ================================
-
-// Genera un mapa al cargar la página
 window.addEventListener("load", () => {
   const mapa = generarTerreno(60, 45);
   dibujarTerreno(mapa);
