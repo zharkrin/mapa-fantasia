@@ -87,7 +87,7 @@ function hayColision(rect, usados) {
 
 function dibujarNombres() {
   ctx.font = "10px Arial";
-  ctx.fillStyle = "black";
+  ctx.fillStyle = "white"; // nombres en blanco
   ctx.textAlign = "center";
 
   let usados = [];
