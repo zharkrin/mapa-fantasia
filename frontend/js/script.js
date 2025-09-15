@@ -1,69 +1,63 @@
-// 📂 frontend/js/script.js
+// script.js
+// Punto de entrada principal para el generador de mapas de fantasía
 
 import { generarTerreno } from "./mapa/generacionTerreno.js";
 
-// Seleccionamos el canvas y el contexto
-const canvas = document.getElementById("mapaCanvas");
+// ================================
+// Selección de elementos del DOM
+// ================================
+const canvas = document.getElementById("mapCanvas");
 const ctx = canvas.getContext("2d");
 
-// Botones y controles
 const btnGenerar = document.getElementById("btnGenerar");
-const btnGuardar = document.getElementById("btnGuardar");
-const sliderEscala = document.getElementById("escala");
-const valorEscala = document.getElementById("valorEscala");
+const btnLimpiar = document.getElementById("btnLimpiar");
 
-// Escala inicial por defecto
-let escalaActual = parseInt(sliderEscala.value, 10);
+// ================================
+// Funciones principales
+// ================================
 
-// Función para dibujar el mapa en el canvas
-function dibujarMapa(mapa) {
+// Dibujar el terreno generado en el canvas
+function dibujarTerreno(mapa) {
+  const colores = {
+    agua: "#1E90FF",
+    tierra: "#228B22",
+    montaña: "#A9A9A9",
+  };
+
   const anchoCelda = canvas.width / mapa[0].length;
   const altoCelda = canvas.height / mapa.length;
 
   for (let y = 0; y < mapa.length; y++) {
-    for (let x = 0; x < mapa[0].length; x++) {
-      const valor = mapa[y][x];
-
-      if (valor < 0.3) {
-        ctx.fillStyle = "#1E90FF"; // Agua
-      } else if (valor < 0.5) {
-        ctx.fillStyle = "#228B22"; // Tierra baja
-      } else if (valor < 0.7) {
-        ctx.fillStyle = "#A9A9A9"; // Montaña baja
-      } else {
-        ctx.fillStyle = "#FFFFFF"; // Nieve
-      }
-
+    for (let x = 0; x < mapa[y].length; x++) {
+      ctx.fillStyle = colores[mapa[y][x]] || "#000";
       ctx.fillRect(x * anchoCelda, y * altoCelda, anchoCelda, altoCelda);
     }
   }
 }
 
-// Función para generar y dibujar el mapa con la escala actual
-function actualizarMapa() {
-  escalaActual = parseInt(sliderEscala.value, 10);
-  valorEscala.textContent = escalaActual;
-  const mapa = generarTerreno(80, 60, escalaActual);
-  dibujarMapa(mapa);
+// Limpiar el canvas
+function limpiarMapa() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// Generar mapa inicial
-actualizarMapa();
+// ================================
+// Eventos
+// ================================
 
-// Botón: generar un nuevo terreno con la escala seleccionada
 btnGenerar.addEventListener("click", () => {
-  actualizarMapa();
+  limpiarMapa();
+  const mapa = generarTerreno(60, 45); // ancho x alto en celdas
+  dibujarTerreno(mapa);
 });
 
-// Botón: guardar el mapa como imagen
-btnGuardar.addEventListener("click", () => {
-  const enlace = document.createElement("a");
-  enlace.download = "mapa_fantasia.png";
-  enlace.href = canvas.toDataURL("image/png");
-  enlace.click();
-});
+btnLimpiar.addEventListener("click", limpiarMapa);
 
-// Slider: actualizar el mapa en tiempo real
-sliderEscala.addEventListener("input", () => {
-  actualizarMapa();
+// ================================
+// Inicialización automática
+// ================================
+
+// Genera un mapa al cargar la página
+window.addEventListener("load", () => {
+  const mapa = generarTerreno(60, 45);
+  dibujarTerreno(mapa);
 });
