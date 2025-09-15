@@ -39,15 +39,20 @@ function dibujarMapa(mapa) {
   }
 }
 
-// Generar mapa inicial
-let mapaActual = generarTerreno(80, 60, escalaActual);
-dibujarMapa(mapaActual);
-
-// Botón: generar un nuevo terreno
-btnGenerar.addEventListener("click", () => {
+// Función para generar y dibujar el mapa con la escala actual
+function actualizarMapa() {
   escalaActual = parseInt(sliderEscala.value, 10);
-  mapaActual = generarTerreno(80, 60, escalaActual);
-  dibujarMapa(mapaActual);
+  valorEscala.textContent = escalaActual;
+  const mapa = generarTerreno(80, 60, escalaActual);
+  dibujarMapa(mapa);
+}
+
+// Generar mapa inicial
+actualizarMapa();
+
+// Botón: generar un nuevo terreno con la escala seleccionada
+btnGenerar.addEventListener("click", () => {
+  actualizarMapa();
 });
 
 // Botón: guardar el mapa como imagen
@@ -58,7 +63,7 @@ btnGuardar.addEventListener("click", () => {
   enlace.click();
 });
 
-// Slider: actualizar valor mostrado
+// Slider: actualizar el mapa en tiempo real
 sliderEscala.addEventListener("input", () => {
-  valorEscala.textContent = sliderEscala.value;
+  actualizarMapa();
 });
