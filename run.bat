@@ -1,12 +1,17 @@
 @echo off
 echo Iniciando servidor Flask...
 
-:: Activar entorno virtual si existe
-IF EXIST venv\Scripts\activate.bat (
-    call venv\Scripts\activate.bat
+:: Crear entorno virtual si no existe
+IF NOT EXIST venv (
+    echo Creando entorno virtual...
+    python -m venv venv
 )
 
+:: Activar entorno virtual
+call venv\Scripts\activate.bat
+
 :: Instalar dependencias
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 
 :: Configurar variables de entorno
