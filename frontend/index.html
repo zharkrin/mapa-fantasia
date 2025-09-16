@@ -1,26 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Generador de Mapas de Fantasía</title>
-    <style>
-        body { font-family: sans-serif; background: #f0f0f0; margin: 20px; }
-        #controles { margin-bottom: 10px; }
-        canvas { border: 1px solid #333; background: #fff; display: block; cursor: grab; }
-        canvas:active { cursor: grabbing; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Generador de Mapas de Fantasía</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #eee;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #menu {
+      padding: 10px;
+      background-color: #222;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    button {
+      padding: 5px 10px;
+      background-color: #444;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    button:hover {
+      background-color: #666;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background-color: #000;
+      border: 1px solid #555;
+    }
+  </style>
 </head>
 <body>
-    <h1>Generador de Mapas de Fantasía</h1>
-    <div id="controles">
-        <label>
-            <input type="checkbox" id="activarRutasEspeciales">
-            Activar rutas mágicas y marítimas
-        </label>
-    </div>
+  <div id="menu">
+    <button id="btnMarinas">Activar Rutas Marinas</button>
+    <button id="btnMagicas">Activar Rutas Mágicas</button>
+    <button id="btnDesactivar">Desactivar Rutas Especiales</button>
+    <button id="btnReset">Resetear Mapa</button>
+  </div>
+  <canvas id="mapCanvas" width="1200" height="800"></canvas>
 
-    <canvas id="mapa"></canvas>
+  <script type="module">
+    import { activarRutasMarinas, activarRutasMagicas, desactivarRutasEspeciales, resetMapa } from './js/script.js';
 
-    <script type="module" src="./js/script.js"></script>
+    // Botones del menú
+    const btnMarinas = document.getElementById('btnMarinas');
+    const btnMagicas = document.getElementById('btnMagicas');
+    const btnDesactivar = document.getElementById('btnDesactivar');
+    const btnReset = document.getElementById('btnReset');
+
+    btnMarinas.addEventListener('click', () => activarRutasMarinas());
+    btnMagicas.addEventListener('click', () => activarRutasMagicas());
+    btnDesactivar.addEventListener('click', () => desactivarRutasEspeciales());
+    btnReset.addEventListener('click', () => resetMapa());
+  </script>
 </body>
 </html>
