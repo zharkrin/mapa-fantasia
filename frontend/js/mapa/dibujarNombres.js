@@ -1,32 +1,36 @@
 // frontend/js/mapa/dibujarNombres.js
 
+/**
+ * Dibuja los nombres de las regiones sobre el mapa
+ * - Blanco para la mayoría de biomas
+ * - Negro con borde blanco para helada y glaciar
+ * 
+ * @param {CanvasRenderingContext2D} ctx - contexto del canvas
+ * @param {Array} regiones - lista de regiones generadas
+ */
 export function dibujarNombres(ctx, regiones) {
+    ctx.font = "14px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "14px serif";
 
     regiones.forEach(region => {
-        if (!region.nombre || !region.centro) return;
+        let colorTexto = "white";
+        let borde = false;
 
-        const { x, y } = region.centro;
-
-        // Estilo por defecto: nombres en blanco
-        let colorRelleno = "white";
-        let colorBorde = "black";
-
-        // Si la región es helada, invertimos: negro con borde blanco
         if (region.tipo === "helada" || region.tipo === "glaciar") {
-            colorRelleno = "black";
-            colorBorde = "white";
+            colorTexto = "black";
+            borde = true;
         }
 
-        // Primero borde
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = colorBorde;
-        ctx.strokeText(region.nombre, x, y);
+        // dibujar borde blanco si corresponde
+        if (borde) {
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 3;
+            ctx.strokeText(region.nombre, region.centro.x, region.centro.y);
+        }
 
-        // Después relleno
-        ctx.fillStyle = colorRelleno;
-        ctx.fillText(region.nombre, x, y);
+        // dibujar texto principal
+        ctx.fillStyle = colorTexto;
+        ctx.fillText(region.nombre, region.centro.x, region.centro.y);
     });
 }
