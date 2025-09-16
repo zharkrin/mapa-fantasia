@@ -1,27 +1,26 @@
 // frontend/js/script.js
-import { generarTerreno } from "./mapa/generacionTerreno.js";
-import { dibujarMapa } from "./mapa/dibujarMapa.js";
+import { generarVoronoiReal, dibujarVoronoiReal } from "./mapa/generacionVoronoiReal.js";
 import { dibujarNombres } from "./mapa/dibujarNombres.js";
 
-// configuración inicial
+// Configuración inicial
 const ancho = 800;
 const alto = 600;
 const numRegiones = 12;
 
-// obtener referencia al canvas
+// Obtener referencia al canvas
 const canvas = document.getElementById("mapa");
 const ctx = canvas.getContext("2d");
 canvas.width = ancho;
 canvas.height = alto;
 
-// generar las regiones del terreno
-const regiones = generarTerreno(ancho, alto, numRegiones);
+// Generar regiones Voronoi reales
+const regiones = generarVoronoiReal(ancho, alto, numRegiones);
 
-// dibujar mapa
-dibujarMapa(ctx, regiones);
+// Dibujar mapa con polígonos naturales
+dibujarVoronoiReal(ctx, regiones);
 
-// dibujar nombres
+// Dibujar nombres sobre las regiones
 dibujarNombres(ctx, regiones);
 
-// debug opcional en consola
-console.log("Regiones generadas:", regiones);
+// Debug opcional
+console.log("Regiones generadas (Voronoi real):", regiones);
