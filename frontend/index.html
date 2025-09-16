@@ -2,26 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa de Fantasía</title>
+    <title>Generador de Mapas de Fantasía</title>
     <style>
-        body {
-            margin: 0;
-            background-color: #1e1e1e;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        canvas {
-            border: 2px solid #ffffff;
-            background-color: #000000;
-            display: block;
-        }
+        body { font-family: sans-serif; background: #f0f0f0; margin: 20px; }
+        #controles { margin-bottom: 10px; }
+        canvas { border: 1px solid #333; background: #fff; display: block; cursor: grab; }
+        canvas:active { cursor: grabbing; }
     </style>
 </head>
 <body>
+    <h1>Generador de Mapas de Fantasía</h1>
+    <div id="controles">
+        <label>
+            <input type="checkbox" id="activarRutasEspeciales">
+            Activar rutas mágicas y marítimas
+        </label>
+    </div>
+
     <canvas id="mapa"></canvas>
+
     <script type="module" src="./js/script.js"></script>
 </body>
 </html>
