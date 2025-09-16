@@ -51,36 +51,31 @@ function actualizarRutasEspeciales() {
     redibujar();
 }
 
-// Eventos: zoom con rueda (con límites)
+// ---- Eventos de zoom con rueda ----
 canvas.addEventListener("wheel", (e) => {
     e.preventDefault();
-    const factorZoom = 1.1;
+    aplicarZoom(e.deltaY < 0 ? 1.1 : 1 / 1.1, e.clientX, e.clientY);
+});
+
+// ---- Función de aplicar zoom (usada por ratón y teclado) ----
+function aplicarZoom(factor, cx, cy) {
     const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left - offsetX) / escala;
-    const y = (e.clientY - rect.top - offsetY) / escala;
+    const x = (cx - rect.left - offsetX) / escala;
+    const y = (cy - rect.top - offsetY) / escala;
 
-    let nuevaEscala = escala;
-
-    if (e.deltaY < 0) {
-        nuevaEscala *= factorZoom;
-    } else {
-        nuevaEscala /= factorZoom;
-    }
-
-    // Aplicar límites
+    let nuevaEscala = escala * factor;
     if (nuevaEscala < zoomMin) nuevaEscala = zoomMin;
     if (nuevaEscala > zoomMax) nuevaEscala = zoomMax;
 
-    // Ajustar desplazamiento solo si hay cambio
     if (nuevaEscala !== escala) {
         offsetX -= x * (nuevaEscala - escala);
         offsetY -= y * (nuevaEscala - escala);
         escala = nuevaEscala;
         redibujar();
     }
-});
+}
 
-// Eventos: arrastrar con ratón
+// ---- Eventos de arrastrar con ratón ----
 canvas.addEventListener("mousedown", (e) => {
     arrastrando = true;
     inicioArrastre.x = e.clientX - offsetX;
@@ -93,6 +88,36 @@ canvas.addEventListener("mousemove", (e) => {
         offsetX = e.clientX - inicioArrastre.x;
         offsetY = e.clientY - inicioArrastre.y;
         redibujar();
+    }
+});
+
+// ---- Eventos de teclado ----
+document.addEventListener("keydown", (e) => {
+    const paso = 20; // movimiento con flechas
+    switch (e.key) {
+        case "+":
+        case "=": // algunas teclas usan "=" para "+"
+            aplicarZoom(1.1, canvas.width / 2, canvas.height / 2);
+            break;
+        case "-":
+            aplicarZoom(1 / 1.1, canvas.width / 2, canvas.height / 2);
+            break;
+        case "ArrowUp":
+            offsetY += paso;
+            redibujar();
+            break;
+        case "ArrowDown":
+            offsetY -= paso;
+            redibujar();
+            break;
+        case "ArrowLeft":
+            offsetX += paso;
+            redibujar();
+            break;
+        case "ArrowRight":
+            offsetX -= paso;
+            redibujar();
+            break;
     }
 });
 
