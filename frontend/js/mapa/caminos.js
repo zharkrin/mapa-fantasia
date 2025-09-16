@@ -1,38 +1,44 @@
-// caminos.js
-// Generación de caminos simples entre puntos de interés (ciudades) usando vecinos adyacentes
+// frontend/js/mapa/caminos.js
 
-export function generarCaminos(mapa, ciudades = []) {
-  const ancho = mapa[0].length;
-  const alto = mapa.length;
+/**
+ * Genera caminos entre regiones
+ * @param {Array} regiones - lista de regiones con {centro: {x, y}}
+ * @param {number} maxDist - distancia máxima para crear un camino directo
+ * @returns {Array} lista de caminos [{origen, destino}]
+ */
+export function generarCaminos(regiones, maxDist = 250) {
+    const caminos = [];
 
-  // Si no hay ciudades, generar puntos aleatorios
-  if (ciudades.length === 0) {
-    for (let i = 0; i < 5; i++) {
-      const x = Math.floor(Math.random() * ancho);
-      const y = Math.floor(Math.random() * alto);
-      if (mapa[y][x] !== "agua" && mapa[y][x] !== "montaña") {
-        ciudades.push({ x, y });
-      }
+    for (let i = 0; i < regiones.length; i++) {
+        for (let j = i + 1; j < regiones.length; j++) {
+            const r1 = regiones[i];
+            const r2 = regiones[j];
+            const dx = r1.centro.x - r2.centro.x;
+            const dy = r1.centro.y - r2.centro.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist <= maxDist) {
+                caminos.push({ origen: r1, destino: r2 });
+            }
+        }
     }
-  }
 
-  // Conectar cada ciudad con la siguiente
-  for (let i = 0; i < ciudades.length - 1; i++) {
-    let start = ciudades[i];
-    let end = ciudades[i + 1];
+    return caminos;
+}
 
-    let pos = { ...start };
-    while (pos.x !== end.x || pos.y !== end.y) {
-      if (mapa[pos.y][pos.x] === "tierra" || mapa[pos.y][pos.x] === "pradera" || mapa[pos.y][pos.x] === "bosque") {
-        mapa[pos.y][pos.x] = "camino";
-      }
+/**
+ * Dibuja caminos en el canvas
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Array} caminos - lista de caminos generados
+ */
+export function dibujarCaminos(ctx, caminos) {
+    ctx.strokeStyle = "#FFD700"; // color dorado para caminos
+    ctx.lineWidth = 2;
 
-      if (pos.x < end.x) pos.x++;
-      else if (pos.x > end.x) pos.x--;
-      if (pos.y < end.y) pos.y++;
-      else if (pos.y > end.y) pos.y--;
-    }
-  }
-
-  return mapa;
+    caminos.forEach(c => {
+        ctx.beginPath();
+        ctx.moveTo(c.origen.centro.x, c.origen.centro.y);
+        ctx.lineTo(c.destino.centro.x, c.destino.centro.y);
+        ctx.stroke();
+    });
 }
