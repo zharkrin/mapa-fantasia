@@ -18,24 +18,31 @@ canvas.height = alto;
 // 1️⃣ Generar regiones Voronoi reales
 const regiones = generarVoronoiReal(ancho, alto, numRegiones);
 
-// 2️⃣ Dibujar mapa con polígonos de terreno
+// 2️⃣ Dibujar mapa base y nombres
 dibujarVoronoiReal(ctx, regiones);
+dibujarNombres(ctx, regiones);
 
-// 3️⃣ Generar caminos terrestres finales
+// 3️⃣ Generar y dibujar caminos terrestres
 const caminos = generarCaminosFinales(regiones, ancho, alto, 20, 250);
 dibujarCaminosFinales(ctx, caminos);
 
-// 4️⃣ Generar rutas especiales opcionales (desactivadas por defecto)
-const rutasOpcionales = generarRutasEspeciales(regiones, ancho, alto, 300, false);
-// Para activarlas, cambiar false a true
-// const rutasOpcionales = generarRutasEspeciales(regiones, ancho, alto, 300, true);
+// Función para (re)dibujar rutas especiales según checkbox
+function actualizarRutasEspeciales(){
+    // Limpiar canvas y volver a dibujar mapa, caminos y nombres
+    ctx.clearRect(0, 0, ancho, alto);
+    dibujarVoronoiReal(ctx, regiones);
+    dibujarCaminosFinales(ctx, caminos);
+    dibujarNombres(ctx, regiones);
 
-dibujarRutasEspeciales(ctx, rutasOpcionales);
+    // Leer checkbox
+    const activar = document.getElementById("activarRutasEspeciales").checked;
+    const rutasOpcionales = generarRutasEspeciales(regiones, ancho, alto, 300, activar);
+    dibujarRutasEspeciales(ctx, rutasOpcionales);
+}
 
-// 5️⃣ Dibujar nombres de las regiones
-dibujarNombres(ctx, regiones);
+// Evento checkbox
+document.getElementById("activarRutasEspeciales").addEventListener("change", actualizarRutasEspeciales);
 
 // Debug opcional
 console.log("Regiones generadas:", regiones);
 console.log("Caminos finales generados:", caminos);
-console.log("Rutas especiales generadas:", rutasOpcionales);
