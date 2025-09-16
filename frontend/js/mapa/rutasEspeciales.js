@@ -1,82 +1,66 @@
 // frontend/js/mapa/rutasEspeciales.js
 
 /**
- * Genera rutas mágicas y marítimas entre regiones
- * @param {Array} regiones - lista de regiones con {centro, tipo}
- * @param {number} ancho - ancho del mapa
- * @param {number} alto - alto del mapa
- * @param {number} maxDist - distancia máxima para rutas especiales
- * @param {boolean} activar - si true genera rutas, si false devuelve array vacío
- * @returns {Array} rutas [{origen, destino, ruta, tipo}]
+ * Generador de rutas especiales (marinas y mágicas).
+ * Estas rutas son opcionales y no se generan por defecto.
+ * Se podrán activar manualmente desde el script principal cuando se desee.
  */
-export function generarRutasEspeciales(regiones, ancho, alto, maxDist = 300, activar = false) {
-    if (!activar) return []; // No generar si está desactivado
 
-    const rutas = [];
+import { asentamientos } from './asentamientos.js';
 
-    regiones.forEach((r1, i) => {
-        for (let j = i + 1; j < regiones.length; j++) {
-            const r2 = regiones[j];
-            const dx = r1.centro.x - r2.centro.x;
-            const dy = r1.centro.y - r2.centro.y;
-            const dist = Math.sqrt(dx*dx + dy*dy);
-
-            if(dist <= maxDist){
-                let tipo = "maritima";
-                if(Math.random() < 0.15) tipo = "magica";
-
-                const ruta = generarLineaCurva(r1.centro, r2.centro, tipo);
-                rutas.push({origen: r1, destino: r2, tipo, ruta});
-            }
-        }
-    });
-
-    return rutas;
-}
+export let rutasEspeciales = {
+    marinas: [],
+    magicas: []
+};
 
 /**
- * Dibuja rutas especiales en canvas
- * @param {CanvasRenderingContext2D} ctx
- * @param {Array} rutas
+ * Genera rutas marinas entre puertos.
+ * Solo conecta asentamientos que tengan atributo "puerto: true".
  */
-export function dibujarRutasEspeciales(ctx, rutas){
-    rutas.forEach(r => {
-        switch(r.tipo){
-            case "maritima": ctx.strokeStyle = "#1E90FF"; ctx.lineWidth=2; ctx.setLineDash([4,4]); break;
-            case "magica": ctx.strokeStyle = "#9400D3"; ctx.lineWidth=3; ctx.setLineDash([6,3]); break;
-            default: ctx.strokeStyle="#AAAAAA"; ctx.lineWidth=1.5;
-        }
+export function generarRutasMarinas() {
+    rutasEspeciales.marinas = [];
 
-        ctx.beginPath();
-        const rutaPuntos = r.ruta;
-        if(rutaPuntos.length > 0){
-            ctx.moveTo(rutaPuntos[0].x, rutaPuntos[0].y);
-            for(let i=1; i<rutaPuntos.length; i++){
-                ctx.lineTo(rutaPuntos[i].x, rutaPuntos[i].y);
-            }
-        }
-        ctx.stroke();
-        ctx.setLineDash([]);
-    });
-}
-
-/**
- * Genera una línea curva simple entre dos puntos
- * @param {Object} start {x,y}
- * @param {Object} end {x,y}
- * @param {string} tipo
- * @returns {Array} puntos de la ruta
- */
-function generarLineaCurva(start, end, tipo){
-    const puntos = [];
-    const pasos = 10;
-    for(let i=0; i<=pasos; i++){
-        const t = i/pasos;
-        // Curva tipo S solo para rutas mágicas
-        const offset = (tipo === "magica") ? Math.sin(t * Math.PI)*20 : 0;
-        const x = start.x*(1-t) + end.x*t + offset;
-        const y = start.y*(1-t) + end.y*t + offset;
-        puntos.push({x, y});
+    const puertos = asentamientos.filter(a => a.puerto === true);
+    if (puertos.length < 2) {
+        console.warn("No hay suficientes puertos para rutas marinas.");
+        return;
     }
-    return puntos;
+
+    for (let i = 0; i < puertos.length; i++) {
+        for (let j = i + 1; j < puertos.length; j++) {
+            const desde = puertos[i];
+            const hasta = puertos[j];
+            rutasEspeciales.marinas.push({ desde, hasta });
+        }
+    }
+}
+
+/**
+ * Genera rutas mágicas entre ciudades con nodos de poder.
+ * Conecta asentamientos que tengan atributo "magico: true".
+ */
+export function generarRutasMagicas() {
+    rutasEspeciales.magicas = [];
+
+    const nodos = asentamientos.filter(a => a.magico === true);
+    if (nodos.length < 2) {
+        console.warn("No hay suficientes nodos mágicos para rutas mágicas.");
+        return;
+    }
+
+    for (let i = 0; i < nodos.length; i++) {
+        for (let j = i + 1; j < nodos.length; j++) {
+            const desde = nodos[i];
+            const hasta = nodos[j];
+            rutasEspeciales.magicas.push({ desde, hasta });
+        }
+    }
+}
+
+/**
+ * Limpia todas las rutas especiales (reset).
+ */
+export function limpiarRutasEspeciales() {
+    rutasEspeciales.marinas = [];
+    rutasEspeciales.magicas = [];
 }
