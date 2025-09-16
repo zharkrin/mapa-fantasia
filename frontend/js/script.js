@@ -1,7 +1,7 @@
 // frontend/js/script.js
 import { generarVoronoiReal, dibujarVoronoiReal } from "./mapa/generacionVoronoiReal.js";
 import { dibujarNombres } from "./mapa/dibujarNombres.js";
-import { generarCaminosCurvos, dibujarCaminosCurvos } from "./mapa/caminosCurvos.js";
+import { generarCaminosFinales, dibujarCaminosFinales } from "./mapa/caminosFinales.js";
 
 // Configuración del mapa
 const ancho = 800;
@@ -20,15 +20,15 @@ const regiones = generarVoronoiReal(ancho, alto, numRegiones);
 // 2️⃣ Dibujar mapa con polígonos de terreno
 dibujarVoronoiReal(ctx, regiones);
 
-// 3️⃣ Generar caminos curvos avanzados
-const caminos = generarCaminosCurvos(regiones, ancho, alto, 20);
+// 3️⃣ Generar caminos finales (curvos y suavizados)
+const caminos = generarCaminosFinales(regiones, ancho, alto, 20, 250);
 
 // 4️⃣ Dibujar caminos sobre el mapa
-dibujarCaminosCurvos(ctx, caminos);
+dibujarCaminosFinales(ctx, caminos);
 
 // 5️⃣ Dibujar nombres de las regiones
 dibujarNombres(ctx, regiones);
 
 // Debug opcional
 console.log("Regiones generadas:", regiones);
-console.log("Caminos curvos generados:", caminos);
+console.log("Caminos finales generados:", caminos);
