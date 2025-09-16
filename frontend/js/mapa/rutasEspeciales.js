@@ -6,9 +6,12 @@
  * @param {number} ancho - ancho del mapa
  * @param {number} alto - alto del mapa
  * @param {number} maxDist - distancia máxima para rutas especiales
+ * @param {boolean} activar - si true genera rutas, si false devuelve array vacío
  * @returns {Array} rutas [{origen, destino, ruta, tipo}]
  */
-export function generarRutasEspeciales(regiones, ancho, alto, maxDist = 300) {
+export function generarRutasEspeciales(regiones, ancho, alto, maxDist = 300, activar = false) {
+    if (!activar) return []; // No generar si está desactivado
+
     const rutas = [];
 
     regiones.forEach((r1, i) => {
@@ -69,7 +72,7 @@ function generarLineaCurva(start, end, tipo){
     const pasos = 10;
     for(let i=0; i<=pasos; i++){
         const t = i/pasos;
-        // Curva simple tipo S para rutas mágicas
+        // Curva tipo S solo para rutas mágicas
         const offset = (tipo === "magica") ? Math.sin(t * Math.PI)*20 : 0;
         const x = start.x*(1-t) + end.x*t + offset;
         const y = start.y*(1-t) + end.y*t + offset;
