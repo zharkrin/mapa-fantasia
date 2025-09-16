@@ -22,6 +22,10 @@ let offsetY = 0;
 let arrastrando = false;
 let inicioArrastre = { x: 0, y: 0 };
 
+// Límites de zoom
+const zoomMin = 0.5;
+const zoomMax = 5;
+
 // Generación de mapa base
 const regiones = generarVoronoiReal(ancho, alto, numRegiones);
 const caminos = generarCaminosFinales(regiones, ancho, alto, 20, 250);
@@ -47,7 +51,7 @@ function actualizarRutasEspeciales() {
     redibujar();
 }
 
-// Eventos: zoom con rueda
+// Eventos: zoom con rueda (con límites)
 canvas.addEventListener("wheel", (e) => {
     e.preventDefault();
     const factorZoom = 1.1;
@@ -55,16 +59,25 @@ canvas.addEventListener("wheel", (e) => {
     const x = (e.clientX - rect.left - offsetX) / escala;
     const y = (e.clientY - rect.top - offsetY) / escala;
 
+    let nuevaEscala = escala;
+
     if (e.deltaY < 0) {
-        escala *= factorZoom;
-        offsetX -= x * (factorZoom - 1) * escala;
-        offsetY -= y * (factorZoom - 1) * escala;
+        nuevaEscala *= factorZoom;
     } else {
-        escala /= factorZoom;
-        offsetX += x * (1 - 1 / factorZoom) * escala;
-        offsetY += y * (1 - 1 / factorZoom) * escala;
+        nuevaEscala /= factorZoom;
     }
-    redibujar();
+
+    // Aplicar límites
+    if (nuevaEscala < zoomMin) nuevaEscala = zoomMin;
+    if (nuevaEscala > zoomMax) nuevaEscala = zoomMax;
+
+    // Ajustar desplazamiento solo si hay cambio
+    if (nuevaEscala !== escala) {
+        offsetX -= x * (nuevaEscala - escala);
+        offsetY -= y * (nuevaEscala - escala);
+        escala = nuevaEscala;
+        redibujar();
+    }
 });
 
 // Eventos: arrastrar con ratón
