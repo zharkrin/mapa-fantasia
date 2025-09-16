@@ -1,12 +1,3 @@
-// frontend/js/mapa/caminosAvanzados.js
-import { coloresTerreno } from "./coloresTerreno.js";
-
-/**
- * Genera caminos avanzados entre regiones
- * @param {Array} regiones - lista de regiones con {centro, tipo}
- * @param {number} maxDist - distancia máxima para conexión
- * @returns {Array} lista de caminos [{origen, destino, tipo}]
- */
 export function generarCaminosAvanzados(regiones, maxDist = 250) {
     const caminos = [];
 
@@ -19,8 +10,7 @@ export function generarCaminosAvanzados(regiones, maxDist = 250) {
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist <= maxDist) {
-                // Asignar tipo de camino según bioma o probabilidad
-                let tipo = "comercial"; // default
+                let tipo = "comercial";
                 if (r1.tipo === "montaña" || r2.tipo === "montaña") tipo = "militar";
                 if (Math.random() < 0.1) tipo = "magico";
 
@@ -32,26 +22,21 @@ export function generarCaminosAvanzados(regiones, maxDist = 250) {
     return caminos;
 }
 
-/**
- * Dibuja caminos avanzados en canvas
- * @param {CanvasRenderingContext2D} ctx
- * @param {Array} caminos
- */
 export function dibujarCaminosAvanzados(ctx, caminos) {
     caminos.forEach(c => {
         switch (c.tipo) {
             case "comercial":
-                ctx.strokeStyle = "#FFD700"; // dorado
+                ctx.strokeStyle = "#FFD700";
                 ctx.lineWidth = 2;
                 break;
             case "militar":
-                ctx.strokeStyle = "#FF4500"; // rojo fuerte
+                ctx.strokeStyle = "#FF4500";
                 ctx.lineWidth = 2.5;
                 break;
             case "magico":
-                ctx.strokeStyle = "#4B0082"; // índigo
+                ctx.strokeStyle = "#4B0082";
                 ctx.lineWidth = 3;
-                ctx.setLineDash([5, 5]); // línea punteada
+                ctx.setLineDash([5, 5]);
                 break;
             default:
                 ctx.strokeStyle = "#AAAAAA";
@@ -62,7 +47,6 @@ export function dibujarCaminosAvanzados(ctx, caminos) {
         ctx.moveTo(c.origen.centro.x, c.origen.centro.y);
         ctx.lineTo(c.destino.centro.x, c.destino.centro.y);
         ctx.stroke();
-
-        ctx.setLineDash([]); // resetear dash
+        ctx.setLineDash([]);
     });
 }
