@@ -1,8 +1,9 @@
+// frontend/js/script.js
 import { generarVoronoiReal, dibujarVoronoiReal } from "./mapa/generacionVoronoiReal.js";
 import { dibujarNombres } from "./mapa/dibujarNombres.js";
-import { generarCaminosAvanzados, dibujarCaminosAvanzados } from "./mapa/caminosAvanzados.js";
+import { generarCaminosCurvos, dibujarCaminosCurvos } from "./mapa/caminosCurvos.js";
 
-// Configuración inicial
+// Configuración del mapa
 const ancho = 800;
 const alto = 600;
 const numRegiones = 12;
@@ -13,21 +14,21 @@ const ctx = canvas.getContext("2d");
 canvas.width = ancho;
 canvas.height = alto;
 
-// 1. Generar regiones Voronoi reales
+// 1️⃣ Generar regiones Voronoi reales
 const regiones = generarVoronoiReal(ancho, alto, numRegiones);
 
-// 2. Dibujar mapa
+// 2️⃣ Dibujar mapa con polígonos de terreno
 dibujarVoronoiReal(ctx, regiones);
 
-// 3. Generar caminos avanzados
-const caminos = generarCaminosAvanzados(regiones, 250);
+// 3️⃣ Generar caminos curvos avanzados
+const caminos = generarCaminosCurvos(regiones, ancho, alto, 20);
 
-// 4. Dibujar caminos
-dibujarCaminosAvanzados(ctx, caminos);
+// 4️⃣ Dibujar caminos sobre el mapa
+dibujarCaminosCurvos(ctx, caminos);
 
-// 5. Dibujar nombres
+// 5️⃣ Dibujar nombres de las regiones
 dibujarNombres(ctx, regiones);
 
-// Debug
+// Debug opcional
 console.log("Regiones generadas:", regiones);
-console.log("Caminos generados:", caminos);
+console.log("Caminos curvos generados:", caminos);
