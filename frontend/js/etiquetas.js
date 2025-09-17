@@ -1,42 +1,58 @@
-// etiquetas.js
-// Módulo encargado de dibujar etiquetas (nombres) sobre el mapa
+// frontend/js/etiquetas.js
 
 /**
- * Dibuja una etiqueta de texto en el canvas
- * @param {CanvasRenderingContext2D} ctx - Contexto 2D del canvas
- * @param {string} texto - Texto a mostrar
- * @param {number} x - Coordenada X
- * @param {number} y - Coordenada Y
- * @param {string} tipo - Tipo de etiqueta ("bioma", "montaña", "río")
+ * Módulo para gestionar etiquetas en el mapa
+ * Tipos de etiquetas: ciudades, naciones, montañas, ríos, biomas
  */
-export function dibujarEtiqueta(ctx, texto, x, y, tipo = "bioma") {
-  ctx.save();
 
-  // Estilo según el tipo
-  if (tipo === "bioma") {
-    ctx.font = "16px serif";
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-  } else if (tipo === "montaña") {
-    ctx.font = "bold 14px serif";
-    ctx.fillStyle = "rgba(80, 60, 40, 0.8)";
-  } else if (tipo === "río") {
-    ctx.font = "italic 13px serif";
-    ctx.fillStyle = "rgba(30, 60, 150, 0.8)";
-  }
+export const Etiquetas = (() => {
 
-  ctx.textAlign = "center";
-  ctx.fillText(texto, x, y);
+    // Listado de etiquetas por tipo
+    const etiquetas = {
+        ciudades: [],
+        naciones: [],
+        montañas: [],
+        rios: [],
+        biomas: []
+    };
 
-  ctx.restore();
-}
+    // Añadir una etiqueta
+    function agregar(tipo, nombre, coordenadas) {
+        if (!etiquetas[tipo]) {
+            console.warn(`Tipo de etiqueta desconocido: ${tipo}`);
+            return;
+        }
+        etiquetas[tipo].push({
+            nombre,
+            x: coordenadas.x,
+            y: coordenadas.y
+        });
+    }
 
-/**
- * Dibuja múltiples etiquetas en el mapa
- * @param {CanvasRenderingContext2D} ctx - Contexto del canvas
- * @param {Array} etiquetas - Lista de objetos {texto, x, y, tipo}
- */
-export function dibujarEtiquetas(ctx, etiquetas) {
-  etiquetas.forEach(etiqueta => {
-    dibujarEtiqueta(ctx, etiqueta.texto, etiqueta.x, etiqueta.y, etiqueta.tipo);
-  });
-}
+    // Obtener todas las etiquetas de un tipo
+    function obtener(tipo) {
+        return etiquetas[tipo] || [];
+    }
+
+    // Limpiar etiquetas de un tipo
+    function limpiar(tipo) {
+        if (etiquetas[tipo]) {
+            etiquetas[tipo] = [];
+        }
+    }
+
+    // Limpiar todas las etiquetas
+    function limpiarTodo() {
+        for (const tipo in etiquetas) {
+            etiquetas[tipo] = [];
+        }
+    }
+
+    // Exportar funciones públicas
+    return {
+        agregar,
+        obtener,
+        limpiar,
+        limpiarTodo
+    };
+})();
