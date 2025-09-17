@@ -5,6 +5,7 @@ import { dibujarMapa } from './mapa/dibujarMapa.js';
 import { Rutas } from './rutas/rutas.js';
 import { DrawRutas } from './ui/drawRutas.js';
 import { GeneradorNombres } from './nombresGeograficos.js';
+import { DibujarNombres } from './mapa/dibujarNombres.js';
 
 /**
  * Script principal del generador de mapas
@@ -39,5 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
     GeneradorNombres.asignarRios(listaRios);
 
     // Paso 6: Dibujar etiquetas de nombres en el mapa
-    console.log("Nombres añadidos.");
+    console.log("Dibujando nombres...");
+    DibujarNombres.dibujar(ctx);
+
+    console.log("Mapa generado con éxito.");
 });
