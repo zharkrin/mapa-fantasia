@@ -1,24 +1,47 @@
-export function dibujarNombres(ctx, regiones) {
-    ctx.font = "14px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+// frontend/js/mapa/dibujarNombres.js
 
-    regiones.forEach(region => {
-        let colorTexto = "white";
-        let borde = false;
+import { Etiquetas } from '../etiquetas.js';
 
-        if (region.tipo === "helada" || region.tipo === "glaciar") {
-            colorTexto = "black";
-            borde = true;
-        }
+/**
+ * Módulo encargado de dibujar nombres en el canvas
+ * Soporta nombres de:
+ *  - Montañas
+ *  - Ríos
+ *  - Otros elementos geográficos
+ */
 
-        if (borde) {
-            ctx.strokeStyle = "white";
-            ctx.lineWidth = 3;
-            ctx.strokeText(region.nombre, region.centro.x, region.centro.y);
-        }
+export const DibujarNombres = (() => {
 
-        ctx.fillStyle = colorTexto;
-        ctx.fillText(region.nombre, region.centro.x, region.centro.y);
-    });
-}
+    function dibujar(ctx) {
+        const etiquetas = Etiquetas.obtenerTodas();
+
+        ctx.save();
+        ctx.font = "12px serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        etiquetas.forEach(etiqueta => {
+            switch (etiqueta.tipo) {
+                case "montañas":
+                    ctx.fillStyle = "white"; // Montañas en blanco
+                    ctx.fillText(etiqueta.texto, etiqueta.pos.x, etiqueta.pos.y);
+                    break;
+
+                case "rios":
+                    ctx.fillStyle = "blue"; // Ríos en azul
+                    ctx.fillText(etiqueta.texto, etiqueta.pos.x, etiqueta.pos.y);
+                    break;
+
+                default:
+                    ctx.fillStyle = "black"; // Otros elementos en negro
+                    ctx.fillText(etiqueta.texto, etiqueta.pos.x, etiqueta.pos.y);
+            }
+        });
+
+        ctx.restore();
+    }
+
+    return {
+        dibujar
+    };
+})();
