@@ -1,42 +1,43 @@
 // frontend/js/script.js
 
-import { Etiquetas } from './etiquetas.js';
+import { generarTerreno } from './mapa/generacionTerreno.js';
+import { dibujarMapa } from './mapa/dibujarMapa.js';
 import { Rutas } from './rutas/rutas.js';
 import { DrawRutas } from './ui/drawRutas.js';
-import { Biomas } from './mapa/biomas.js';
-import { CaminosFinales } from './mapa/caminosFinales.js';
-import { GeneracionTerreno } from './mapa/generacionTerreno.js';
+import { GeneradorNombres } from './nombresGeograficos.js';
 
-// Inicializar mapa
-function inicializarMapa() {
-    // 1. Generar terreno
-    GeneracionTerreno.generar();
+/**
+ * Script principal del generador de mapas
+ * Coordina la generación de terreno, rutas, nombres y renderizado.
+ */
 
-    // 2. Generar biomas
-    Biomas.asignarBiomas();
+document.addEventListener("DOMContentLoaded", () => {
+    const canvas = document.getElementById("mapa");
+    const ctx = canvas.getContext("2d");
 
-    // 3. Generar nombres geográficos
-    Etiquetas.agregar('ciudades', 'CiudadEjemplo', { x: 100, y: 150 });
-    Etiquetas.agregar('montañas', 'MontañaEjemplo', { x: 300, y: 200 });
-    Etiquetas.agregar('rios', 'RíoEjemplo', { x: 50, y: 400 });
+    // Paso 1: Generar terreno
+    console.log("Generando terreno...");
+    const terreno = generarTerreno(canvas.width, canvas.height);
 
-    // 4. Generar rutas terrestres
-    const ciudades = Etiquetas.obtener('ciudades');
-    Rutas.generarTerrestres(ciudades);
+    // Paso 2: Dibujar terreno en el mapa
+    console.log("Dibujando mapa...");
+    dibujarMapa(ctx, terreno);
 
-    // Opcional: rutas marinas/mágicas si activadas
-    const puertos = []; // ejemplo
-    Rutas.generarMarinas(puertos);
+    // Paso 3: Generar rutas terrestres principales
+    console.log("Generando rutas...");
+    const rutas = Rutas.generar(terreno);
 
-    const puntosMagicos = []; // ejemplo
-    Rutas.generarMagicas(puntosMagicos);
+    // Paso 4: Dibujar rutas
+    DrawRutas.dibujar(ctx, rutas);
 
-    // 5. Dibujar todo en canvas
-    DrawRutas.inicializar('canvasMapa');
-    DrawRutas.dibujarMapaCompleto();
-}
+    // Paso 5: Generar y asignar nombres a ríos y montañas
+    console.log("Asignando nombres a montañas y ríos...");
+    const listaMontanas = terreno.montanas || [];
+    const listaRios = terreno.rios || [];
 
-// Esperar a que cargue el DOM
-document.addEventListener('DOMContentLoaded', () => {
-    inicializarMapa();
+    GeneradorNombres.asignarMontanas(listaMontanas);
+    GeneradorNombres.asignarRios(listaRios);
+
+    // Paso 6: Dibujar etiquetas de nombres en el mapa
+    console.log("Nombres añadidos.");
 });
