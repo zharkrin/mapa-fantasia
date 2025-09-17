@@ -1,33 +1,34 @@
-// ===============================
-// Generador de Nombres para Montañas y Ríos
-// ===============================
+// frontend/js/nombresMontañasRios.js
 
-// Prefijos y sufijos para montañas
-const prefijosMontaña = ["Monte", "Pico", "Cima", "Sierra", "Cerro"];
-const sufijosMontaña = ["del Fuego", "de la Niebla", "de la Sombra", "del Norte", "de Cristal"];
+/**
+ * Módulo para generar nombres de montañas y ríos
+ * Utiliza patrones fonéticos simples para variedad y realismo
+ */
 
-// Prefijos y sufijos para ríos
-const prefijosRio = ["Río", "Arroyo", "Curso", "Cauce"];
-const sufijosRio = ["Serpenteante", "Tranquilo", "Oscuro", "Rápido", "Eterno"];
+export const NombresGeograficos = (() => {
 
-// Función para generar nombre de montaña
-export function generarNombreMontaña() {
-  const prefijo = prefijosMontaña[Math.floor(Math.random() * prefijosMontaña.length)];
-  const sufijo = sufijosMontaña[Math.floor(Math.random() * sufijosMontaña.length)];
-  return `${prefijo} ${sufijo}`;
-}
+    const prefMontanas = ["Alto", "Pico", "Monte", "Cima", "Cordillera", "Sierra"];
+    const sufMontanas = ["del Fuego", "del Viento", "de la Niebla", "Oscura", "Nevada", "Sagrada"];
+    
+    const prefRios = ["Río", "Arroyo", "Canal", "Quebrada", "Torrent"];
+    const sufRios = ["de Plata", "del Norte", "de la Luna", "Oscuro", "Serpenteante", "Claro"];
 
-// Función para generar nombre de río
-export function generarNombreRio() {
-  const prefijo = prefijosRio[Math.floor(Math.random() * prefijosRio.length)];
-  const sufijo = sufijosRio[Math.floor(Math.random() * sufijosRio.length)];
-  return `${prefijo} ${sufijo}`;
-}
+    // Generar nombre de montaña
+    function generarMontana() {
+        const pref = prefMontanas[Math.floor(Math.random() * prefMontanas.length)];
+        const suf = sufMontanas[Math.floor(Math.random() * sufMontanas.length)];
+        return `${pref} ${suf}`;
+    }
 
-// Ejemplo de uso
-/*
-for (let i = 0; i < 5; i++) {
-  console.log(generarNombreMontaña());
-  console.log(generarNombreRio());
-}
-*/
+    // Generar nombre de río
+    function generarRio() {
+        const pref = prefRios[Math.floor(Math.random() * prefRios.length)];
+        const suf = sufRios[Math.floor(Math.random() * sufRios.length)];
+        return `${pref} ${suf}`;
+    }
+
+    return {
+        generarMontana,
+        generarRio
+    };
+})();
