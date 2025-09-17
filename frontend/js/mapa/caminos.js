@@ -1,23 +1,10 @@
 // frontend/js/mapa/caminos.js
-// Módulo final de caminos terrestres
-// - Genera conexiones entre regiones/asentamientos
-// - Evita obstáculos (montañas, glaciares)
-// - Calcula rutas con A* sobre cuadrícula
-// - Suaviza rutas (interpolación básica)
-// - Dibuja rutas con estilos por tipo (comercial, militar, mágico)
+// Generación y renderizado de caminos en el mapa
 
 /**
- * Genera caminos terrestres entre regiones.
- * @param {Array} regiones - array de regiones/asentamientos con {centro: {x,y}, tipo}
- * @param {number} ancho - ancho del mapa (px)
- * @param {number} alto - alto del mapa (px)
- * @param {Object} [opts] - opciones
- *    opts.gridSize (px) tamaño de celda para la cuadrícula A* (default 20)
- *    opts.maxDist distancia máxima para intentar conectar regiones (default 300)
- *    opts.maxConexiones número máximo de conexiones por región (default 3)
- *    opts.costObstacle coste para celdas con obstáculos (default 9999)
- *    opts.probMagico probabilidad de que una conexión sea "mágica" (default 0.1)
- * @returns {Array} caminos - [{ origen, destino, tipo, ruta:[{x,y}] }]
+ * Genera caminos terrestres entre regiones
+ * - Por defecto: comerciales y militares
+ * - Opcionales: mágicos y marinos
  */
 export function generarCaminos(regiones, ancho, alto, opts = {}) {
   const {
@@ -25,15 +12,15 @@ export function generarCaminos(regiones, ancho, alto, opts = {}) {
     maxDist = 300,
     maxConexiones = 3,
     costObstacle = 9999,
-    probMagico = 0.1
+    generarMagicos = false,
+    generarMarinos = false,
   } = opts;
 
-  // Preparar cuadrícula de costes
   const cols = Math.ceil(ancho / gridSize);
   const rows = Math.ceil(alto / gridSize);
   const grid = new Array(rows).fill(0).map(() => new Array(cols).fill(1));
 
-  // Marcar obstáculos según tipo de región (montaña, glaciar -> alto coste)
+  // Obstáculos: montañas y glaciares
   regiones.forEach(r => {
     if (!r || !r.centro) return;
     if (r.tipo === "montaña" || r.tipo === "glaciar") {
@@ -46,18 +33,15 @@ export function generarCaminos(regiones, ancho, alto, opts = {}) {
   });
 
   const caminos = [];
-  // Para controlar cuántas conexiones tiene cada región
-  const contadorConexiones = new Map(regiones.map((r, i) => [r, 0]));
+  const conexiones = new Map(regiones.map(r => [r, 0]));
 
-  // Intenta conectar cada par de regiones cercanas
   for (let i = 0; i < regiones.length; i++) {
     const a = regiones[i];
     if (!a || !a.centro) continue;
 
-    // Ordenar posibles destinos por distancia (más cercano primero)
     const candidatos = [];
     for (let j = 0; j < regiones.length; j++) {
-      if (j === i) continue;
+      if (i === j) continue;
       const b = regiones[j];
       if (!b || !b.centro) continue;
       const d = distancia(a.centro, b.centro);
@@ -67,34 +51,23 @@ export function generarCaminos(regiones, ancho, alto, opts = {}) {
 
     for (const cand of candidatos) {
       const b = cand.b;
-
-      // Si ya superó conexiones, saltar
-      if (contadorConexiones.get(a) >= maxConexiones) break;
-      if (contadorConexiones.get(b) >= maxConexiones) continue;
-
-      // Evitar duplicados
+      if (conexiones.get(a) >= maxConexiones) break;
+      if (conexiones.get(b) >= maxConexiones) continue;
       if (existeCaminoEntre(caminos, a, b)) continue;
 
-      // Elegir tipo de camino
+      // Tipo de camino
       let tipo = "comercial";
       if (a.tipo === "montaña" || b.tipo === "montaña") tipo = "militar";
-      if (Math.random() < probMagico) tipo = "magico";
+      if (generarMagicos && Math.random() < 0.1) tipo = "magico";
+      if (generarMarinos && (a.tipo === "costa" || b.tipo === "costa")) tipo = "marina";
 
-      // Calcular ruta A*
+      // Ruta con A*
       const rutaGrid = aStarRuta(a.centro, b.centro, grid, gridSize);
-      if (!rutaGrid || rutaGrid.length === 0) {
-        // Si no se encontró ruta, intentamos una conexión directa como fallback (línea recta)
-        const rutaFallback = [a.centro, b.centro];
-        caminos.push({ origen: a, destino: b, tipo, ruta: suavizarRuta(rutaFallback) });
-        contadorConexiones.set(a, contadorConexiones.get(a) + 1);
-        contadorConexiones.set(b, contadorConexiones.get(b) + 1);
-      } else {
-        // Suavizar y guardar
-        const rutaSuave = suavizarRuta(rutaGrid);
-        caminos.push({ origen: a, destino: b, tipo, ruta: rutaSuave });
-        contadorConexiones.set(a, contadorConexiones.get(a) + 1);
-        contadorConexiones.set(b, contadorConexiones.get(b) + 1);
-      }
+      const rutaFinal = (rutaGrid && rutaGrid.length > 0) ? suavizarRuta(rutaGrid) : [a.centro, b.centro];
+
+      caminos.push({ origen: a, destino: b, tipo, ruta: rutaFinal });
+      conexiones.set(a, conexiones.get(a) + 1);
+      conexiones.set(b, conexiones.get(b) + 1);
     }
   }
 
@@ -102,13 +75,13 @@ export function generarCaminos(regiones, ancho, alto, opts = {}) {
 }
 
 /**
- * Dibuja caminos en el canvas (función exportada)
- * @param {CanvasRenderingContext2D} ctx
- * @param {Array} caminos - salida de generarCaminos
+ * Dibuja caminos y asentamientos
  */
 export function dibujarCaminos(ctx, caminos) {
   if (!Array.isArray(caminos)) return;
+
   caminos.forEach(c => {
+    // Estilos según tipo de camino
     switch (c.tipo) {
       case "comercial":
         ctx.strokeStyle = "#FFD700"; // dorado
@@ -123,58 +96,88 @@ export function dibujarCaminos(ctx, caminos) {
         ctx.lineWidth = 3;
         ctx.setLineDash([6, 4]);
         break;
+      case "marina":
+        ctx.strokeStyle = "#1E90FF"; // azul
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        break;
       default:
         ctx.strokeStyle = "#AAAAAA";
         ctx.lineWidth = 1.5;
     }
 
+    // Ruta
     ctx.beginPath();
     const ruta = c.ruta;
     if (ruta && ruta.length > 0) {
       ctx.moveTo(ruta[0].x, ruta[0].y);
-      for (let i = 1; i < ruta.length; i++) ctx.lineTo(ruta[i].x, ruta[i].y);
+      for (let i = 1; i < ruta.length; i++) {
+        ctx.lineTo(ruta[i].x, ruta[i].y);
+      }
       ctx.stroke();
     }
     ctx.setLineDash([]);
+  });
+
+  // Asentamientos
+  const asentamientos = new Set();
+  caminos.forEach(c => {
+    asentamientos.add(c.origen);
+    asentamientos.add(c.destino);
+  });
+
+  asentamientos.forEach(a => {
+    let color = "#FFFFFF";
+    switch (a.tipo) {
+      case "glaciar":
+        color = "#000000";
+        break;
+      case "desierto":
+        color = "#FFDAB9";
+        break;
+      case "bosque":
+        color = "#228B22";
+        break;
+      case "montaña":
+        color = "#A9A9A9";
+        break;
+      default:
+        color = "#FFFFFF";
+    }
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(a.centro.x, a.centro.y, 5, 0, Math.PI * 2);
+    ctx.fill();
   });
 }
 
 /* ---------------------------
    Helpers internos
-   --------------------------- */
+----------------------------*/
+function distancia(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 
-/** Distancia Euclidiana entre dos puntos {x,y} */
-function distancia(a, b) {
-  const dx = a.x - b.x;
-  const dy = a.y - b.y;
-  return Math.hypot(dx, dy);
-}
-
-/** Comprueba si ya existe un camino entre a y b */
 function existeCaminoEntre(caminos, a, b) {
-  return caminos.some(c =>
-    (c.origen === a && c.destino === b) || (c.origen === b && c.destino === a)
-  );
+  return caminos.some(c => (c.origen === a && c.destino === b) || (c.origen === b && c.destino === a));
 }
 
-/**
- * A* simplificado sobre la cuadrícula de costes.
- * Devuelve una ruta en coordenadas reales (centro de celdas)
- * start/end son {x,y} en coordenadas px.
- */
 function aStarRuta(start, end, grid, gridSize) {
   const cols = grid[0].length;
   const rows = grid.length;
+  const nodoKey = (x, y) => `${x},${y}`;
+  const heur = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 
-  function nodoKey(x, y) { return `${x},${y}`; }
-  function heur(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
-
-  const startNode = { x: clamp(Math.floor(start.x / gridSize), 0, cols - 1), y: clamp(Math.floor(start.y / gridSize), 0, rows - 1), g: 0, f: 0, parent: null };
-  const endNode = { x: clamp(Math.floor(end.x / gridSize), 0, cols - 1), y: clamp(Math.floor(end.y / gridSize), 0, rows - 1) };
+  const startNode = {
+    x: clamp(Math.floor(start.x / gridSize), 0, cols - 1),
+    y: clamp(Math.floor(start.y / gridSize), 0, rows - 1),
+    g: 0, f: 0, parent: null
+  };
+  const endNode = {
+    x: clamp(Math.floor(end.x / gridSize), 0, cols - 1),
+    y: clamp(Math.floor(end.y / gridSize), 0, rows - 1)
+  };
 
   const open = [startNode];
-  const openMap = new Map();
-  openMap.set(nodoKey(startNode.x, startNode.y), startNode);
+  const openMap = new Map([[nodoKey(startNode.x, startNode.y), startNode]]);
   const closed = new Set();
 
   while (open.length > 0) {
@@ -184,7 +187,6 @@ function aStarRuta(start, end, grid, gridSize) {
     closed.add(nodoKey(current.x, current.y));
 
     if (current.x === endNode.x && current.y === endNode.y) {
-      // Reconstruir ruta
       const path = [];
       let node = current;
       while (node) {
@@ -198,12 +200,7 @@ function aStarRuta(start, end, grid, gridSize) {
       { x: current.x + 1, y: current.y },
       { x: current.x - 1, y: current.y },
       { x: current.x, y: current.y + 1 },
-      { x: current.x, y: current.y - 1 },
-      // diagonales opcionales (más natural, pero + coste)
-      { x: current.x + 1, y: current.y + 1 },
-      { x: current.x - 1, y: current.y - 1 },
-      { x: current.x + 1, y: current.y - 1 },
-      { x: current.x - 1, y: current.y + 1 }
+      { x: current.x, y: current.y - 1 }
     ];
 
     for (const v of vecinos) {
@@ -211,11 +208,9 @@ function aStarRuta(start, end, grid, gridSize) {
       const k = nodoKey(v.x, v.y);
       if (closed.has(k)) continue;
 
-      // coste del paso: el valor en la grid (alto si obstáculo)
       const stepCost = grid[v.y][v.x] || 1;
       const gTent = current.g + stepCost;
-      const h = heur({ x: v.x, y: v.y }, endNode);
-      const fTent = gTent + h;
+      const fTent = gTent + heur(v, endNode);
 
       const existing = openMap.get(k);
       if (!existing || gTent < existing.g) {
@@ -225,41 +220,22 @@ function aStarRuta(start, end, grid, gridSize) {
       }
     }
   }
-
-  // No se encontró ruta
-  return [];
+  return null;
 }
 
-/**
- * Suaviza la ruta interpolando puntos intermedios
- * - Si la ruta es una lista de celdas, interpolamos midpoints para hacerla más "curva".
- */
 function suavizarRuta(ruta) {
-  if (!ruta || ruta.length < 2) return ruta || [];
-  const nueva = [];
-  for (let i = 0; i < ruta.length - 1; i++) {
-    const p0 = ruta[i];
-    const p1 = ruta[i + 1];
-    nueva.push(p0);
-    // añadir punto intermedio
-    nueva.push({ x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 });
+  if (!ruta || ruta.length < 3) return ruta;
+  const nueva = [ruta[0]];
+  for (let i = 1; i < ruta.length - 1; i++) {
+    const prev = ruta[i - 1];
+    const curr = ruta[i];
+    const next = ruta[i + 1];
+    const mx = (prev.x + next.x) / 2;
+    const my = (prev.y + next.y) / 2;
+    nueva.push({ x: (curr.x + mx) / 2, y: (curr.y + my) / 2 });
   }
   nueva.push(ruta[ruta.length - 1]);
-  // opcional: reducir puntos muy cercanos
-  return simplificarRuta(nueva, 1.0);
+  return nueva;
 }
 
-/** Simplifica ruta eliminando puntos demasiado próximos (umbral en px) */
-function simplificarRuta(ruta, umbral = 1.0) {
-  if (!ruta || ruta.length < 2) return ruta;
-  const out = [ruta[0]];
-  for (let i = 1; i < ruta.length; i++) {
-    const prev = out[out.length - 1];
-    const cur = ruta[i];
-    if (Math.hypot(prev.x - cur.x, prev.y - cur.y) >= umbral) out.push(cur);
-  }
-  return out;
-}
-
-/** Clamp helper */
-function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
