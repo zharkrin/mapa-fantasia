@@ -1,38 +1,55 @@
 // frontend/js/rutas/rutas.js
-// Manejo de rutas terrestres (y más adelante opcionales: mágicas, marítimas)
+// Sistema de rutas principal (terrestres, opcionales especiales en el futuro)
 
-export class Ruta {
-    constructor(origen, destino, tipo = "terrestre") {
-        this.origen = origen;
-        this.destino = destino;
-        this.tipo = tipo; // "terrestre", "maritima", "magica"
+import { aStar } from "./aStar.js";
+import { Grafo } from "./grafo.js";
+
+class Rutas {
+    constructor() {
+        this.rutasTerrestres = [];
+        this.grafo = new Grafo();
+    }
+
+    // Añadir conexión entre dos nodos (ciudades, pueblos, etc.)
+    agregarConexion(nodoA, nodoB, peso = 1) {
+        this.grafo.agregarArista(nodoA, nodoB, peso);
+    }
+
+    // Calcular ruta más corta con A*
+    calcularRuta(origen, destino) {
+        return aStar(this.grafo, origen, destino);
+    }
+
+    // Guardar ruta calculada
+    guardarRuta(ruta) {
+        if (ruta && ruta.length > 0) {
+            this.rutasTerrestres.push(ruta);
+        }
+    }
+
+    // Dibujar rutas en el canvas
+    dibujar(ctx) {
+        ctx.strokeStyle = "#FFCC00";
+        ctx.lineWidth = 2;
+
+        for (const ruta of this.rutasTerrestres) {
+            ctx.beginPath();
+            for (let i = 0; i < ruta.length - 1; i++) {
+                const p1 = ruta[i];
+                const p2 = ruta[i + 1];
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+            }
+            ctx.stroke();
+        }
+    }
+
+    // Limpiar rutas almacenadas
+    limpiar() {
+        this.rutasTerrestres = [];
+        this.grafo = new Grafo();
     }
 }
 
-export function dibujarRuta(ctx, ruta) {
-    ctx.beginPath();
-    ctx.moveTo(ruta.origen.x, ruta.origen.y);
-    ctx.lineTo(ruta.destino.x, ruta.destino.y);
-
-    switch (ruta.tipo) {
-        case "terrestre":
-            ctx.strokeStyle = "#8B4513"; // marrón caminos
-            ctx.setLineDash([]);
-            break;
-        case "maritima":
-            ctx.strokeStyle = "#1E90FF"; // azul marino
-            ctx.setLineDash([5, 5]);
-            break;
-        case "magica":
-            ctx.strokeStyle = "#9932CC"; // púrpura
-            ctx.setLineDash([2, 4]);
-            break;
-        default:
-            ctx.strokeStyle = "#000000";
-            ctx.setLineDash([]);
-    }
-
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.setLineDash([]); // reset
-}
+// Exportar para su uso en otros módulos
+export { Rutas };
