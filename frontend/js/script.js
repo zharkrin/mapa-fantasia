@@ -1,47 +1,62 @@
 // frontend/js/script.js
+// Script principal del generador de mapas de fantasía
 
-import { generarTerreno } from './mapa/generacionTerreno.js';
-import { dibujarMapa } from './mapa/dibujarMapa.js';
-import { Rutas } from './rutas/rutas.js';
-import { DrawRutas } from './ui/drawRutas.js';
-import { GeneradorNombres } from './nombresGeograficos.js';
-import { DibujarNombres } from './mapa/dibujarNombres.js';
+import { generarTerreno } from "./mapa/generacionTerreno.js";
+import { dibujarMapa } from "./mapa/dibujarMapa.js";
+import { Etiquetas } from "./etiquetas.js";
+import { Rutas } from "./rutas/rutas.js";
 
-/**
- * Script principal del generador de mapas
- * Coordina la generación de terreno, rutas, nombres y renderizado.
- */
+let canvas, ctx;
+let mapa = null;
+let etiquetas = null;
+let rutas = null;
 
-document.addEventListener("DOMContentLoaded", () => {
-    const canvas = document.getElementById("mapa");
-    const ctx = canvas.getContext("2d");
+function inicializar() {
+    canvas = document.getElementById("mapaCanvas");
+    ctx = canvas.getContext("2d");
 
-    // Paso 1: Generar terreno
-    console.log("Generando terreno...");
-    const terreno = generarTerreno(canvas.width, canvas.height);
+    // Ajustar tamaño del canvas
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    // Paso 2: Dibujar terreno en el mapa
-    console.log("Dibujando mapa...");
-    dibujarMapa(ctx, terreno);
+    // Generar el mapa inicial
+    mapa = generarTerreno(canvas.width, canvas.height);
 
-    // Paso 3: Generar rutas terrestres principales
-    console.log("Generando rutas...");
-    const rutas = Rutas.generar(terreno);
+    // Crear sistema de etiquetas
+    etiquetas = new Etiquetas();
 
-    // Paso 4: Dibujar rutas
-    DrawRutas.dibujar(ctx, rutas);
+    // Crear sistema de rutas
+    rutas = new Rutas();
 
-    // Paso 5: Generar y asignar nombres a ríos y montañas
-    console.log("Asignando nombres a montañas y ríos...");
-    const listaMontanas = terreno.montanas || [];
-    const listaRios = terreno.rios || [];
+    // Dibujar mapa base
+    dibujar();
+}
 
-    GeneradorNombres.asignarMontanas(listaMontanas);
-    GeneradorNombres.asignarRios(listaRios);
+function dibujar() {
+    // Dibujar terreno y biomas
+    dibujarMapa(ctx, mapa);
 
-    // Paso 6: Dibujar etiquetas de nombres en el mapa
-    console.log("Dibujando nombres...");
-    DibujarNombres.dibujar(ctx);
+    // Dibujar rutas terrestres
+    rutas.dibujar(ctx);
 
-    console.log("Mapa generado con éxito.");
+    // Dibujar etiquetas
+    etiquetas.dibujar(ctx);
+}
+
+// Evento: generar un mapa nuevo
+document.getElementById("btnGenerar").addEventListener("click", () => {
+    mapa = generarTerreno(canvas.width, canvas.height);
+    rutas.limpiar();
+    etiquetas.limpiar();
+    dibujar();
 });
+
+// Ajustar canvas al redimensionar ventana
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    dibujar();
+});
+
+// Iniciar cuando la ventana cargue
+window.onload = inicializar;
