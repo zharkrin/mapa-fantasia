@@ -1,54 +1,64 @@
 // frontend/js/etiquetas.js
-// Gestión de etiquetas para el mapa (ciudades, regiones, biomas, ríos, montañas, etc.)
+// Sistema completo de etiquetas para ciudades, montañas, ríos y regiones en el mapa
 
 class Etiquetas {
-    constructor(ctx) {
-        this.ctx = ctx;
+    constructor() {
         this.etiquetas = [];
-        this.config = {
-            fuente: "12px Arial",
-            color: "#FFFFFF",
-            borde: "#000000",
-            alineacion: "center"
-        };
+        this.color = "#FFFFFF"; // nombres en blanco por defecto
+        this.font = "14px Arial";
     }
 
-    // Añadir una etiqueta
-    agregarEtiqueta(texto, x, y, opciones = {}) {
-        const etiqueta = {
-            texto,
-            x,
-            y,
-            fuente: opciones.fuente || this.config.fuente,
-            color: opciones.color || this.config.color,
-            borde: opciones.borde || this.config.borde,
-            alineacion: opciones.alineacion || this.config.alineacion
-        };
-        this.etiquetas.push(etiqueta);
-    }
-
-    // Dibujar todas las etiquetas
-    dibujar() {
-        for (const etiqueta of this.etiquetas) {
-            this.ctx.font = etiqueta.fuente;
-            this.ctx.textAlign = etiqueta.alineacion;
-            this.ctx.lineWidth = 3;
-
-            // Borde
-            this.ctx.strokeStyle = etiqueta.borde;
-            this.ctx.strokeText(etiqueta.texto, etiqueta.x, etiqueta.y);
-
-            // Texto
-            this.ctx.fillStyle = etiqueta.color;
-            this.ctx.fillText(etiqueta.texto, etiqueta.x, etiqueta.y);
-        }
+    // Añadir etiqueta
+    agregar(texto, x, y) {
+        this.etiquetas.push({ texto, x, y });
     }
 
     // Limpiar etiquetas
     limpiar() {
         this.etiquetas = [];
     }
+
+    // Dibujar todas las etiquetas en el canvas
+    dibujar(ctx) {
+        if (!ctx) return;
+        ctx.fillStyle = this.color;
+        ctx.font = this.font;
+        ctx.textAlign = "center";
+
+        for (const et of this.etiquetas) {
+            ctx.fillText(et.texto, et.x, et.y);
+        }
+    }
+
+    // Generar etiquetas automáticas a partir del mapa
+    generarAutomaticas(mapa) {
+        if (!mapa) return;
+
+        // Ciudades
+        if (mapa.ciudades) {
+            mapa.ciudades.forEach(c => this.agregar(c.nombre, c.x, c.y));
+        }
+
+        // Montañas
+        if (mapa.montañas) {
+            mapa.montañas.forEach(m => this.agregar(m.nombre, m.x, m.y));
+        }
+
+        // Ríos
+        if (mapa.rios) {
+            mapa.rios.forEach(r => {
+                const px = (r.startX + r.endX) / 2;
+                const py = (r.startY + r.endY) / 2;
+                this.agregar(r.nombre, px, py);
+            });
+        }
+
+        // Regiones
+        if (mapa.regiones) {
+            mapa.regiones.forEach(reg => this.agregar(reg.nombre, reg.x, reg.y));
+        }
+    }
 }
 
-// Exportar para su uso en otros módulos
+// Exportar clase para integración
 export { Etiquetas };
