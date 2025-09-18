@@ -1,5 +1,5 @@
 // frontend/js/rutas/rutas.js
-// Sistema de rutas principal (terrestres, opcionales especiales en el futuro)
+// Sistema de rutas principal (terrestres automáticas)
 
 import { aStar } from "./aStar.js";
 import { Grafo } from "./grafo.js";
@@ -44,6 +44,31 @@ class Rutas {
         }
     }
 
+    // Generar automáticamente rutas entre ciudades
+    generarAutomaticas(ciudades) {
+        if (!ciudades || ciudades.length < 2) return;
+
+        // Crear grafo con todas las ciudades
+        for (let i = 0; i < ciudades.length; i++) {
+            for (let j = i + 1; j < ciudades.length; j++) {
+                const dx = ciudades[i].x - ciudades[j].x;
+                const dy = ciudades[i].y - ciudades[j].y;
+                const distancia = Math.sqrt(dx * dx + dy * dy);
+
+                // Conectar solo si están relativamente cerca
+                if (distancia < 300) {
+                    this.agregarConexion(ciudades[i], ciudades[j], distancia);
+                }
+            }
+        }
+
+        // Calcular rutas principales
+        for (let i = 0; i < ciudades.length - 1; i++) {
+            const ruta = this.calcularRuta(ciudades[i], ciudades[i + 1]);
+            this.guardarRuta(ruta);
+        }
+    }
+
     // Limpiar rutas almacenadas
     limpiar() {
         this.rutasTerrestres = [];
@@ -51,5 +76,4 @@ class Rutas {
     }
 }
 
-// Exportar para su uso en otros módulos
 export { Rutas };
