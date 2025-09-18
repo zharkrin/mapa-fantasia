@@ -28,6 +28,11 @@ function inicializar() {
     // Crear sistema de rutas
     rutas = new Rutas();
 
+    // Generar rutas automáticas (ejemplo: entre ciudades del mapa)
+    if (mapa.ciudades) {
+        rutas.generarAutomaticas(mapa.ciudades);
+    }
+
     // Dibujar mapa base
     dibujar();
 }
@@ -48,6 +53,11 @@ document.getElementById("btnGenerar").addEventListener("click", () => {
     mapa = generarTerreno(canvas.width, canvas.height);
     rutas.limpiar();
     etiquetas.limpiar();
+
+    if (mapa.ciudades) {
+        rutas.generarAutomaticas(mapa.ciudades);
+    }
+
     dibujar();
 });
 
