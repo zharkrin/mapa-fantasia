@@ -1,27 +1,51 @@
 // frontend/js/mapa/dibujarMapa.js
-import { coloresTerreno } from "./coloresTerreno.js";
+// Dibuja el mapa con biomas, volcanes y glaciares
 
-/**
- * Dibuja el mapa en un canvas usando las regiones generadas
- * @param {CanvasRenderingContext2D} ctx - contexto del canvas
- * @param {Array} regiones - lista de regiones generadas
- */
-export function dibujarMapa(ctx, regiones) {
-    // limpiar canvas
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+import { coloresBiomas } from "./coloresTerreno.js";
 
-    regiones.forEach(region => {
-        const color = coloresTerreno[region.tipo] || "#cccccc"; // gris por defecto
-        ctx.fillStyle = color;
+export function dibujarMapa(ctx, mapa, cellSize = 4) {
+    const { width, height, biomas, volcanes, glaciares } = mapa;
 
-        // dibujar región como un círculo por ahora (placeholder de polígonos)
-        ctx.beginPath();
-        ctx.arc(region.centro.x, region.centro.y, 40, 0, Math.PI * 2);
-        ctx.fill();
+    ctx.clearRect(0, 0, width * cellSize, height * cellSize);
 
-        // trazo fino para separar regiones
-        ctx.strokeStyle = "#333333";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-    });
+    // Dibujar biomas como fondo
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const bioma = biomas[y][x];
+            const color = coloresBiomas[bioma] || "#808080";
+
+            ctx.fillStyle = color;
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+    }
+
+    // Dibujar volcanes (rojo intenso con borde negro)
+    ctx.font = `${cellSize * 2}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (volcanes[y][x]) {
+                ctx.fillStyle = "red";
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 1;
+                ctx.fillText("🌋", x * cellSize + cellSize / 2, y * cellSize + cellSize / 2);
+                ctx.strokeText("🌋", x * cellSize + cellSize / 2, y * cellSize + cellSize / 2);
+            }
+        }
+    }
+
+    // Dibujar glaciares (copos de nieve en azul)
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (glaciares[y][x]) {
+                ctx.fillStyle = "lightblue";
+                ctx.strokeStyle = "navy";
+                ctx.lineWidth = 1;
+                ctx.fillText("❄️", x * cellSize + cellSize / 2, y * cellSize + cellSize / 2);
+                ctx.strokeText("❄️", x * cellSize + cellSize / 2, y * cellSize + cellSize / 2);
+            }
+        }
+    }
 }
