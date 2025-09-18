@@ -1,38 +1,61 @@
-// ==============================
-// Módulo: nombresGeograficos.js
-// Generación de nombres para montañas, ríos y ciudades
-// ==============================
+// frontend/js/mapa/nombresGeograficos.js
+// Generación procedimental de nombres geográficos: montañas, ríos y regiones
 
-// Sílabas base para nombres
-const silabasMontana = ["Kar", "Dur", "Mor", "Thal", "Brun", "Gor", "Zar", "Tor", "Krag", "Rhun"];
-const silabasRio = ["Al", "Bel", "Nor", "Ser", "Tur", "Val", "Eld", "Lum", "Mar", "Orin"];
-const silabasCiudad = ["Ar", "Bel", "Cor", "Dor", "El", "Fen", "Gal", "Har", "Lor", "Mir"];
+class NombresGeograficos {
+    constructor() {
+        this.prefMontañas = ["Monte", "Pico", "Cerro", "Cordillera", "Alto"];
+        this.sufMontañas = ["dor", "an", "en", "or", "ar", "im", "um"];
 
-// Función auxiliar para componer un nombre
-function combinarSilabas(lista, longitudMin = 2, longitudMax = 3) {
-  const longitud = Math.floor(Math.random() * (longitudMax - longitudMin + 1)) + longitudMin;
-  let nombre = "";
-  for (let i = 0; i < longitud; i++) {
-    nombre += lista[Math.floor(Math.random() * lista.length)];
-  }
-  return nombre;
+        this.prefRios = ["Rio", "Río", "Arroyo", "Canal"];
+        this.sufRios = ["del Norte", "del Sur", "Grande", "Claro", "Serpenteante", "Oscuro"];
+
+        this.prefRegiones = ["Valle", "Llanura", "Bosque", "Desierto", "Altiplano"];
+        this.sufRegiones = ["Eterna", "Sombrío", "Luminoso", "Profundo", "Misterioso"];
+
+        this.vocales = ["a", "e", "i", "o", "u"];
+        this.consonantes = ["b", "c", "d", "f", "g", "h", "k", "l", "m", "n", "r", "s", "t", "v", "z"];
+    }
+
+    // Genera un nombre de montaña
+    generarMontaña() {
+        const pref = this.prefMontañas[Math.floor(Math.random() * this.prefMontañas.length)];
+        const suf = this.sufMontañas[Math.floor(Math.random() * this.sufMontañas.length)];
+        return `${pref} ${suf}`;
+    }
+
+    // Genera un nombre de río
+    generarRio() {
+        const pref = this.prefRios[Math.floor(Math.random() * this.prefRios.length)];
+        const suf = this.sufRios[Math.floor(Math.random() * this.sufRios.length)];
+        return `${pref} ${suf}`;
+    }
+
+    // Genera un nombre de región
+    generarRegion() {
+        const pref = this.prefRegiones[Math.floor(Math.random() * this.prefRegiones.length)];
+        const suf = this.sufRegiones[Math.floor(Math.random() * this.sufRegiones.length)];
+        return `${pref} ${suf}`;
+    }
+
+    // Generar nombres de forma aleatoria para un mapa completo
+    generarNombresMapa(mapa) {
+        if (!mapa) return;
+
+        if (mapa.montañas) {
+            mapa.montañas.forEach(m => m.nombre = this.generarMontaña());
+        }
+
+        if (mapa.rios) {
+            mapa.rios.forEach(r => r.nombre = this.generarRio());
+        }
+
+        if (mapa.regiones) {
+            mapa.regiones.forEach(reg => reg.nombre = this.generarRegion());
+        }
+
+        return mapa;
+    }
 }
 
-// Generar nombres con sufijos adecuados
-export function generarNombreMontaña() {
-  const base = combinarSilabas(silabasMontana);
-  const sufijos = ["-dor", "-kar", "-drim", "holl", " peak", " mount"];
-  return base + sufijos[Math.floor(Math.random() * sufijos.length)];
-}
-
-export function generarNombreRio() {
-  const base = combinarSilabas(silabasRio);
-  const sufijos = ["-en", "-ir", "-or", "-el", "os", "as"];
-  return "Río " + base + sufijos[Math.floor(Math.random() * sufijos.length)];
-}
-
-export function generarNombreCiudad() {
-  const base = combinarSilabas(silabasCiudad);
-  const sufijos = ["grad", "heim", "port", "del", "dor", "ton"];
-  return base + sufijos[Math.floor(Math.random() * sufijos.length)];
-}
+// Exportar clase
+export { NombresGeograficos };
