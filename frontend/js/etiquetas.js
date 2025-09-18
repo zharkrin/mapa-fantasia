@@ -1,42 +1,54 @@
 // frontend/js/etiquetas.js
-// Gestiona las etiquetas y nombres en el mapa (ciudades, montañas, ríos, regiones, etc.)
+// Gestión de etiquetas para el mapa (ciudades, regiones, biomas, ríos, montañas, etc.)
 
-export function dibujarEtiqueta(ctx, texto, x, y, opciones = {}) {
-    const {
-        fuente = "12px serif",
-        color = "#ffffff",
-        borde = "#000000",
-        anchoBorde = 2,
-        alineacion = "center",
-        baseline = "middle"
-    } = opciones;
+class Etiquetas {
+    constructor(ctx) {
+        this.ctx = ctx;
+        this.etiquetas = [];
+        this.config = {
+            fuente: "12px Arial",
+            color: "#FFFFFF",
+            borde: "#000000",
+            alineacion: "center"
+        };
+    }
 
-    ctx.font = fuente;
-    ctx.textAlign = alineacion;
-    ctx.textBaseline = baseline;
+    // Añadir una etiqueta
+    agregarEtiqueta(texto, x, y, opciones = {}) {
+        const etiqueta = {
+            texto,
+            x,
+            y,
+            fuente: opciones.fuente || this.config.fuente,
+            color: opciones.color || this.config.color,
+            borde: opciones.borde || this.config.borde,
+            alineacion: opciones.alineacion || this.config.alineacion
+        };
+        this.etiquetas.push(etiqueta);
+    }
 
-    // Borde
-    ctx.strokeStyle = borde;
-    ctx.lineWidth = anchoBorde;
-    ctx.strokeText(texto, x, y);
+    // Dibujar todas las etiquetas
+    dibujar() {
+        for (const etiqueta of this.etiquetas) {
+            this.ctx.font = etiqueta.fuente;
+            this.ctx.textAlign = etiqueta.alineacion;
+            this.ctx.lineWidth = 3;
 
-    // Texto
-    ctx.fillStyle = color;
-    ctx.fillText(texto, x, y);
+            // Borde
+            this.ctx.strokeStyle = etiqueta.borde;
+            this.ctx.strokeText(etiqueta.texto, etiqueta.x, etiqueta.y);
+
+            // Texto
+            this.ctx.fillStyle = etiqueta.color;
+            this.ctx.fillText(etiqueta.texto, etiqueta.x, etiqueta.y);
+        }
+    }
+
+    // Limpiar etiquetas
+    limpiar() {
+        this.etiquetas = [];
+    }
 }
 
-export function dibujarNombreCiudad(ctx, ciudad) {
-    dibujarEtiqueta(ctx, ciudad.nombre, ciudad.x, ciudad.y, {
-        fuente: "bold 14px serif",
-        color: "#ffffff",
-        borde: "#000000"
-    });
-}
-
-export function dibujarNombreRegion(ctx, region) {
-    dibujarEtiqueta(ctx, region.nombre, region.x, region.y, {
-        fuente: "bold 18px serif",
-        color: "#ffffff",
-        borde: "#000000"
-    });
-}
+// Exportar para su uso en otros módulos
+export { Etiquetas };
