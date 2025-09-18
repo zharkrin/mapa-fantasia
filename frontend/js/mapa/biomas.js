@@ -1,34 +1,51 @@
-// biomas.js
-// Asignación de biomas sobre un terreno ya generado
+// frontend/js/mapa/biomas.js
+// Generación y manejo de biomas para el mapa de fantasía
 
-export function asignarBiomas(mapa) {
-  const alto = mapa.length;
-  const ancho = mapa[0].length;
+export const BIOMAS = {
+    BOSQUE: { nombre: "Bosque", color: "#2E8B57" },
+    DESIERTO: { nombre: "Desierto", color: "#EDC9Af" },
+    TUNDRA: { nombre: "Tundra", color: "#C0C0C0" },
+    MONTAÑA: { nombre: "Montaña", color: "#8B8B83" },
+    GLACIAR: { nombre: "Glaciar", color: "#FFFFFF" },
+    SABANA: { nombre: "Sabana", color: "#E4A672" },
+    PANTANO: { nombre: "Pantano", color: "#556B2F" },
+    LLANURA: { nombre: "Llanura", color: "#7CFC00" },
+};
 
-  for (let y = 0; y < alto; y++) {
-    for (let x = 0; x < ancho; x++) {
-      const celda = mapa[y][x];
-
-      // No cambiamos agua ni montaña
-      if (celda === "agua" || celda === "montaña") {
-        continue;
-      }
-
-      // Latitud normalizada (0 arriba, 1 abajo)
-      const latitud = y / alto;
-
-      // Selección de biomas por latitud
-      if (latitud < 0.2) {
-        mapa[y][x] = "tundra";
-      } else if (latitud < 0.4) {
-        mapa[y][x] = Math.random() < 0.6 ? "bosque" : "pradera";
-      } else if (latitud < 0.7) {
-        mapa[y][x] = Math.random() < 0.7 ? "pradera" : "bosque";
-      } else {
-        mapa[y][x] = Math.random() < 0.5 ? "desierto" : "pradera";
-      }
+export class Biomas {
+    constructor(anchura, altura) {
+        this.anchura = anchura;
+        this.altura = altura;
+        this.mapaBiomas = [];
     }
-  }
 
-  return mapa;
+    generarMapaBiomas(alturas, temperaturas) {
+        // Generar matriz de biomas basada en altura y temperatura
+        for (let y = 0; y < this.altura; y++) {
+            this.mapaBiomas[y] = [];
+            for (let x = 0; x < this.anchura; x++) {
+                const h = alturas[y][x];
+                const t = temperaturas[y][x];
+                this.mapaBiomas[y][x] = this.definirBioma(h, t);
+            }
+        }
+        return this.mapaBiomas;
+    }
+
+    definirBioma(altura, temperatura) {
+        // Altura y temperatura determinan bioma
+        if (altura > 0.8) return BIOMAS.MONTAÑA;
+        if (altura > 0.6 && temperatura < 0.3) return BIOMAS.TUNDRA;
+        if (altura < 0.3 && temperatura > 0.7) return BIOMAS.DESIERTO;
+        if (altura < 0.4 && temperatura < 0.3) return BIOMAS.GLACIAR;
+        if (temperatura > 0.5 && altura < 0.6) return BIOMAS.SABANA;
+        if (temperatura > 0.4 && altura < 0.5) return BIOMAS.BOSQUE;
+        if (temperatura < 0.4 && altura < 0.5) return BIOMAS.PANTANO;
+        return BIOMAS.LLANURA;
+    }
+
+    obtenerColor(x, y) {
+        const bioma = this.mapaBiomas[y][x];
+        return bioma ? bioma.color : "#000000";
+    }
 }
