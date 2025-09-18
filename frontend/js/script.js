@@ -1,5 +1,5 @@
 // frontend/js/script.js
-// Script completo del generador de mapas de fantasía
+// Script completo del generador de mapas de fantasía con interactividad
 
 import { generarTerreno } from "./mapa/generacionTerreno.js";
 import { DibujarNombres } from "./mapa/dibujarNombres.js";
@@ -14,6 +14,14 @@ let etiquetas = null;
 let rutas = null;
 let dibujarNombres = null;
 
+// Variables de interactividad
+let scale = 1;
+let offsetX = 0;
+let offsetY = 0;
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+
 // Inicialización del mapa y módulos
 function inicializar() {
     canvas = document.getElementById("mapaCanvas");
@@ -22,33 +30,48 @@ function inicializar() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Generar terreno
+    generarMapa();
+
+    // Eventos de interacción
+    canvas.addEventListener("mousedown", iniciarArrastre);
+    canvas.addEventListener("mousemove", arrastrando);
+    canvas.addEventListener("mouseup", finalizarArrastre);
+    canvas.addEventListener("wheel", zoomMapa);
+}
+
+// Función para generar mapa completo
+function generarMapa() {
     mapa = generarTerreno(canvas.width, canvas.height);
 
-    // Generar nombres geográficos
+    // Nombres geográficos
     const nombresGeo = new NombresGeograficos();
     mapa = nombresGeo.generarNombresMapa(mapa);
 
-    // Inicializar etiquetas
+    // Etiquetas
     etiquetas = new Etiquetas();
     etiquetas.generarAutomaticas(mapa);
 
-    // Inicializar rutas
+    // Rutas terrestres
     rutas = new Rutas();
     if (mapa.ciudades) {
         rutas.generarAutomaticas(mapa.ciudades);
         rutas.generarRutasPrincipales(mapa.ciudades);
     }
 
-    // Inicializar dibujo de nombres
+    // Dibujo de nombres
     dibujarNombres = new DibujarNombres("#FFFFFF", "14px Arial");
 
     dibujar();
 }
 
-// Función principal de dibujo
+// Función principal de dibujo con zoom y desplazamiento
 function dibujar() {
     if (!ctx || !mapa) return;
+
+    ctx.save();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.translate(offsetX, offsetY);
+    ctx.scale(scale, scale);
 
     // Dibujar mapa base
     dibujarMapa(ctx, mapa);
@@ -61,25 +84,51 @@ function dibujar() {
 
     // Dibujar nombres geográficos y ciudades
     if (dibujarNombres) dibujarNombres.dibujar(ctx, mapa, etiquetas);
+
+    ctx.restore();
 }
 
-// Evento de botón para generar nuevo mapa
-document.getElementById("btnGenerar").addEventListener("click", () => {
-    mapa = generarTerreno(canvas.width, canvas.height);
+// Zoom con rueda del ratón
+function zoomMapa(event) {
+    event.preventDefault();
+    const zoomFactor = 0.1;
+    const delta = event.deltaY < 0 ? 1 + zoomFactor : 1 - zoomFactor;
+    scale *= delta;
 
-    const nombresGeo = new NombresGeograficos();
-    mapa = nombresGeo.generarNombresMapa(mapa);
-
-    etiquetas.limpiar();
-    etiquetas.generarAutomaticas(mapa);
-
-    rutas.limpiar();
-    if (mapa.ciudades) {
-        rutas.generarAutomaticas(mapa.ciudades);
-        rutas.generarRutasPrincipales(mapa.ciudades);
-    }
+    // Ajustar offset para que zoom se centre en el cursor
+    const rect = canvas.getBoundingClientRect();
+    const mx = event.clientX - rect.left;
+    const my = event.clientY - rect.top;
+    offsetX -= (mx - offsetX) * (delta - 1);
+    offsetY -= (my - offsetY) * (delta - 1);
 
     dibujar();
+}
+
+// Arrastre del mapa
+function iniciarArrastre(event) {
+    isDragging = true;
+    dragStartX = event.clientX - offsetX;
+    dragStartY = event.clientY - offsetY;
+}
+
+function arrastrando(event) {
+    if (!isDragging) return;
+    offsetX = event.clientX - dragStartX;
+    offsetY = event.clientY - dragStartY;
+    dibujar();
+}
+
+function finalizarArrastre() {
+    isDragging = false;
+}
+
+// Botón para regenerar mapa
+document.getElementById("btnGenerar").addEventListener("click", () => {
+    scale = 1;
+    offsetX = 0;
+    offsetY = 0;
+    generarMapa();
 });
 
 // Redimensionar canvas al cambiar tamaño de ventana
