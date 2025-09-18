@@ -1,58 +1,42 @@
 // frontend/js/etiquetas.js
+// Gestiona las etiquetas y nombres en el mapa (ciudades, montañas, ríos, regiones, etc.)
 
-/**
- * Módulo para gestionar etiquetas en el mapa
- * Tipos de etiquetas: ciudades, naciones, montañas, ríos, biomas
- */
+export function dibujarEtiqueta(ctx, texto, x, y, opciones = {}) {
+    const {
+        fuente = "12px serif",
+        color = "#ffffff",
+        borde = "#000000",
+        anchoBorde = 2,
+        alineacion = "center",
+        baseline = "middle"
+    } = opciones;
 
-export const Etiquetas = (() => {
+    ctx.font = fuente;
+    ctx.textAlign = alineacion;
+    ctx.textBaseline = baseline;
 
-    // Listado de etiquetas por tipo
-    const etiquetas = {
-        ciudades: [],
-        naciones: [],
-        montañas: [],
-        rios: [],
-        biomas: []
-    };
+    // Borde
+    ctx.strokeStyle = borde;
+    ctx.lineWidth = anchoBorde;
+    ctx.strokeText(texto, x, y);
 
-    // Añadir una etiqueta
-    function agregar(tipo, nombre, coordenadas) {
-        if (!etiquetas[tipo]) {
-            console.warn(`Tipo de etiqueta desconocido: ${tipo}`);
-            return;
-        }
-        etiquetas[tipo].push({
-            nombre,
-            x: coordenadas.x,
-            y: coordenadas.y
-        });
-    }
+    // Texto
+    ctx.fillStyle = color;
+    ctx.fillText(texto, x, y);
+}
 
-    // Obtener todas las etiquetas de un tipo
-    function obtener(tipo) {
-        return etiquetas[tipo] || [];
-    }
+export function dibujarNombreCiudad(ctx, ciudad) {
+    dibujarEtiqueta(ctx, ciudad.nombre, ciudad.x, ciudad.y, {
+        fuente: "bold 14px serif",
+        color: "#ffffff",
+        borde: "#000000"
+    });
+}
 
-    // Limpiar etiquetas de un tipo
-    function limpiar(tipo) {
-        if (etiquetas[tipo]) {
-            etiquetas[tipo] = [];
-        }
-    }
-
-    // Limpiar todas las etiquetas
-    function limpiarTodo() {
-        for (const tipo in etiquetas) {
-            etiquetas[tipo] = [];
-        }
-    }
-
-    // Exportar funciones públicas
-    return {
-        agregar,
-        obtener,
-        limpiar,
-        limpiarTodo
-    };
-})();
+export function dibujarNombreRegion(ctx, region) {
+    dibujarEtiqueta(ctx, region.nombre, region.x, region.y, {
+        fuente: "bold 18px serif",
+        color: "#ffffff",
+        borde: "#000000"
+    });
+}
