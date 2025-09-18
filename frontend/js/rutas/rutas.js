@@ -1,80 +1,38 @@
 // frontend/js/rutas/rutas.js
+// Manejo de rutas terrestres (y más adelante opcionales: mágicas, marítimas)
 
-/**
- * Módulo para generación y gestión de rutas
- * Tipos de rutas: terrestres (obligatorias), marinas (opcional), mágicas (opcional)
- */
+export class Ruta {
+    constructor(origen, destino, tipo = "terrestre") {
+        this.origen = origen;
+        this.destino = destino;
+        this.tipo = tipo; // "terrestre", "maritima", "magica"
+    }
+}
 
-import { aStar } from './aStar.js';
-import { Grafo } from './grafo.js';
-import { Ciudades } from './ciudades.js';
+export function dibujarRuta(ctx, ruta) {
+    ctx.beginPath();
+    ctx.moveTo(ruta.origen.x, ruta.origen.y);
+    ctx.lineTo(ruta.destino.x, ruta.destino.y);
 
-export const Rutas = (() => {
-
-    // Opciones para generar rutas
-    const opcionesRutas = {
-        terrestres: true,
-        marinas: false,   // opcional
-        magicas: false    // opcional
-    };
-
-    // Listado de rutas generadas
-    const rutasGeneradas = {
-        terrestres: [],
-        marinas: [],
-        magicas: []
-    };
-
-    // Generar rutas terrestres
-    function generarTerrestres(ciudades) {
-        if (!opcionesRutas.terrestres) return;
-        rutasGeneradas.terrestres = [];
-
-        ciudades.forEach((origen) => {
-            ciudades.forEach((destino) => {
-                if (origen !== destino) {
-                    const camino = aStar(origen, destino);
-                    rutasGeneradas.terrestres.push(camino);
-                }
-            });
-        });
+    switch (ruta.tipo) {
+        case "terrestre":
+            ctx.strokeStyle = "#8B4513"; // marrón caminos
+            ctx.setLineDash([]);
+            break;
+        case "maritima":
+            ctx.strokeStyle = "#1E90FF"; // azul marino
+            ctx.setLineDash([5, 5]);
+            break;
+        case "magica":
+            ctx.strokeStyle = "#9932CC"; // púrpura
+            ctx.setLineDash([2, 4]);
+            break;
+        default:
+            ctx.strokeStyle = "#000000";
+            ctx.setLineDash([]);
     }
 
-    // Generar rutas marinas
-    function generarMarinas(puertos) {
-        if (!opcionesRutas.marinas) return;
-        rutasGeneradas.marinas = [];
-        // Lógica para rutas marinas
-        // Solo si el usuario activa esta opción
-    }
-
-    // Generar rutas mágicas
-    function generarMagicas(puntosMagicos) {
-        if (!opcionesRutas.magicas) return;
-        rutasGeneradas.magicas = [];
-        // Lógica para rutas mágicas
-        // Solo si el usuario activa esta opción
-    }
-
-    // Obtener rutas de un tipo
-    function obtener(tipo) {
-        return rutasGeneradas[tipo] || [];
-    }
-
-    // Limpiar rutas
-    function limpiar(tipo) {
-        if (rutasGeneradas[tipo]) {
-            rutasGeneradas[tipo] = [];
-        }
-    }
-
-    // Exportar funciones públicas
-    return {
-        opcionesRutas,
-        generarTerrestres,
-        generarMarinas,
-        generarMagicas,
-        obtener,
-        limpiar
-    };
-})();
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.setLineDash([]); // reset
+}
