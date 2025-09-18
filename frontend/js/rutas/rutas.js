@@ -1,5 +1,5 @@
 // frontend/js/rutas/rutas.js
-// Sistema de rutas principal (terrestres automáticas)
+// Sistema de rutas principal (terrestres automáticas y rutas principales)
 
 import { aStar } from "./aStar.js";
 import { Grafo } from "./grafo.js";
@@ -29,11 +29,13 @@ class Rutas {
 
     // Dibujar rutas en el canvas
     dibujar(ctx) {
-        ctx.strokeStyle = "#FFCC00";
-        ctx.lineWidth = 2;
-
         for (const ruta of this.rutasTerrestres) {
             ctx.beginPath();
+
+            // Color diferente según si es ruta principal o secundaria
+            ctx.strokeStyle = ruta.principal ? "#FF3300" : "#FFCC00";
+            ctx.lineWidth = ruta.principal ? 3 : 2;
+
             for (let i = 0; i < ruta.length - 1; i++) {
                 const p1 = ruta[i];
                 const p2 = ruta[i + 1];
@@ -44,7 +46,7 @@ class Rutas {
         }
     }
 
-    // Generar automáticamente rutas entre ciudades
+    // Generar automáticamente rutas entre ciudades cercanas
     generarAutomaticas(ciudades) {
         if (!ciudades || ciudades.length < 2) return;
 
@@ -62,10 +64,35 @@ class Rutas {
             }
         }
 
-        // Calcular rutas principales
+        // Calcular rutas secundarias (ciudades cercanas en serie)
         for (let i = 0; i < ciudades.length - 1; i++) {
             const ruta = this.calcularRuta(ciudades[i], ciudades[i + 1]);
-            this.guardarRuta(ruta);
+            if (ruta) {
+                ruta.principal = false;
+                this.guardarRuta(ruta);
+            }
+        }
+    }
+
+    // Generar rutas principales entre capitales
+    generarRutasPrincipales(ciudades) {
+        if (!ciudades || ciudades.length < 2) return;
+
+        const capitales = ciudades.filter(c => c.capital || c.tipo === "capital");
+
+        // Si no hay capitales definidas, elegimos las primeras 3 ciudades como capitales
+        if (capitales.length === 0) {
+            capitales.push(...ciudades.slice(0, Math.min(3, ciudades.length)));
+        }
+
+        for (let i = 0; i < capitales.length; i++) {
+            for (let j = i + 1; j < capitales.length; j++) {
+                const ruta = this.calcularRuta(capitales[i], capitales[j]);
+                if (ruta) {
+                    ruta.principal = true; // marcar como ruta principal
+                    this.guardarRuta(ruta);
+                }
+            }
         }
     }
 
