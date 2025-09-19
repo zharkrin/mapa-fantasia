@@ -1,7 +1,8 @@
 // ===============================
 // Script principal
 // frontend/js/script.js
-// ==============================
+// ===============================
+
 import { DibujarTerreno } from "./mapa/dibujarMapa.js";
 import { DibujarNombres } from "./mapa/dibujarNombres.js";
 import { DibujarTerrenoEspecial } from "./mapa/dibujarTerrenoEspecial.js";
