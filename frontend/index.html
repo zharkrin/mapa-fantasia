@@ -6,12 +6,17 @@
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-  <h1>🌍 Generador de Mapas</h1>
+  <div id="menu">
+    <h1>Generador de Mapas</h1>
 
-  <!-- Canvas del mapa -->
-  <canvas id="mapa" width="1200" height="800"></canvas>
+    <label>
+      <input type="checkbox" id="toggleTerrenoEspecial" checked>
+      Mostrar lugares singulares
+    </label>
+  </div>
 
-  <!-- Script principal -->
+  <canvas id="mapaCanvas" width="1200" height="800"></canvas>
+
   <script type="module" src="js/script.js"></script>
 </body>
 </html>
