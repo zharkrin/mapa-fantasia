@@ -1,82 +1,83 @@
 // ===============================
-// Terreno Especial
+// Generación de Terreno Especial
 // frontend/js/mapa/terrenoEspecial.js
 // ===============================
-// Genera lugares singulares (volcanes, glaciares,
-// bosques únicos, montes legendarios, valles).
-// Ahora con nombres integrados.
+//
+// Aquí se generan los elementos singulares del mapa:
+// - Volcanes
+// - Glaciares
+// - Bosques legendarios
+// - Montañas/valle con nombre propio
+//
+// Estos NO son biomas generales, sino hitos únicos del mapa
 // ===============================
 
-import { NombresTerrenoEspecial } from "./nombresTerrenoEspecial.js";
+// -------------------------------
+// Definición de tipos de terreno especial
+// -------------------------------
+const TIPOS_TERRENO_ESPECIAL = [
+    {
+        tipo: "volcan",
+        probabilidad: 0.02, // 2% de probabilidad por región
+        color: "#8B0000", // rojo oscuro
+        nombresEjemplo: ["Monte del Destino", "Fuegoeterno", "Krag’Thar", "Volcán del Olvido"]
+    },
+    {
+        tipo: "glaciar",
+        probabilidad: 0.03, // 3% de probabilidad por región
+        color: "#000000", // negro (regiones heladas según tu preferencia)
+        nombresEjemplo: ["Glaciar de Hielo Negro", "Campos Eternos", "Lengua Helada", "Valle del Hielo"]
+    },
+    {
+        tipo: "bosque_singular",
+        probabilidad: 0.04, // 4%
+        color: "#013220", // verde oscuro
+        nombresEjemplo: ["Bosque Viejo", "Bosque Susurrante", "Selva del Silencio", "Arboleda Sagrada"]
+    },
+    {
+        tipo: "montaña_singular",
+        probabilidad: 0.02, // 2%
+        color: "#696969", // gris oscuro
+        nombresEjemplo: ["Monte Alto", "Roca del Trueno", "Colmillo del Dragón", "Cumbre Solitaria"]
+    },
+    {
+        tipo: "valle_singular",
+        probabilidad: 0.02, // 2%
+        color: "#228B22", // verde valle
+        nombresEjemplo: ["Valle del Viento Helado", "Valle Oscuro", "Llanura Encantada", "Refugio del Alba"]
+    }
+];
 
-export class TerrenoEspecial {
-    constructor() {
-        this.nombres = new NombresTerrenoEspecial();
+// -------------------------------
+// Función generadora
+// -------------------------------
+export function generarTerrenoEspecial(terrenoBase) {
+    const especiales = [];
 
-        // Cada elemento será un objeto { x, y, nombre }
-        this.volcanes = [];
-        this.glaciares = [];
-        this.bosquesUnicos = [];
-        this.montesLegendarios = [];
-        this.vallesEspeciales = [];
+    // Recorremos las celdas del terreno para ubicar lugares singulares
+    for (let i = 0; i < terrenoBase.length; i++) {
+        const celda = terrenoBase[i];
+
+        TIPOS_TERRENO_ESPECIAL.forEach(tipo => {
+            if (Math.random() < tipo.probabilidad) {
+                const especial = {
+                    tipo: tipo.tipo,
+                    x: celda.x,
+                    y: celda.y,
+                    color: tipo.color,
+                    nombre: tipo.nombresEjemplo[Math.floor(Math.random() * tipo.nombresEjemplo.length)]
+                };
+                especiales.push(especial);
+            }
+        });
     }
 
-    // -------------------------------
-    // Métodos de generación
-    // -------------------------------
+    return especiales;
+}
 
-    generarVolcanes(celdas, cantidad) {
-        for (let i = 0; i < cantidad; i++) {
-            const celda = celdas[Math.floor(Math.random() * celdas.length)];
-            this.volcanes.push({
-                x: celda.x,
-                y: celda.y,
-                nombre: this.nombres.generarNombre("volcan")
-            });
-        }
-    }
-
-    generarGlaciares(celdas, cantidad) {
-        for (let i = 0; i < cantidad; i++) {
-            const celda = celdas[Math.floor(Math.random() * celdas.length)];
-            this.glaciares.push({
-                x: celda.x,
-                y: celda.y,
-                nombre: this.nombres.generarNombre("glaciar")
-            });
-        }
-    }
-
-    generarBosquesUnicos(celdas, cantidad) {
-        for (let i = 0; i < cantidad; i++) {
-            const celda = celdas[Math.floor(Math.random() * celdas.length)];
-            this.bosquesUnicos.push({
-                x: celda.x,
-                y: celda.y,
-                nombre: this.nombres.generarNombre("bosque")
-            });
-        }
-    }
-
-    generarMontesLegendarios(celdas, cantidad) {
-        for (let i = 0; i < cantidad; i++) {
-            const celda = celdas[Math.floor(Math.random() * celdas.length)];
-            this.montesLegendarios.push({
-                x: celda.x,
-                y: celda.y,
-                nombre: this.nombres.generarNombre("monte")
-            });
-        }
-    }
-
-    generarVallesEspeciales(celdas, cantidad) {
-        for (let i = 0; i < cantidad; i++) {
-            const celda = celdas[Math.floor(Math.random() * celdas.length)];
-            this.vallesEspeciales.push({
-                x: celda.x,
-                y: celda.y,
-                nombre: this.nombres.generarNombre("valle")
-            });
-        }
-    }
+// -------------------------------
+// Función auxiliar para obtener todos los tipos disponibles
+// -------------------------------
+export function obtenerTiposTerrenoEspecial() {
+    return TIPOS_TERRENO_ESPECIAL.map(t => t.tipo);
 }
