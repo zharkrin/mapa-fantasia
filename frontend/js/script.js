@@ -5,8 +5,7 @@
 
 import { DibujarTerreno } from "./mapa/dibujarMapa.js";
 import { DibujarNombres } from "./mapa/dibujarNombres.js";
-import { DibujarTerrenoEspecial } from "./mapa/dibujarTerrenoEspecial.js";
-import { UITerrenoEspecial } from "../ui/uiTerrenoEspecial.js";
+import { dibujarTerrenoEspecial } from "./mapa/dibujarTerrenoEspecial.js";
 import { generarTerreno } from "./mapa/generacionTerreno.js";
 import { generarNombres } from "./mapa/nombres.js";
 import { generarTerrenoEspecial } from "./mapa/terrenoEspecial.js";
@@ -29,17 +28,9 @@ window.addEventListener("DOMContentLoaded", () => {
     const dibujarNombres = new DibujarNombres(nombres);
     dibujarNombres.dibujar(ctx);
 
-    // 5. Generar terreno especial (volcanes, glaciares, bosques singulares, etc.)
+    // 5. Generar lugares singulares (volcanes, glaciares, bosques legendarios, etc.)
     const terrenoEspecial = generarTerrenoEspecial(terreno);
 
-    // 6. Dibujar terreno especial
-    const dibujarTE = new DibujarTerrenoEspecial(terrenoEspecial);
-    dibujarTE.dibujar(ctx);
-
-    // 7. Control de UI para mostrar/ocultar lugares singulares
-    const uiTerrenoEspecial = new UITerrenoEspecial(
-        "toggleTerrenoEspecial",
-        dibujarTE,
-        ctx
-    );
+    // 6. Dibujar lugares singulares
+    dibujarTerrenoEspecial(ctx, terrenoEspecial);
 });
