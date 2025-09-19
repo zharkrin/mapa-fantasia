@@ -11,6 +11,7 @@ export class UITerrenoEspecial {
 
         this.mostrar = true;
 
+        // Conectar el checkbox con el estado de dibujado
         this.toggle.addEventListener("change", () => {
             this.mostrar = this.toggle.checked;
             this.redibujar();
@@ -21,8 +22,7 @@ export class UITerrenoEspecial {
         if (this.mostrar) {
             this.dibujarTerrenoEspecial.dibujar(this.ctx);
         } else {
-            // Si se desactiva, simplemente no se dibujan encima.
-            // El mapa base ya está dibujado, así que no borramos nada.
+            // No se dibujan los lugares singulares
             console.log("Terreno especial oculto");
         }
     }
