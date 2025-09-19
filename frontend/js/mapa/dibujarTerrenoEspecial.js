@@ -2,9 +2,8 @@
 // Dibujar Terreno Especial
 // frontend/js/mapa/dibujarTerrenoEspecial.js
 // ===============================
-// Este archivo se encarga únicamente de
-// representar visualmente los lugares singulares
-// como volcanes, glaciares, bosques únicos, etc.
+// Representa visualmente los lugares singulares
+// y muestra sus nombres.
 // ===============================
 
 import { TerrenoEspecial } from "./terrenoEspecial.js";
@@ -17,9 +16,6 @@ export class DibujarTerrenoEspecial {
         this.terrenoEspecial = terrenoEspecial;
     }
 
-    // -------------------------------
-    // Método principal de dibujado
-    // -------------------------------
     dibujar(ctx) {
         const dibujarIcono = (punto, simbolo, color) => {
             ctx.fillStyle = color;
@@ -27,6 +23,11 @@ export class DibujarTerrenoEspecial {
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText(simbolo, punto.x, punto.y);
+
+            // Dibujar el nombre debajo
+            ctx.fillStyle = "white";
+            ctx.font = "10px serif";
+            ctx.fillText(punto.nombre, punto.x, punto.y + 15);
         };
 
         this.terrenoEspecial.volcanes.forEach(v => dibujarIcono(v, "🌋", "red"));
