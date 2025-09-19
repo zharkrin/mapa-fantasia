@@ -1,28 +1,47 @@
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 0;
+/* ===============================
+   Estilos generales
+   frontend/css/estilos.css
+   =============================== */
+
+/* Canvas del mapa */
+#mapaCanvas {
+    border: 2px solid #333;
+    display: block;
+    margin: 0 auto;
+    background-color: #f8f8f8; /* fondo neutro para el mapa */
 }
 
-h1 {
-  margin: 20px 0;
-  color: #333;
+/* ===============================
+   Etiquetas de lugares singulares
+   =============================== */
+
+/* Texto general sobre el mapa */
+.canvas-label {
+    font-family: "Georgia", serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 1px 1px 2px #000000aa; /* sombra ligera para destacar */
+    pointer-events: none; /* evita que bloquee interacciones */
 }
 
-.controls {
-  margin-bottom: 10px;
+/* Colores según tipo */
+.canvas-label.volcan {
+    color: #FF4500; /* rojo intenso */
 }
 
-button {
-  margin: 5px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
+.canvas-label.glaciar {
+    color: #ADD8E6; /* azul hielo */
 }
 
-canvas {
-  border: 2px solid #333;
-  background-color: white;
+.canvas-label.bosque {
+    color: #228B22; /* verde bosque */
+}
+
+.canvas-label.montaña {
+    color: #A9A9A9; /* gris roca */
+}
+
+.canvas-label.valle {
+    color: #32CD32; /* verde claro */
 }
