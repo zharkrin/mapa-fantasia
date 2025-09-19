@@ -1,39 +1,108 @@
 // ===============================
-// Dibujar Terreno Especial
+// Dibujo de Terreno Especial
 // frontend/js/mapa/dibujarTerrenoEspecial.js
 // ===============================
-// Representa visualmente los lugares singulares
-// y muestra sus nombres.
+//
+// Aquí se dibujan en el canvas los lugares singulares:
+// - Volcanes
+// - Glaciares
+// - Bosques singulares
+// - Montañas legendarias
+// - Valles especiales
+//
+// Estos se sobreponen al mapa base
 // ===============================
 
-import { TerrenoEspecial } from "./terrenoEspecial.js";
+// -------------------------------
+// Función principal de dibujo
+// -------------------------------
+export function dibujarTerrenoEspecial(ctx, terrenosEspeciales) {
+    if (!terrenosEspeciales || terrenosEspeciales.length === 0) return;
 
-export class DibujarTerrenoEspecial {
-    constructor(terrenoEspecial) {
-        if (!(terrenoEspecial instanceof TerrenoEspecial)) {
-            throw new Error("Se requiere una instancia de TerrenoEspecial");
+    terrenosEspeciales.forEach(especial => {
+        ctx.fillStyle = especial.color;
+
+        // Dibujar cada tipo con un estilo diferenciado
+        switch (especial.tipo) {
+            case "volcan":
+                dibujarVolcan(ctx, especial.x, especial.y, especial.nombre, especial.color);
+                break;
+            case "glaciar":
+                dibujarGlaciar(ctx, especial.x, especial.y, especial.nombre, especial.color);
+                break;
+            case "bosque_singular":
+                dibujarBosqueSingular(ctx, especial.x, especial.y, especial.nombre, especial.color);
+                break;
+            case "montaña_singular":
+                dibujarMontañaSingular(ctx, especial.x, especial.y, especial.nombre, especial.color);
+                break;
+            case "valle_singular":
+                dibujarValleSingular(ctx, especial.x, especial.y, especial.nombre, especial.color);
+                break;
+            default:
+                // fallback: un simple círculo
+                ctx.beginPath();
+                ctx.arc(especial.x, especial.y, 4, 0, 2 * Math.PI);
+                ctx.fill();
         }
-        this.terrenoEspecial = terrenoEspecial;
-    }
+    });
+}
 
-    dibujar(ctx) {
-        const dibujarIcono = (punto, simbolo, color) => {
-            ctx.fillStyle = color;
-            ctx.font = "bold 14px serif";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(simbolo, punto.x, punto.y);
+// -------------------------------
+// Estilos por tipo
+// -------------------------------
+function dibujarVolcan(ctx, x, y, nombre, color) {
+    ctx.beginPath();
+    ctx.moveTo(x, y - 6);
+    ctx.lineTo(x - 5, y + 5);
+    ctx.lineTo(x + 5, y + 5);
+    ctx.closePath();
+    ctx.fill();
 
-            // Dibujar el nombre debajo
-            ctx.fillStyle = "white";
-            ctx.font = "10px serif";
-            ctx.fillText(punto.nombre, punto.x, punto.y + 15);
-        };
+    dibujarNombre(ctx, x, y, nombre, "#FF4500");
+}
 
-        this.terrenoEspecial.volcanes.forEach(v => dibujarIcono(v, "🌋", "red"));
-        this.terrenoEspecial.glaciares.forEach(g => dibujarIcono(g, "❄️", "cyan"));
-        this.terrenoEspecial.bosquesUnicos.forEach(b => dibujarIcono(b, "🌲", "green"));
-        this.terrenoEspecial.montesLegendarios.forEach(m => dibujarIcono(m, "⛰️", "gray"));
-        this.terrenoEspecial.vallesEspeciales.forEach(v => dibujarIcono(v, "🏞️", "blue"));
-    }
+function dibujarGlaciar(ctx, x, y, nombre, color) {
+    ctx.beginPath();
+    ctx.rect(x - 5, y - 5, 10, 10);
+    ctx.fill();
+
+    dibujarNombre(ctx, x, y, nombre, "#ADD8E6");
+}
+
+function dibujarBosqueSingular(ctx, x, y, nombre, color) {
+    ctx.beginPath();
+    ctx.arc(x, y, 6, 0, 2 * Math.PI);
+    ctx.fill();
+
+    dibujarNombre(ctx, x, y, nombre, "#228B22");
+}
+
+function dibujarMontañaSingular(ctx, x, y, nombre, color) {
+    ctx.beginPath();
+    ctx.moveTo(x, y - 7);
+    ctx.lineTo(x - 6, y + 6);
+    ctx.lineTo(x + 6, y + 6);
+    ctx.closePath();
+    ctx.fill();
+
+    dibujarNombre(ctx, x, y, nombre, "#A9A9A9");
+}
+
+function dibujarValleSingular(ctx, x, y, nombre, color) {
+    ctx.beginPath();
+    ctx.ellipse(x, y, 8, 4, 0, 0, 2 * Math.PI);
+    ctx.fill();
+
+    dibujarNombre(ctx, x, y, nombre, "#32CD32");
+}
+
+// -------------------------------
+// Función auxiliar: nombres
+// -------------------------------
+function dibujarNombre(ctx, x, y, nombre, colorTexto) {
+    ctx.fillStyle = colorTexto || "#FFFFFF";
+    ctx.font = "10px serif";
+    ctx.textAlign = "center";
+    ctx.fillText(nombre, x, y - 10);
 }
