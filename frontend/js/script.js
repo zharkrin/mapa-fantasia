@@ -3,34 +3,28 @@
 // frontend/js/script.js
 // ===============================
 
-import { DibujarTerreno } from "./mapa/dibujarMapa.js";
-import { DibujarNombres } from "./mapa/dibujarNombres.js";
-import { dibujarTerrenoEspecial } from "./mapa/dibujarTerrenoEspecial.js";
-import { generarTerreno } from "./mapa/generacionTerreno.js";
-import { generarNombres } from "./mapa/nombres.js";
-import { generarTerrenoEspecial } from "./mapa/terrenoEspecial.js";
+// Importaciones de módulos (ejemplo)
+import { generarBiomas } from "./generacion-biomas.js";
+import { dibujarMapa } from "../mapa/dibujarMapa.js";
+import { generarTerrenoEspecial } from "../mapa/terrenoEspecial.js";
 
-window.addEventListener("DOMContentLoaded", () => {
-    const canvas = document.getElementById("mapaCanvas");
-    const ctx = canvas.getContext("2d");
+// Inicializar el canvas
+const canvas = document.getElementById("mapCanvas");
+const ctx = canvas.getContext("2d");
 
-    // 1. Generar terreno base
-    const terreno = generarTerreno();
+// Función principal de generación
+function generarMapa() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 2. Dibujar terreno
-    const dibujarTerreno = new DibujarTerreno(terreno);
-    dibujarTerreno.dibujar(ctx);
+    // Dibujar base del terreno
+    dibujarMapa(ctx);
 
-    // 3. Generar nombres
-    const nombres = generarNombres(terreno);
+    // Dibujar biomas
+    generarBiomas(ctx);
 
-    // 4. Dibujar nombres
-    const dibujarNombres = new DibujarNombres(nombres);
-    dibujarNombres.dibujar(ctx);
+    // Dibujar elementos singulares: volcanes, glaciares, bosques especiales
+    generarTerrenoEspecial(ctx);
+}
 
-    // 5. Generar lugares singulares (volcanes, glaciares, bosques legendarios, etc.)
-    const terrenoEspecial = generarTerrenoEspecial(terreno);
-
-    // 6. Dibujar lugares singulares
-    dibujarTerrenoEspecial(ctx, terrenoEspecial);
-});
+// Ejecutar al cargar la página
+window.onload = generarMapa;
