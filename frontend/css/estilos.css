@@ -1,80 +1,93 @@
 /* ===============================
-   Estilos generales
+   Estilos principales
+   frontend/static/css/estilos.css
    =============================== */
+
 body {
     margin: 0;
-    padding: 0;
-    background: #f0f0f0;
-    overflow: hidden;
-    font-family: "Georgia", serif;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f4f4;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-canvas#mapCanvas {
-    display: block;
-    margin: 0 auto;
-    background: #cce7ff;
-    border: 2px solid #333;
-}
-
-/* ===============================
-   Leyenda del mapa
-   =============================== */
-#leyenda-mapa {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid #333;
-    padding: 10px 15px;
-    font-size: 14px;
-    border-radius: 6px;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
-    z-index: 100;
-}
-
-#leyenda-mapa h3 {
-    margin: 0 0 8px 0;
-    font-size: 16px;
+header {
+    background: #333;
+    color: white;
+    padding: 1rem;
     text-align: center;
 }
 
-#leyenda-mapa ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    gap: 1rem;
 }
 
-#leyenda-mapa li {
+canvas#mapCanvas {
+    border: 2px solid #333;
+    background: #fff;
+    flex: 3;
+    max-width: 100%;
+}
+
+/* ===============================
+   Panel lateral de la leyenda
+   =============================== */
+#leyenda {
+    flex: 1;
+    background: #fff;
+    border: 2px solid #ccc;
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+#leyenda h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.leyenda-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+}
+
+.leyenda-grid div {
     display: flex;
     align-items: center;
-    margin: 4px 0;
+    gap: 0.5rem;
 }
 
-#leyenda-mapa .icon {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
-    border-radius: 50%;
+.leyenda-grid img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fafafa;
+    padding: 2px;
 }
 
-/* Colores coherentes con el canvas */
-#leyenda-mapa .icon.volcan {
-    background-color: #FF4500;
+.leyenda-grid span {
+    font-size: 0.9rem;
+    color: #222;
 }
 
-#leyenda-mapa .icon.glaciar {
-    background-color: #ADD8E6;
-}
-
-#leyenda-mapa .icon.bosque {
-    background-color: #228B22;
-}
-
-#leyenda-mapa .icon.montaña {
-    background-color: #A9A9A9;
-}
-
-#leyenda-mapa .icon.valle {
-    background-color: #32CD32;
+/* ===============================
+   Footer
+   =============================== */
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.9rem;
 }
