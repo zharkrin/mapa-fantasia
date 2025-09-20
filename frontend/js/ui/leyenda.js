@@ -1,5 +1,5 @@
 // ===========================================
-// Leyenda del mapa
+// Leyenda del mapa con panel plegable
 // frontend/js/ui/leyenda.js
 // ===========================================
 
@@ -36,35 +36,56 @@ const leyendaIconos = {
 };
 
 /**
- * Genera dinámicamente el HTML de la leyenda
+ * Genera dinámicamente el panel de la leyenda
  */
-function renderLeyenda() {
-    const contenedor = document.createElement("div");
-    contenedor.id = "map-legend";
-    contenedor.style.position = "absolute";
-    contenedor.style.bottom = "10px";
-    contenedor.style.right = "10px";
-    contenedor.style.padding = "10px";
-    contenedor.style.backgroundColor = "rgba(0,0,0,0.6)";
-    contenedor.style.color = "#fff";
-    contenedor.style.borderRadius = "6px";
-    contenedor.style.fontFamily = "sans-serif";
-    contenedor.style.fontSize = "13px";
-    contenedor.style.maxHeight = "250px";
-    contenedor.style.overflowY = "auto";
+function renderLeyendaPanel() {
+    // Botón flotante
+    const boton = document.createElement("button");
+    boton.id = "toggle-legend";
+    boton.innerText = "📜 Leyenda";
+    boton.style.position = "absolute";
+    boton.style.bottom = "10px";
+    boton.style.right = "10px";
+    boton.style.zIndex = "1000";
+    boton.style.padding = "6px 10px";
+    boton.style.backgroundColor = "#333";
+    boton.style.color = "#fff";
+    boton.style.border = "none";
+    boton.style.borderRadius = "4px";
+    boton.style.cursor = "pointer";
+    boton.style.fontSize = "13px";
+
+    // Panel oculto
+    const panel = document.createElement("div");
+    panel.id = "map-legend";
+    panel.style.position = "absolute";
+    panel.style.bottom = "50px";
+    panel.style.right = "10px";
+    panel.style.width = "200px";
+    panel.style.maxHeight = "300px";
+    panel.style.overflowY = "auto";
+    panel.style.padding = "10px";
+    panel.style.backgroundColor = "rgba(0,0,0,0.8)";
+    panel.style.color = "#fff";
+    panel.style.borderRadius = "6px";
+    panel.style.fontFamily = "sans-serif";
+    panel.style.fontSize = "13px";
+    panel.style.display = "none"; // Oculto por defecto
+    panel.style.zIndex = "999";
 
     const titulo = document.createElement("h4");
-    titulo.innerText = "Leyenda";
+    titulo.innerText = "Leyenda del mapa";
     titulo.style.margin = "0 0 10px 0";
     titulo.style.fontSize = "14px";
     titulo.style.textAlign = "center";
-    contenedor.appendChild(titulo);
+    panel.appendChild(titulo);
 
+    // Entradas de la leyenda
     for (const [clave, nombre] of Object.entries(leyendaIconos)) {
         const fila = document.createElement("div");
         fila.style.display = "flex";
         fila.style.alignItems = "center";
-        fila.style.marginBottom = "4px";
+        fila.style.marginBottom = "5px";
 
         const img = document.createElement("img");
         img.src = `/static/img/icons/${clave}.png`;
@@ -78,11 +99,18 @@ function renderLeyenda() {
 
         fila.appendChild(img);
         fila.appendChild(label);
-        contenedor.appendChild(fila);
+        panel.appendChild(fila);
     }
 
-    document.body.appendChild(contenedor);
+    // Añadir a la página
+    document.body.appendChild(boton);
+    document.body.appendChild(panel);
+
+    // Alternar mostrar/ocultar
+    boton.addEventListener("click", () => {
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
+    });
 }
 
 // Ejecutar la leyenda al cargar
-document.addEventListener("DOMContentLoaded", renderLeyenda);
+document.addEventListener("DOMContentLoaded", renderLeyendaPanel);
