@@ -1,47 +1,80 @@
 /* ===============================
    Estilos generales
-   frontend/css/estilos.css
    =============================== */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f0f0f0;
+    overflow: hidden;
+    font-family: "Georgia", serif;
+}
 
-/* Canvas del mapa */
-#mapaCanvas {
-    border: 2px solid #333;
+canvas#mapCanvas {
     display: block;
     margin: 0 auto;
-    background-color: #f8f8f8; /* fondo neutro para el mapa */
+    background: #cce7ff;
+    border: 2px solid #333;
 }
 
 /* ===============================
-   Etiquetas de lugares singulares
+   Leyenda del mapa
    =============================== */
+#leyenda-mapa {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #333;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 6px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    z-index: 100;
+}
 
-/* Texto general sobre el mapa */
-.canvas-label {
-    font-family: "Georgia", serif;
-    font-size: 12px;
-    font-weight: bold;
+#leyenda-mapa h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
     text-align: center;
-    text-shadow: 1px 1px 2px #000000aa; /* sombra ligera para destacar */
-    pointer-events: none; /* evita que bloquee interacciones */
 }
 
-/* Colores según tipo */
-.canvas-label.volcan {
-    color: #FF4500; /* rojo intenso */
+#leyenda-mapa ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-.canvas-label.glaciar {
-    color: #ADD8E6; /* azul hielo */
+#leyenda-mapa li {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
 }
 
-.canvas-label.bosque {
-    color: #228B22; /* verde bosque */
+#leyenda-mapa .icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    border-radius: 50%;
 }
 
-.canvas-label.montaña {
-    color: #A9A9A9; /* gris roca */
+/* Colores coherentes con el canvas */
+#leyenda-mapa .icon.volcan {
+    background-color: #FF4500;
 }
 
-.canvas-label.valle {
-    color: #32CD32; /* verde claro */
+#leyenda-mapa .icon.glaciar {
+    background-color: #ADD8E6;
+}
+
+#leyenda-mapa .icon.bosque {
+    background-color: #228B22;
+}
+
+#leyenda-mapa .icon.montaña {
+    background-color: #A9A9A9;
+}
+
+#leyenda-mapa .icon.valle {
+    background-color: #32CD32;
 }
