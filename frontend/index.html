@@ -1,56 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Generador de Mapas</title>
-    <link rel="stylesheet" href="/static/css/estilos.css">
+  <meta charset="UTF-8">
+  <title>Mapa de Fantasía</title>
+  <link rel="stylesheet" href="/static/css/estilos.css">
 </head>
 <body>
-    <header>
-        <h1>🌍 Generador de Mapas</h1>
-    </header>
+  <!-- ===============================
+       Header
+       =============================== -->
+  <header>
+    <h1>Generador de Mapas de Fantasía</h1>
+  </header>
 
-    <main>
-        <!-- Lienzo principal del mapa -->
-        <canvas id="mapCanvas" width="1200" height="800"></canvas>
+  <!-- ===============================
+       Contenido principal
+       =============================== -->
+  <main>
+    <!-- Canvas del mapa -->
+    <canvas id="mapCanvas" width="800" height="600"></canvas>
 
-        <!-- Panel lateral con la leyenda -->
-        <aside id="leyenda">
-            <h2>Leyenda de Biomas y Lugares</h2>
-            <div class="leyenda-grid">
-                <div><img src="/static/img/icons/acantilado.png" alt="Acantilado"><span>Acantilado</span></div>
-                <div><img src="/static/img/icons/bosque_boreal.png" alt="Bosque boreal"><span>Bosque Boreal</span></div>
-                <div><img src="/static/img/icons/bosque_tropical.png" alt="Bosque tropical"><span>Bosque Tropical</span></div>
-                <div><img src="/static/img/icons/bosque.png" alt="Bosque"><span>Bosque</span></div>
-                <div><img src="/static/img/icons/cañon.png" alt="Cañón"><span>Cañón</span></div>
-                <div><img src="/static/img/icons/colina.png" alt="Colina"><span>Colina</span></div>
-                <div><img src="/static/img/icons/costa.png" alt="Costa"><span>Costa</span></div>
-                <div><img src="/static/img/icons/desierto_calido.png" alt="Desierto cálido"><span>Desierto Cálido</span></div>
-                <div><img src="/static/img/icons/desierto_frio.png" alt="Desierto frío"><span>Desierto Frío</span></div>
-                <div><img src="/static/img/icons/estepa.png" alt="Estepa"><span>Estepa</span></div>
-                <div><img src="/static/img/icons/humedal.png" alt="Humedal"><span>Humedal</span></div>
-                <div><img src="/static/img/icons/lago.png" alt="Lago"><span>Lago</span></div>
-                <div><img src="/static/img/icons/mar.png" alt="Mar"><span>Mar</span></div>
-                <div><img src="/static/img/icons/mesera.png" alt="Mesera"><span>Mesera</span></div>
-                <div><img src="/static/img/icons/montañas.png" alt="Montañas"><span>Montañas</span></div>
-                <div><img src="/static/img/icons/oceano.png" alt="Océano"><span>Océano</span></div>
-                <div><img src="/static/img/icons/pantano.png" alt="Pantano"><span>Pantano</span></div>
-                <div><img src="/static/img/icons/playa.png" alt="Playa"><span>Playa</span></div>
-                <div><img src="/static/img/icons/pradera.png" alt="Pradera"><span>Pradera</span></div>
-                <div><img src="/static/img/icons/sabana.png" alt="Sabana"><span>Sabana</span></div>
-                <div><img src="/static/img/icons/selva_tropical.png" alt="Selva tropical"><span>Selva Tropical</span></div>
-                <div><img src="/static/img/icons/tundra.png" alt="Tundra"><span>Tundra</span></div>
-                <div><img src="/static/img/icons/valle.png" alt="Valle"><span>Valle</span></div>
-                <div><img src="/static/img/icons/volcan.png" alt="Volcán"><span>Volcán</span></div>
-            </div>
-        </aside>
-    </main>
+    <!-- Panel de la leyenda -->
+    <aside id="leyenda"></aside>
+  </main>
 
-    <footer>
-        <p>Generador de Mapas &copy; 2025</p>
-    </footer>
+  <!-- ===============================
+       Footer
+       =============================== -->
+  <footer>
+    <p>Proyecto de Generador Procedimental de Mapas © 2025</p>
+  </footer>
 
-    <!-- Script principal -->
-    <script src="/static/js/script.js"></script>
+  <!-- ===============================
+       Scripts
+       =============================== -->
+  <script src="/js/script.js"></script>
+  <script src="/js/ui/leyenda.js"></script>
 </body>
 </html>
