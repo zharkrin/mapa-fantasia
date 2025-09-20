@@ -3,20 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>Generador de Mapas</title>
-  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="/static/css/estilos.css">
+  <script type="module" src="/static/js/script.js"></script>
 </head>
 <body>
-  <div id="menu">
-    <h1>Generador de Mapas</h1>
+  <!-- ===============================
+       Canvas principal del mapa
+       =============================== -->
+  <canvas id="mapCanvas" width="1200" height="800"></canvas>
 
-    <label>
-      <input type="checkbox" id="toggleTerrenoEspecial" checked>
-      Mostrar lugares singulares
-    </label>
+  <!-- ===============================
+       Leyenda del mapa
+       =============================== -->
+  <div id="leyenda-mapa">
+    <h3>Leyenda</h3>
+    <ul>
+      <li><span class="icon volcan"></span> Volcán</li>
+      <li><span class="icon glaciar"></span> Glaciar</li>
+      <li><span class="icon bosque"></span> Bosque singular</li>
+      <li><span class="icon montaña"></span> Montaña</li>
+      <li><span class="icon valle"></span> Valle</li>
+    </ul>
   </div>
-
-  <canvas id="mapaCanvas" width="1200" height="800"></canvas>
-
-  <script type="module" src="js/script.js"></script>
 </body>
 </html>
