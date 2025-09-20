@@ -1,44 +1,56 @@
-// ===============================
-// Nombres para Terreno Especial
+// ===========================================
+// Nombres de terrenos especiales con iconos
 // frontend/js/mapa/nombresTerrenoEspecial.js
-// ===============================
-// Se encarga de generar nombres únicos para
-// volcanes, glaciares, bosques legendarios,
-// montes y valles especiales.
-// ===============================
+// ===========================================
 
-export class NombresTerrenoEspecial {
-    constructor() {
-        // Listas base, neutrales
-        this.volcanes = ["Monte de Fuego", "La Garganta Ardiente", "Pico de Ceniza", "El Yelmo Llameante"];
-        this.glaciares = ["Valle Helado", "Lengua de Hielo", "La Corona Blanca", "Grieta Glacial"];
-        this.bosques = ["Bosque Viejo", "El Robledal Oscuro", "Selva Susurrante", "Arboleda Perdida"];
-        this.montes = ["Monte del Destino", "Pico de la Tormenta", "La Cumbre Solitaria", "Colmillo de Piedra"];
-        this.valles = ["Valle del Viento Helado", "Quebrada Sombría", "Las Lomas Verdes", "Desfiladero Silente"];
+/**
+ * Diccionario de terrenos especiales
+ * - clave: nombre en minúsculas (coincide con archivo en /static/img/icons/)
+ * - nombre: nombre visible para mostrar al jugador
+ * - icono: ruta al archivo PNG en /static/img/icons/
+ */
+const terrenosEspeciales = {
+    "volcan": {
+        nombre: "Volcán",
+        icono: "/static/img/icons/volcan.png"
+    },
+    "glaciar": {
+        nombre: "Glaciar",
+        icono: "/static/img/icons/glaciar.png"
+    },
+    "bosque_ancestral": {
+        nombre: "Bosque ancestral",
+        icono: "/static/img/icons/bosque.png"
+    },
+    "pantano_mistico": {
+        nombre: "Pantano místico",
+        icono: "/static/img/icons/pantano.png"
+    },
+    "valle_sagrado": {
+        nombre: "Valle sagrado",
+        icono: "/static/img/icons/valle.png"
+    },
+    "montaña_perdida": {
+        nombre: "Montaña perdida",
+        icono: "/static/img/icons/montañas.png"
     }
+};
 
-    // Devuelve un nombre aleatorio de la lista indicada
-    generarNombre(tipo) {
-        let lista;
-        switch (tipo) {
-            case "volcan":
-                lista = this.volcanes;
-                break;
-            case "glaciar":
-                lista = this.glaciares;
-                break;
-            case "bosque":
-                lista = this.bosques;
-                break;
-            case "monte":
-                lista = this.montes;
-                break;
-            case "valle":
-                lista = this.valles;
-                break;
-            default:
-                lista = ["Lugar Desconocido"];
-        }
-        return lista[Math.floor(Math.random() * lista.length)];
-    }
+/**
+ * Devuelve todos los terrenos especiales disponibles
+ */
+function obtenerTerrenosEspeciales() {
+    return Object.values(terrenosEspeciales);
 }
+
+/**
+ * Devuelve un terreno especial por su clave
+ * @param {string} clave
+ * @returns {object|null}
+ */
+function obtenerTerrenoEspecial(clave) {
+    return terrenosEspeciales[clave] || null;
+}
+
+// Exportar si usamos módulos ES6
+// export { terrenosEspeciales, obtenerTerrenosEspeciales, obtenerTerrenoEspecial };
