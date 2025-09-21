@@ -12,14 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.height = window.innerHeight;
 
     // ===============================
-    // Terrenos especiales: volcán, glaciar, bosque singular
+    // Terrenos especiales
     // ===============================
-    // Aquí importamos o simulamos los datos desde terrenoEspecial.js
-    const terrenosEspeciales = [
+    // Array inicial, puede modificarse manualmente
+    let terrenosEspeciales = [
         { nombre: "Volcán", icono: "volcan.png" },
         { nombre: "Glaciar", icono: "glaciar.png" },
         { nombre: "Bosque singular", icono: "bosque.png" }
-        // Puedes añadir más elementos según tu terrenoEspecial.js
     ];
 
     // ===============================
@@ -50,20 +49,36 @@ document.addEventListener("DOMContentLoaded", () => {
     generarLeyenda();
 
     // ===============================
+    // Función para registrar terrenos especiales generados por el mapa
+    // ===============================
+    function registrarTerrenoEspecial(nombre, icono) {
+        // Comprobar si ya existe para no duplicar
+        if (!terrenosEspeciales.some(t => t.nombre === nombre)) {
+            terrenosEspeciales.push({ nombre, icono });
+            generarLeyenda(); // actualizar leyenda automáticamente
+        }
+    }
+
+    // ===============================
     // Función principal del mapa
     // ===============================
     function dibujarMapa() {
         // Limpiar canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Aquí se llamarían las funciones de biomas, ríos, ciudades, caminos, etc.
+        // Aquí se llamarían las funciones de biomas, ríos, ciudades, caminos, terrenos especiales
         // Ejemplo:
         // dibujarBiomas(ctx);
         // dibujarRios(ctx);
         // dibujarCiudades(ctx);
         // dibujarTerrenosEspeciales(ctx);
 
-        // Por ahora solo un fondo gris de prueba
+        // Simulación de generación de terreno especial
+        // Por ejemplo, un volcán generado proceduralmente
+        registrarTerrenoEspecial("Monte Fuego", "volcan.png");
+        registrarTerrenoEspecial("Glaciar Ártico", "glaciar.png");
+
+        // Fondo de prueba
         ctx.fillStyle = "#cccccc";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
@@ -79,4 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.height = window.innerHeight;
         dibujarMapa();
     });
+
+    // ===============================
+    // Exponer función para añadir terrenos manualmente desde consola o otros scripts
+    // ===============================
+    window.agregarTerrenoEspecial = registrarTerrenoEspecial;
 });
