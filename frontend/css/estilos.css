@@ -1,93 +1,65 @@
-/* ===============================
-   Estilos principales
-   frontend/static/css/estilos.css
-   =============================== */
-
+/* =======================================
+   Estilos generales
+   ======================================= */
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f4f4;
-    color: #222;
+    font-family: Arial, sans-serif;
+    background: #f0f0f0;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    align-items: center;
 }
 
-header {
-    background: #333;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-}
-
-main {
-    flex: 1;
+#app {
     display: flex;
     flex-direction: row;
-    padding: 1rem;
-    gap: 1rem;
+    margin: 20px;
 }
 
-canvas#mapCanvas {
+/* =======================================
+   Canvas del mapa
+   ======================================= */
+#mapaCanvas {
     border: 2px solid #333;
-    background: #fff;
-    flex: 3;
-    max-width: 100%;
+    background: white;
 }
 
-/* ===============================
+/* =======================================
    Panel lateral de la leyenda
-   =============================== */
-#leyenda {
-    flex: 1;
-    background: #fff;
-    border: 2px solid #ccc;
-    padding: 1rem;
+   ======================================= */
+#panel-leyenda {
+    margin-left: 20px;
+    padding: 15px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    min-width: 220px;
+    max-height: 800px;
     overflow-y: auto;
-    max-height: 90vh;
 }
 
-#leyenda h2 {
+#panel-leyenda h3 {
+    margin-top: 0;
     text-align: center;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    color: #333;
 }
 
-.leyenda-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem 1rem;
+/* =======================================
+   Lista de la leyenda
+   ======================================= */
+.leyenda-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.leyenda-grid div {
+.leyenda-item {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    margin-bottom: 8px;
 }
 
-.leyenda-grid img {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #fafafa;
-    padding: 2px;
-}
-
-.leyenda-grid span {
-    font-size: 0.9rem;
-    color: #222;
-}
-
-/* ===============================
-   Footer
-   =============================== */
-footer {
-    background: #333;
-    color: white;
-    text-align: center;
-    padding: 0.5rem;
-    font-size: 0.9rem;
+.leyenda-icono {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
 }
