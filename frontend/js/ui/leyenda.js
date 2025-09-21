@@ -1,5 +1,5 @@
 // ===========================================
-// Leyenda del mapa
+// Leyenda del mapa (solo terrenos especiales)
 // frontend/js/ui/leyenda.js
 // ===========================================
 
@@ -19,7 +19,7 @@ function generarLeyenda() {
 
     // Crear título
     const titulo = document.createElement("h3");
-    titulo.textContent = "Leyenda del Mapa";
+    titulo.textContent = "Terrenos Especiales";
     contenedor.appendChild(titulo);
 
     // Obtener terrenos especiales
