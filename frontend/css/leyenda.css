@@ -1,0 +1,46 @@
+/* ===============================
+   Leyenda - estilos del panel
+   frontend/css/leyenda.css
+   =============================== */
+
+#leyenda-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 250px;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: rgba(30, 30, 30, 0.9);
+    border: 2px solid #fff;
+    border-radius: 8px;
+    padding: 12px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    z-index: 2000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+}
+
+#leyenda-container h3 {
+    margin-top: 0;
+    font-size: 16px;
+    text-align: center;
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 6px;
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    margin: 6px 0;
+}
+
+.leyenda-item img {
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+}
+
+.leyenda-item span {
+    flex: 1;
+}
