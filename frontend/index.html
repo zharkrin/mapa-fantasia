@@ -1,24 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Generador de Mapas de Fantasía</title>
-    <link rel="stylesheet" href="css/estilos.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Mapas</title>
+
+  <!-- =======================
+       Estilos principales
+       ======================= -->
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="css/leyenda.css">
 </head>
 <body>
-    <div id="app">
-        <h1>Generador de Mapas de Fantasía</h1>
-        <canvas id="mapaCanvas" width="1200" height="800"></canvas>
+  <!-- =======================
+       Contenedor principal
+       ======================= -->
+  <div id="app">
+    <canvas id="mapa"></canvas>
+  </div>
 
-        <!-- Panel lateral para la leyenda -->
-        <aside id="panel-leyenda">
-            <div id="leyenda"></div>
-        </aside>
+  <!-- =======================
+       Panel de leyenda
+       ======================= -->
+  <div id="leyenda-container">
+    <h3>Leyenda</h3>
+    <div class="leyenda-item">
+      <img src="static/img/icons/volcan.png" alt="Volcán">
+      <span>Volcán</span>
     </div>
+    <div class="leyenda-item">
+      <img src="static/img/icons/glaciar.png" alt="Glaciar">
+      <span>Glaciar</span>
+    </div>
+    <div class="leyenda-item">
+      <img src="static/img/icons/bosque.png" alt="Bosque singular">
+      <span>Bosque singular</span>
+    </div>
+    <!-- Puedes añadir más elementos según se vayan creando -->
+  </div>
 
-    <!-- Scripts del mapa -->
-    <script src="js/mapa/nombresTerrenoEspecial.js"></script>
-    <script src="js/ui/leyenda.js"></script>
-    <script src="js/script.js"></script>
+  <!-- =======================
+       Scripts principales
+       ======================= -->
+  <script src="js/perlin.js"></script>
+  <script src="js/generacionProcedural.js"></script>
+  <script src="js/generacion-biomas.js"></script>
+  <script src="js/nombres-biomas.js"></script>
+  <script src="js/nombresCiudadesNaciones.js"></script>
+  <script src="js/nombresMontañasRios.js"></script>
+  <script src="js/etiquetas.js"></script>
+
+  <!-- Carpeta mapa -->
+  <script src="js/mapa/biomas.js"></script>
+  <script src="js/mapa/caminos.js"></script>
+  <script src="js/mapa/caminosFinales.js"></script>
+  <script src="js/mapa/coloresTerreno.js"></script>
+  <script src="js/mapa/dibujarMapa.js"></script>
+  <script src="js/mapa/dibujarNombres.js"></script>
+  <script src="js/mapa/generacionTerreno.js"></script>
+  <script src="js/mapa/generacionVoronoi.js"></script>
+  <script src="js/mapa/generacionVoronoiReal.js"></script>
+  <script src="js/mapa/nombres.js"></script>
+  <script src="js/mapa/nombresGeograficos.js"></script>
+  <script src="js/mapa/rios.js"></script>
+  <script src="js/mapa/terrenoEspecial.js"></script>
+
+  <!-- Carpeta rutas -->
+  <script src="js/rutas/aStar.js"></script>
+  <script src="js/rutas/ciudades.js"></script>
+  <script src="js/rutas/grafo.js"></script>
+  <script src="js/rutas/rutas.js"></script>
+
+  <!-- Carpeta ui -->
+  <script src="js/ui/drawRutas.js"></script>
+
+  <!-- Script principal -->
+  <script src="js/script.js"></script>
 </body>
 </html>
