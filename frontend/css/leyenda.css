@@ -1,57 +1,137 @@
-/* ================================================
-   frontend/css/leyenda.css
-   Estilos para el panel de leyenda visual
-   ================================================ */
+/* =========================================
+   LEYENDA DE TERRENOS ESPECIALES
+   ========================================= */
 
-#panel-leyenda {
-  position: fixed;
-  top: 20px;
+#leyenda {
+  position: absolute;
   right: 20px;
-  background: rgba(30, 30, 30, 0.85);
-  border: 2px solid #ffffff33;
-  border-radius: 10px;
-  padding: 12px 16px;
-  max-height: 85vh;
-  overflow-y: auto;
-  z-index: 9999;
-  color: #fff;
-  font-family: 'Segoe UI', sans-serif;
-  width: 260px;
-  box-shadow: 0 0 10px #000000aa;
+  bottom: 60px;
+  background-color: rgba(36, 40, 45, 0.92);
+  border: 1px solid #3a3f44;
+  border-radius: 8px;
+  padding: 1em;
+  width: 240px;
+  color: #f0f0f0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 500;
 }
 
-#panel-leyenda h3 {
+/* Título de la leyenda */
+#leyenda h3 {
   text-align: center;
-  font-size: 18px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ffffff44;
-  padding-bottom: 6px;
+  color: #3fa7d6;
+  font-size: 1.1em;
+  margin-bottom: 0.8em;
+  border-bottom: 1px solid #3a3f44;
+  padding-bottom: 0.4em;
 }
 
-.leyenda-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+/* Contenedor de ítems */
+#leyenda ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.leyenda-item {
+#leyenda li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 6px 8px;
-  border-radius: 6px;
-  transition: background 0.2s;
+  margin-bottom: 0.6em;
+  transition: background 0.2s ease;
+  border-radius: 4px;
+  padding: 4px 6px;
 }
 
-.leyenda-item:hover {
-  background: rgba(255, 255, 255, 0.18);
+#leyenda li:hover {
+  background-color: rgba(63, 167, 214, 0.15);
 }
 
-.leyenda-icono {
+/* Iconos de terreno especial */
+#leyenda li img {
   width: 28px;
   height: 28px;
-  border-radius: 4px;
+  margin-right: 10px;
   object-fit: contain;
-  background: #00000044;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.6));
+}
+
+/* Texto del nombre */
+#leyenda li span {
+  flex: 1;
+  font-size: 0.95em;
+  color: #e0e0e0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* =========================================
+   BOTÓN PARA MOSTRAR/OCULTAR LEYENDA
+   ========================================= */
+
+#toggle-leyenda {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  background-color: #3fa7d6;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.4em;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  transition: background 0.25s ease, transform 0.2s ease;
+  z-index: 600;
+}
+
+#toggle-leyenda:hover {
+  background-color: #2f8db8;
+  transform: scale(1.08);
+}
+
+/* =========================================
+   ANIMACIONES Y TRANSICIONES
+   ========================================= */
+
+#leyenda.oculta {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+#leyenda.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 700px) {
+  #leyenda {
+    width: 200px;
+    right: 10px;
+    bottom: 70px;
+    font-size: 0.9em;
+  }
+
+  #toggle-leyenda {
+    right: 10px;
+    bottom: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2em;
+  }
+
+  #leyenda li img {
+    width: 24px;
+    height: 24px;
+  }
 }
