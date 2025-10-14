@@ -9,7 +9,7 @@ import { dibujarNombres } from './mapa/dibujarNombres.js';
 import { nombresTerrenoEspecial } from './mapa/nombresTerrenoEspecial.js';
 import { nombresGeograficos } from './mapa/nombresGeograficos.js';
 import { drawRutas } from './ui/drawRutas.js';
-import { rutasTerrestres } from './rutas/rutas.js';
+import { generarRutasTerrestres } from './rutas/rutas.js';
 
 // ===============================
 // VARIABLES PRINCIPALES
@@ -20,6 +20,7 @@ const ctx = canvas.getContext('2d');
 let mapaDatos = null;
 let mostrarTerrenosEspeciales = true;
 let mostrarRutas = false;
+let rutasTerrestres = [];
 
 // ===============================
 // CONFIGURACIÓN DEL CANVAS
@@ -49,28 +50,27 @@ function generarMapa() {
   });
 
   // 4. Dibujar nombres de terrenos especiales
-  nombresTerrenoEspecial.forEach(terreno => {
-    const img = new Image();
-    img.src = `static/img/icons/${terreno.icono}.png`;
-    img.onload = () => {
-      ctx.drawImage(img, terreno.x, terreno.y, 32, 32);
-    };
-  });
-
-  // 5. Dibujar rutas terrestres
-  if (mostrarRutas) {
-    rutasTerrestres.forEach(ruta => {
-      drawRutas(ctx, ruta);
+  if (mostrarTerrenosEspeciales) {
+    nombresTerrenoEspecial.forEach(terreno => {
+      const img = new Image();
+      img.src = `static/img/icons/${terreno.icono}.png`;
+      img.onload = () => {
+        ctx.drawImage(img, terreno.x, terreno.y, 32, 32);
+      };
     });
+  }
+
+  // 5. Generar y dibujar rutas terrestres procedimentales
+  if (mostrarRutas) {
+    rutasTerrestres = generarRutasTerrestres();
+    rutasTerrestres.forEach(ruta => drawRutas(ctx, ruta));
   }
 }
 
 // ===============================
 // EVENTOS DE BOTONES
 // ===============================
-document.getElementById('generar-mapa').addEventListener('click', () => {
-  generarMapa();
-});
+document.getElementById('generar-mapa').addEventListener('click', generarMapa);
 
 document.getElementById('guardar-mapa').addEventListener('click', () => {
   if (!mapaDatos) return alert('Genera un mapa primero.');
