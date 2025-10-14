@@ -3,116 +3,48 @@
 // frontend/js/script.js
 // ===============================
 
+// Importación de módulos
+import { generarBiomas } from './mapa/biomas.js';
 import { generarTerreno } from './mapa/generacionTerreno.js';
 import { dibujarMapa } from './mapa/dibujarMapa.js';
 import { dibujarNombres } from './mapa/dibujarNombres.js';
-import { nombresTerrenoEspecial } from './mapa/nombresTerrenoEspecial.js';
-import { nombresGeograficos } from './mapa/nombresGeograficos.js';
-import { drawRutas } from './ui/drawRutas.js';
 import { generarRutasTerrestres } from './rutas/rutas.js';
+import { nombresGeograficos } from './mapa/nombresGeograficos.js';
+import { terrenoEspecial } from './mapa/terrenoEspecial.js';
 
 // ===============================
-// VARIABLES PRINCIPALES
+// Función principal para generar el mapa completo
 // ===============================
-const canvas = document.getElementById('mapa');
-const ctx = canvas.getContext('2d');
+function generarMapaCompleto() {
+    // 1️⃣ Generar biomas procedurales
+    const biomas = generarBiomas();
 
-let mapaDatos = null;
-let mostrarTerrenosEspeciales = true;
-let mostrarRutas = false;
-let rutasTerrestres = [];
+    // 2️⃣ Generar terrenos normales y especiales
+    const terrenos = generarTerreno();
+    const especiales = terrenoEspecial(); // volcanes, glaciares, bosques singulares
 
-// ===============================
-// CONFIGURACIÓN DEL CANVAS
-// ===============================
-function ajustarCanvas() {
-  canvas.width = window.innerWidth * 0.85;
-  canvas.height = window.innerHeight * 0.85;
-}
-window.addEventListener('resize', ajustarCanvas);
-ajustarCanvas();
+    // 3️⃣ Generar rutas terrestres procedurales
+    const rutas = generarRutasTerrestres();
 
-// ===============================
-// GENERAR MAPA
-// ===============================
-function generarMapa() {
-  // 1. Generar terreno procedimental
-  mapaDatos = generarTerreno(canvas.width, canvas.height);
+    // 4️⃣ Dibujar el mapa completo en el canvas
+    dibujarMapa(biomas, terrenos, especiales);
 
-  // 2. Dibujar mapa base
-  dibujarMapa(ctx, mapaDatos);
+    // 5️⃣ Dibujar nombres de ciudades, montañas y ríos
+    dibujarNombres(nombresGeograficos, terrenos, especiales);
 
-  // 3. Dibujar nombres geográficos: ciudades, ríos, montañas
-  nombresGeograficos.forEach(nombre => {
-    ctx.fillStyle = nombre.color || 'white';
-    ctx.font = nombre.tamano || '14px Arial';
-    ctx.fillText(nombre.texto, nombre.x, nombre.y);
-  });
-
-  // 4. Dibujar nombres de terrenos especiales
-  if (mostrarTerrenosEspeciales) {
-    nombresTerrenoEspecial.forEach(terreno => {
-      const img = new Image();
-      img.src = `static/img/icons/${terreno.icono}.png`;
-      img.onload = () => {
-        ctx.drawImage(img, terreno.x, terreno.y, 32, 32);
-      };
+    // 6️⃣ Dibujar rutas terrestres en el mapa
+    rutas.forEach(ruta => {
+        // Cada ruta es un array de coordenadas
+        // La función drawRuta está definida en frontend/js/ui/drawRutas.js
+        window.drawRuta(ruta);
     });
-  }
 
-  // 5. Generar y dibujar rutas terrestres procedimentales
-  if (mostrarRutas) {
-    rutasTerrestres = generarRutasTerrestres();
-    rutasTerrestres.forEach(ruta => drawRutas(ctx, ruta));
-  }
+    console.log('✅ Mapa generado automáticamente con todos los elementos.');
 }
 
 // ===============================
-// EVENTOS DE BOTONES
+// Ejecutar al cargar la página
 // ===============================
-document.getElementById('generar-mapa').addEventListener('click', generarMapa);
-
-document.getElementById('guardar-mapa').addEventListener('click', () => {
-  if (!mapaDatos) return alert('Genera un mapa primero.');
-  const dataURL = canvas.toDataURL('image/png');
-  const link = document.createElement('a');
-  link.href = dataURL;
-  link.download = 'mapa_fantasia.png';
-  link.click();
-});
-
-// ===============================
-// CHECKBOX DE OPCIONES
-// ===============================
-document.getElementById('mostrar-terrenos-especiales').addEventListener('change', (e) => {
-  mostrarTerrenosEspeciales = e.target.checked;
-  generarMapa();
-});
-
-document.getElementById('mostrar-rutas').addEventListener('change', (e) => {
-  mostrarRutas = e.target.checked;
-  generarMapa();
-});
-
-// ===============================
-// BOTÓN MOSTRAR/OCULTAR LEYENDA
-// ===============================
-const leyenda = document.getElementById('leyenda');
-const toggleLeyenda = document.getElementById('toggle-leyenda');
-
-toggleLeyenda.addEventListener('click', () => {
-  if (leyenda.classList.contains('visible')) {
-    leyenda.classList.remove('visible');
-    leyenda.classList.add('oculta');
-  } else {
-    leyenda.classList.remove('oculta');
-    leyenda.classList.add('visible');
-  }
-});
-
-// ===============================
-// INICIALIZACIÓN
-// ===============================
-window.addEventListener('load', () => {
-  generarMapa();
+window.addEventListener('DOMContentLoaded', () => {
+    generarMapaCompleto();
 });
