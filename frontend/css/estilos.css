@@ -1,65 +1,202 @@
-/* =======================================
-   Estilos generales
-   ======================================= */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* =========================================
+   ESTILOS GENERALES DEL GENERADOR DE MAPAS
+   ========================================= */
+
+:root {
+  --color-fondo: #1b1e22;
+  --color-panel: #24282d;
+  --color-texto: #f0f0f0;
+  --color-acento: #3fa7d6;
+  --color-borde: #3a3f44;
+  --color-sombra: rgba(0, 0, 0, 0.4);
+
+  --fuente-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#app {
-    display: flex;
-    flex-direction: row;
-    margin: 20px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* =======================================
-   Canvas del mapa
-   ======================================= */
-#mapaCanvas {
-    border: 2px solid #333;
-    background: white;
+html, body {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente-principal);
+  overflow: hidden;
 }
 
-/* =======================================
-   Panel lateral de la leyenda
-   ======================================= */
-#panel-leyenda {
-    margin-left: 20px;
-    padding: 15px;
-    background: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    min-width: 220px;
-    max-height: 800px;
-    overflow-y: auto;
+/* =========================================
+   ENCABEZADO
+   ========================================= */
+
+#main-header {
+  background-color: var(--color-panel);
+  border-bottom: 2px solid var(--color-borde);
+  padding: 0.8em 1.2em;
+  text-align: center;
+  box-shadow: 0 2px 6px var(--color-sombra);
 }
 
-#panel-leyenda h3 {
-    margin-top: 0;
-    text-align: center;
+#main-header h1 {
+  font-size: 1.8em;
+  font-weight: 600;
+  color: var(--color-acento);
+  margin-bottom: 0.2em;
 }
 
-/* =======================================
-   Lista de la leyenda
-   ======================================= */
-.leyenda-lista {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+#main-header .subtitulo {
+  font-size: 0.9em;
+  color: #ccc;
 }
 
-.leyenda-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
+/* =========================================
+   CONTENEDOR PRINCIPAL DEL MAPA
+   ========================================= */
+
+#mapa-container {
+  position: absolute;
+  top: 80px;
+  bottom: 40px;
+  left: 250px;
+  right: 0;
+  overflow: hidden;
 }
 
-.leyenda-icono {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
+#mapa {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #a8d0e6 0%, #f8f9fa 100%);
+  display: block;
+}
+
+/* =========================================
+   PANEL DE CONTROLES
+   ========================================= */
+
+#panel-controles {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  bottom: 40px;
+  width: 250px;
+  background-color: var(--color-panel);
+  border-right: 2px solid var(--color-borde);
+  padding: 1em;
+  overflow-y: auto;
+  box-shadow: 2px 0 6px var(--color-sombra);
+}
+
+#panel-controles h2 {
+  text-align: center;
+  margin-bottom: 1em;
+  color: var(--color-acento);
+}
+
+#panel-controles button {
+  width: 100%;
+  background-color: var(--color-acento);
+  color: #fff;
+  border: none;
+  padding: 0.6em;
+  margin-bottom: 0.8em;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+#panel-controles button:hover {
+  background-color: #3293bf;
+}
+
+#panel-controles .opciones {
+  margin-top: 1em;
+}
+
+#panel-controles label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.6em;
+  font-size: 0.9em;
+  color: #ddd;
+}
+
+#panel-controles input[type="checkbox"] {
+  margin-right: 0.5em;
+  accent-color: var(--color-acento);
+}
+
+/* =========================================
+   PIE DE PÁGINA
+   ========================================= */
+
+#main-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: var(--color-panel);
+  border-top: 2px solid var(--color-borde);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85em;
+  color: #ccc;
+  box-shadow: 0 -2px 6px var(--color-sombra);
+}
+
+/* =========================================
+   SCROLLBARS PERSONALIZADOS
+   ========================================= */
+
+#panel-controles::-webkit-scrollbar {
+  width: 8px;
+}
+
+#panel-controles::-webkit-scrollbar-track {
+  background: #1b1e22;
+}
+
+#panel-controles::-webkit-scrollbar-thumb {
+  background-color: var(--color-acento);
+  border-radius: 4px;
+}
+
+/* =========================================
+   ADAPTACIÓN RESPONSIVA
+   ========================================= */
+
+@media (max-width: 900px) {
+  #panel-controles {
+    width: 200px;
+  }
+
+  #mapa-container {
+    left: 200px;
+  }
+}
+
+@media (max-width: 700px) {
+  #panel-controles {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 2px solid var(--color-borde);
+  }
+
+  #mapa-container {
+    position: relative;
+    left: 0;
+    top: 0;
+    height: calc(100vh - 180px);
+  }
+
+  #main-footer {
+    position: relative;
+  }
 }
