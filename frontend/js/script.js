@@ -7,7 +7,9 @@ import { generarTerreno } from './mapa/generacionTerreno.js';
 import { dibujarMapa } from './mapa/dibujarMapa.js';
 import { dibujarNombres } from './mapa/dibujarNombres.js';
 import { nombresTerrenoEspecial } from './mapa/nombresTerrenoEspecial.js';
+import { nombresGeograficos } from './mapa/nombresGeograficos.js';
 import { drawRutas } from './ui/drawRutas.js';
+import { rutasTerrestres } from './rutas/rutas.js';
 
 // ===============================
 // VARIABLES PRINCIPALES
@@ -15,7 +17,7 @@ import { drawRutas } from './ui/drawRutas.js';
 const canvas = document.getElementById('mapa');
 const ctx = canvas.getContext('2d');
 
-let mapaDatos = null;        // Datos generados del mapa
+let mapaDatos = null;
 let mostrarTerrenosEspeciales = true;
 let mostrarRutas = false;
 
@@ -23,7 +25,7 @@ let mostrarRutas = false;
 // CONFIGURACIÓN DEL CANVAS
 // ===============================
 function ajustarCanvas() {
-  canvas.width = window.innerWidth * 0.85;  // Ocupa 85% del ancho
+  canvas.width = window.innerWidth * 0.85;
   canvas.height = window.innerHeight * 0.85;
 }
 window.addEventListener('resize', ajustarCanvas);
@@ -39,23 +41,27 @@ function generarMapa() {
   // 2. Dibujar mapa base
   dibujarMapa(ctx, mapaDatos);
 
-  // 3. Dibujar nombres de ciudades, ríos y montañas
-  dibujarNombres(ctx, mapaDatos);
+  // 3. Dibujar nombres geográficos: ciudades, ríos, montañas
+  nombresGeograficos.forEach(nombre => {
+    ctx.fillStyle = nombre.color || 'white';
+    ctx.font = nombre.tamano || '14px Arial';
+    ctx.fillText(nombre.texto, nombre.x, nombre.y);
+  });
 
-  // 4. Dibujar terrenos especiales si está activado
-  if (mostrarTerrenosEspeciales) {
-    nombresTerrenoEspecial.forEach(terreno => {
-      const img = new Image();
-      img.src = `static/img/icons/${terreno.icono}.png`;
-      img.onload = () => {
-        ctx.drawImage(img, terreno.x, terreno.y, 32, 32);
-      };
-    });
-  }
+  // 4. Dibujar nombres de terrenos especiales
+  nombresTerrenoEspecial.forEach(terreno => {
+    const img = new Image();
+    img.src = `static/img/icons/${terreno.icono}.png`;
+    img.onload = () => {
+      ctx.drawImage(img, terreno.x, terreno.y, 32, 32);
+    };
+  });
 
-  // 5. Dibujar rutas si está activado
+  // 5. Dibujar rutas terrestres
   if (mostrarRutas) {
-    drawRutas(ctx, mapaDatos);
+    rutasTerrestres.forEach(ruta => {
+      drawRutas(ctx, ruta);
+    });
   }
 }
 
