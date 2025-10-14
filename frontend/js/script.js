@@ -3,100 +3,110 @@
 // frontend/js/script.js
 // ===============================
 
-document.addEventListener("DOMContentLoaded", () => {
-    const canvas = document.getElementById("mapa");
-    const ctx = canvas.getContext("2d");
+import { generarTerreno } from './mapa/generacionTerreno.js';
+import { dibujarMapa } from './mapa/dibujarMapa.js';
+import { dibujarNombres } from './mapa/dibujarNombres.js';
+import { nombresTerrenoEspecial } from './mapa/nombresTerrenoEspecial.js';
+import { drawRutas } from './ui/drawRutas.js';
 
-    // Ajustar tamaño del canvas
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+// ===============================
+// VARIABLES PRINCIPALES
+// ===============================
+const canvas = document.getElementById('mapa');
+const ctx = canvas.getContext('2d');
 
-    // ===============================
-    // Terrenos especiales
-    // ===============================
-    // Array inicial, puede modificarse manualmente
-    let terrenosEspeciales = [
-        { nombre: "Volcán", icono: "volcan.png" },
-        { nombre: "Glaciar", icono: "glaciar.png" },
-        { nombre: "Bosque singular", icono: "bosque.png" }
-    ];
+let mapaDatos = null;        // Datos generados del mapa
+let mostrarTerrenosEspeciales = true;
+let mostrarRutas = false;
 
-    // ===============================
-    // Función para generar la leyenda automáticamente
-    // ===============================
-    function generarLeyenda() {
-        const leyendaContainer = document.getElementById("leyenda-container");
-        leyendaContainer.innerHTML = "<h3>Leyenda</h3>";
+// ===============================
+// CONFIGURACIÓN DEL CANVAS
+// ===============================
+function ajustarCanvas() {
+  canvas.width = window.innerWidth * 0.85;  // Ocupa 85% del ancho
+  canvas.height = window.innerHeight * 0.85;
+}
+window.addEventListener('resize', ajustarCanvas);
+ajustarCanvas();
 
-        terrenosEspeciales.forEach(terreno => {
-            const item = document.createElement("div");
-            item.classList.add("leyenda-item");
+// ===============================
+// GENERAR MAPA
+// ===============================
+function generarMapa() {
+  // 1. Generar terreno procedimental
+  mapaDatos = generarTerreno(canvas.width, canvas.height);
 
-            const img = document.createElement("img");
-            img.src = `static/img/icons/${terreno.icono}`;
-            img.alt = terreno.nombre;
+  // 2. Dibujar mapa base
+  dibujarMapa(ctx, mapaDatos);
 
-            const span = document.createElement("span");
-            span.textContent = terreno.nombre;
+  // 3. Dibujar nombres de ciudades, ríos y montañas
+  dibujarNombres(ctx, mapaDatos);
 
-            item.appendChild(img);
-            item.appendChild(span);
-            leyendaContainer.appendChild(item);
-        });
-    }
-
-    // Generar leyenda al cargar
-    generarLeyenda();
-
-    // ===============================
-    // Función para registrar terrenos especiales generados por el mapa
-    // ===============================
-    function registrarTerrenoEspecial(nombre, icono) {
-        // Comprobar si ya existe para no duplicar
-        if (!terrenosEspeciales.some(t => t.nombre === nombre)) {
-            terrenosEspeciales.push({ nombre, icono });
-            generarLeyenda(); // actualizar leyenda automáticamente
-        }
-    }
-
-    // ===============================
-    // Función principal del mapa
-    // ===============================
-    function dibujarMapa() {
-        // Limpiar canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Aquí se llamarían las funciones de biomas, ríos, ciudades, caminos, terrenos especiales
-        // Ejemplo:
-        // dibujarBiomas(ctx);
-        // dibujarRios(ctx);
-        // dibujarCiudades(ctx);
-        // dibujarTerrenosEspeciales(ctx);
-
-        // Simulación de generación de terreno especial
-        // Por ejemplo, un volcán generado proceduralmente
-        registrarTerrenoEspecial("Monte Fuego", "volcan.png");
-        registrarTerrenoEspecial("Glaciar Ártico", "glaciar.png");
-
-        // Fondo de prueba
-        ctx.fillStyle = "#cccccc";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    // Dibujar mapa inicial
-    dibujarMapa();
-
-    // ===============================
-    // Ajustar canvas al redimensionar ventana
-    // ===============================
-    window.addEventListener("resize", () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        dibujarMapa();
+  // 4. Dibujar terrenos especiales si está activado
+  if (mostrarTerrenosEspeciales) {
+    nombresTerrenoEspecial.forEach(terreno => {
+      const img = new Image();
+      img.src = `static/img/icons/${terreno.icono}.png`;
+      img.onload = () => {
+        ctx.drawImage(img, terreno.x, terreno.y, 32, 32);
+      };
     });
+  }
 
-    // ===============================
-    // Exponer función para añadir terrenos manualmente desde consola o otros scripts
-    // ===============================
-    window.agregarTerrenoEspecial = registrarTerrenoEspecial;
+  // 5. Dibujar rutas si está activado
+  if (mostrarRutas) {
+    drawRutas(ctx, mapaDatos);
+  }
+}
+
+// ===============================
+// EVENTOS DE BOTONES
+// ===============================
+document.getElementById('generar-mapa').addEventListener('click', () => {
+  generarMapa();
+});
+
+document.getElementById('guardar-mapa').addEventListener('click', () => {
+  if (!mapaDatos) return alert('Genera un mapa primero.');
+  const dataURL = canvas.toDataURL('image/png');
+  const link = document.createElement('a');
+  link.href = dataURL;
+  link.download = 'mapa_fantasia.png';
+  link.click();
+});
+
+// ===============================
+// CHECKBOX DE OPCIONES
+// ===============================
+document.getElementById('mostrar-terrenos-especiales').addEventListener('change', (e) => {
+  mostrarTerrenosEspeciales = e.target.checked;
+  generarMapa();
+});
+
+document.getElementById('mostrar-rutas').addEventListener('change', (e) => {
+  mostrarRutas = e.target.checked;
+  generarMapa();
+});
+
+// ===============================
+// BOTÓN MOSTRAR/OCULTAR LEYENDA
+// ===============================
+const leyenda = document.getElementById('leyenda');
+const toggleLeyenda = document.getElementById('toggle-leyenda');
+
+toggleLeyenda.addEventListener('click', () => {
+  if (leyenda.classList.contains('visible')) {
+    leyenda.classList.remove('visible');
+    leyenda.classList.add('oculta');
+  } else {
+    leyenda.classList.remove('oculta');
+    leyenda.classList.add('visible');
+  }
+});
+
+// ===============================
+// INICIALIZACIÓN
+// ===============================
+window.addEventListener('load', () => {
+  generarMapa();
 });
