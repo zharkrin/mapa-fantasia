@@ -3,78 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generador de Mapas</title>
+  <title>🌍 Generador de Mapas Fantasía</title>
 
-  <!-- =======================
-       Estilos principales
-       ======================= -->
+  <!-- =================== ESTILOS =================== -->
   <link rel="stylesheet" href="css/estilos.css">
   <link rel="stylesheet" href="css/leyenda.css">
+
+  <!-- Icono del sitio -->
+  <link rel="icon" type="image/png" href="static/img/icons/montañas.png">
 </head>
+
 <body>
-  <!-- =======================
-       Contenedor principal
-       ======================= -->
-  <div id="app">
+  <!-- =================== ENCABEZADO =================== -->
+  <header id="main-header">
+    <h1>🌍 Generador de Mapas Fantasía</h1>
+    <p class="subtitulo">Mapas procedurales con biomas, ríos, montañas y terrenos especiales</p>
+  </header>
+
+  <!-- =================== CONTENEDOR DEL MAPA =================== -->
+  <main id="mapa-container">
     <canvas id="mapa"></canvas>
-  </div>
+  </main>
 
-  <!-- =======================
-       Panel de leyenda
-       ======================= -->
-  <div id="leyenda-container">
-    <h3>Leyenda</h3>
-    <div class="leyenda-item">
-      <img src="static/img/icons/volcan.png" alt="Volcán">
-      <span>Volcán</span>
+  <!-- =================== PANEL DE CONTROLES =================== -->
+  <aside id="panel-controles">
+    <h2>⚙️ Controles</h2>
+
+    <button id="btn-generar">Generar Nuevo Mapa</button>
+    <button id="btn-guardar">Guardar</button>
+    <button id="btn-cargar">Cargar</button>
+
+    <div class="opciones">
+      <label>
+        <input type="checkbox" id="mostrar-biomas" checked>
+        Mostrar biomas
+      </label>
+      <label>
+        <input type="checkbox" id="mostrar-rutas" checked>
+        Mostrar rutas
+      </label>
+      <label>
+        <input type="checkbox" id="mostrar-etiquetas" checked>
+        Mostrar etiquetas
+      </label>
     </div>
-    <div class="leyenda-item">
-      <img src="static/img/icons/glaciar.png" alt="Glaciar">
-      <span>Glaciar</span>
-    </div>
-    <div class="leyenda-item">
-      <img src="static/img/icons/bosque.png" alt="Bosque singular">
-      <span>Bosque singular</span>
-    </div>
-    <!-- Puedes añadir más elementos según se vayan creando -->
-  </div>
+  </aside>
 
-  <!-- =======================
-       Scripts principales
-       ======================= -->
-  <script src="js/perlin.js"></script>
-  <script src="js/generacionProcedural.js"></script>
-  <script src="js/generacion-biomas.js"></script>
-  <script src="js/nombres-biomas.js"></script>
-  <script src="js/nombresCiudadesNaciones.js"></script>
-  <script src="js/nombresMontañasRios.js"></script>
-  <script src="js/etiquetas.js"></script>
+  <!-- =================== PANEL DE LEYENDA =================== -->
+  <div id="panel-leyenda"></div>
 
-  <!-- Carpeta mapa -->
-  <script src="js/mapa/biomas.js"></script>
-  <script src="js/mapa/caminos.js"></script>
-  <script src="js/mapa/caminosFinales.js"></script>
-  <script src="js/mapa/coloresTerreno.js"></script>
-  <script src="js/mapa/dibujarMapa.js"></script>
-  <script src="js/mapa/dibujarNombres.js"></script>
-  <script src="js/mapa/generacionTerreno.js"></script>
-  <script src="js/mapa/generacionVoronoi.js"></script>
-  <script src="js/mapa/generacionVoronoiReal.js"></script>
-  <script src="js/mapa/nombres.js"></script>
-  <script src="js/mapa/nombresGeograficos.js"></script>
-  <script src="js/mapa/rios.js"></script>
-  <script src="js/mapa/terrenoEspecial.js"></script>
+  <!-- =================== PIE DE PÁGINA =================== -->
+  <footer id="main-footer">
+    <p>Proyecto Fantasy © 2025 — Generador de Mapas Procedurales</p>
+  </footer>
 
-  <!-- Carpeta rutas -->
-  <script src="js/rutas/aStar.js"></script>
-  <script src="js/rutas/ciudades.js"></script>
-  <script src="js/rutas/grafo.js"></script>
-  <script src="js/rutas/rutas.js"></script>
+  <!-- =================== SCRIPTS PRINCIPALES =================== -->
+  <script type="module">
+    import { inicializarMapa } from './js/script.js';
+    import { crearLeyenda } from './js/ui/leyenda.js';
 
-  <!-- Carpeta ui -->
-  <script src="js/ui/drawRutas.js"></script>
-
-  <!-- Script principal -->
-  <script src="js/script.js"></script>
+    // Inicializa el mapa y la leyenda
+    window.addEventListener('DOMContentLoaded', () => {
+      inicializarMapa();
+      crearLeyenda();
+    });
+  </script>
 </body>
 </html>
