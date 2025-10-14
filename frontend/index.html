@@ -2,71 +2,76 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌍 Generador de Mapas Fantasía</title>
-
-  <!-- =================== ESTILOS =================== -->
+  <title>Generador de Mapas de Fantasía</title>
   <link rel="stylesheet" href="css/estilos.css">
   <link rel="stylesheet" href="css/leyenda.css">
-
-  <!-- Icono del sitio -->
-  <link rel="icon" type="image/png" href="static/img/icons/montañas.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body>
-  <!-- =================== ENCABEZADO =================== -->
+
+  <!-- ===============================
+       ENCABEZADO PRINCIPAL
+       =============================== -->
   <header id="main-header">
-    <h1>🌍 Generador de Mapas Fantasía</h1>
-    <p class="subtitulo">Mapas procedurales con biomas, ríos, montañas y terrenos especiales</p>
+    <h1>Generador de Mapas de Fantasía</h1>
+    <div class="subtitulo">Crea mundos únicos y detallados</div>
   </header>
 
-  <!-- =================== CONTENEDOR DEL MAPA =================== -->
+  <!-- ===============================
+       PANEL DE CONTROLES
+       =============================== -->
+  <aside id="panel-controles">
+    <h2>Controles</h2>
+    <button id="generar-mapa">Generar Mapa</button>
+    <button id="guardar-mapa">Guardar Mapa</button>
+
+    <div class="opciones">
+      <label><input type="checkbox" id="mostrar-terrenos-especiales" checked> Mostrar terrenos especiales</label>
+      <label><input type="checkbox" id="mostrar-rutas"> Mostrar rutas terrestres</label>
+    </div>
+  </aside>
+
+  <!-- ===============================
+       CONTENEDOR DEL MAPA
+       =============================== -->
   <main id="mapa-container">
     <canvas id="mapa"></canvas>
   </main>
 
-  <!-- =================== PANEL DE CONTROLES =================== -->
-  <aside id="panel-controles">
-    <h2>⚙️ Controles</h2>
+  <!-- ===============================
+       LEYENDA DE TERRENOS ESPECIALES
+       =============================== -->
+  <div id="leyenda" class="visible">
+    <h3>Terrenos Especiales</h3>
+    <ul>
+      <li><img src="static/img/icons/volcan.png" alt="Volcán"><span>Volcán</span></li>
+      <li><img src="static/img/icons/glaciar.png" alt="Glaciar"><span>Glaciar</span></li>
+      <li><img src="static/img/icons/bosque.png" alt="Bosque Singular"><span>Bosque Singular</span></li>
+      <li><img src="static/img/icons/rio.png" alt="Río"><span>Río</span></li>
+      <li><img src="static/img/icons/crater.png" alt="Cráter"><span>Cráter</span></li>
+      <li><img src="static/img/icons/tierras_aridas.png" alt="Tierras Áridas"><span>Tierras Áridas</span></li>
+      <li><img src="static/img/icons/chaparral.png" alt="Chaparral"><span>Chaparral</span></li>
+      <li><img src="static/img/icons/selva.png" alt="Selva"><span>Selva</span></li>
+      <li><img src="static/img/icons/manglar.png" alt="Manglar"><span>Manglar</span></li>
+      <li><img src="static/img/icons/jungla.png" alt="Jungla"><span>Jungla</span></li>
+      <li><img src="static/img/icons/matorral.png" alt="Matorral"><span>Matorral</span></li>
+      <li><img src="static/img/icons/cavernas.png" alt="Cavernas"><span>Cavernas</span></li>
+    </ul>
+  </div>
 
-    <button id="btn-generar">Generar Nuevo Mapa</button>
-    <button id="btn-guardar">Guardar</button>
-    <button id="btn-cargar">Cargar</button>
+  <!-- BOTÓN PARA MOSTRAR/OCULTAR LEYENDA -->
+  <button id="toggle-leyenda">🗺️</button>
 
-    <div class="opciones">
-      <label>
-        <input type="checkbox" id="mostrar-biomas" checked>
-        Mostrar biomas
-      </label>
-      <label>
-        <input type="checkbox" id="mostrar-rutas" checked>
-        Mostrar rutas
-      </label>
-      <label>
-        <input type="checkbox" id="mostrar-etiquetas" checked>
-        Mostrar etiquetas
-      </label>
-    </div>
-  </aside>
-
-  <!-- =================== PANEL DE LEYENDA =================== -->
-  <div id="panel-leyenda"></div>
-
-  <!-- =================== PIE DE PÁGINA =================== -->
+  <!-- ===============================
+       PIE DE PÁGINA
+       =============================== -->
   <footer id="main-footer">
-    <p>Proyecto Fantasy © 2025 — Generador de Mapas Procedurales</p>
+    &copy; 2025 Generador de Mapas de Fantasía - Todos los derechos reservados
   </footer>
 
-  <!-- =================== SCRIPTS PRINCIPALES =================== -->
-  <script type="module">
-    import { inicializarMapa } from './js/script.js';
-    import { crearLeyenda } from './js/ui/leyenda.js';
-
-    // Inicializa el mapa y la leyenda
-    window.addEventListener('DOMContentLoaded', () => {
-      inicializarMapa();
-      crearLeyenda();
-    });
-  </script>
+  <!-- ===============================
+       SCRIPTS
+       =============================== -->
+  <script type="module" src="js/script.js"></script>
 </body>
 </html>
