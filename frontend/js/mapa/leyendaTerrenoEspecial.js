@@ -1,34 +1,26 @@
 // ===============================
-// Leyenda Terreno Especial
+// Leyenda visual de terrenos especiales
 // frontend/js/mapa/leyendaTerrenoEspecial.js
 // ===============================
 
-// Lista de iconos de lugares singulares
-import { lugaresSingulares } from "./nombresTerrenoEspecial.js";
+export function generarLeyenda(terrenosEspeciales) {
+  const listaLeyenda = document.getElementById('listaLeyenda');
+  listaLeyenda.innerHTML = '';
 
-document.addEventListener("DOMContentLoaded", () => {
-  const boton = document.getElementById("toggle-leyenda");
-  const contenido = document.getElementById("contenido-leyenda");
-  const lista = document.getElementById("lista-leyenda");
+  terrenosEspeciales.forEach((terreno) => {
+    const item = document.createElement('li');
+    item.classList.add('item-leyenda');
 
-  // Rellenar dinámicamente la leyenda
-  lugaresSingulares.forEach(lugar => {
-    const li = document.createElement("li");
+    const icono = document.createElement('img');
+    icono.src = `./static/img/icons/${terreno.icono}`;
+    icono.alt = terreno.nombre;
+    icono.classList.add('icono-leyenda');
 
-    const img = document.createElement("img");
-    img.src = `/static/img/icons/${lugar.icono}.png`;
-    img.alt = lugar.nombre;
+    const texto = document.createElement('span');
+    texto.textContent = terreno.nombre;
 
-    const span = document.createElement("span");
-    span.textContent = lugar.nombre;
-
-    li.appendChild(img);
-    li.appendChild(span);
-    lista.appendChild(li);
+    item.appendChild(icono);
+    item.appendChild(texto);
+    listaLeyenda.appendChild(item);
   });
-
-  // Evento para abrir/cerrar
-  boton.addEventListener("click", () => {
-    contenido.style.display = contenido.style.display === "block" ? "none" : "block";
-  });
-});
+}
