@@ -3,45 +3,70 @@
 // frontend/js/script.js
 // ===============================
 
-// Importa los módulos necesarios
-import { terrenosEspeciales } from './mapa/nombresTerrenoEspecial.js';
-import { generarLeyenda } from './mapa/leyenda.js';
+// Importaciones principales
+import { generarTerrenoEspecial } from './mapa/terrenoEspecial.js';
+import { generarNombresTerrenoEspecial } from './mapa/nombresTerrenoEspecial.js';
+import { generarLeyenda } from './mapa/leyendaTerrenoEspecial.js';
 
 // ===============================
-// INICIALIZACIÓN
+// Inicialización general del mapa
 // ===============================
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('🌍 Generador de mapa cargado correctamente');
+  console.log('🗺️ Generador de mapa fantástico iniciado');
 
-  // Inicializar el canvas (aunque aún no dibuja mapa)
-  const canvas = document.getElementById('mapaCanvas');
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#cfe3f0';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = '20px serif';
-  ctx.fillStyle = '#333';
-  ctx.fillText('Mapa base en desarrollo...', 20, 40);
+  // Contenedor principal del mapa
+  const contenedorMapa = document.getElementById('mapa');
+  const listaLeyenda = document.getElementById('listaLeyenda');
 
-  // ===============================
-  // GENERAR LEYENDA DE TERRENOS ESPECIALES
-  // ===============================
-  generarLeyenda(terrenosEspeciales);
+  // Generar los terrenos especiales (volcanes, glaciares, bosques antiguos…)
+  const terrenosEspeciales = generarTerrenoEspecial();
 
-  // ===============================
-  // CONTROL DE PANELES DE LEYENDA
-  // ===============================
-  const panelLeyenda = document.getElementById('panel-leyenda');
-  const btnAbrirLeyenda = document.getElementById('btnAbrirLeyenda');
-  const btnCerrarLeyenda = document.getElementById('btnCerrarLeyenda');
+  // Asignar nombres únicos a los terrenos especiales
+  const terrenosConNombres = generarNombresTerrenoEspecial(terrenosEspeciales);
 
-  btnAbrirLeyenda.addEventListener('click', () => {
-    panelLeyenda.classList.remove('cerrado');
-    btnAbrirLeyenda.style.display = 'none';
+  // Dibujar los íconos de los terrenos especiales
+  terrenosConNombres.forEach((terreno) => {
+    const icono = document.createElement('img');
+    icono.src = `./static/img/icons/${terreno.icono}`;
+    icono.alt = terreno.nombre;
+    icono.title = terreno.nombre;
+    icono.classList.add('icono-terreno');
+
+    // Posicionar aleatoriamente en el mapa (temporal)
+    icono.style.position = 'absolute';
+    icono.style.left = `${Math.random() * 90 + 5}%`;
+    icono.style.top = `${Math.random() * 90 + 5}%`;
+
+    contenedorMapa.appendChild(icono);
   });
 
-  btnCerrarLeyenda.addEventListener('click', () => {
-    panelLeyenda.classList.add('cerrado');
-    btnAbrirLeyenda.style.display = 'block';
-  });
+  // Generar leyenda visual
+  generarLeyenda(terrenosConNombres);
+
+  console.log('✅ Terrenos especiales generados:', terrenosConNombres);
 });
+
+// ===============================
+// Panel de leyenda (mostrar / ocultar)
+// ===============================
+
+document.addEventListener('DOMContentLoaded', () => {
+  const botonLeyenda = document.getElementById('botonLeyenda');
+  const panelLeyenda = document.getElementById('panelLeyenda');
+  const cerrarLeyenda = document.getElementById('cerrarLeyenda');
+
+  if (botonLeyenda && panelLeyenda && cerrarLeyenda) {
+    botonLeyenda.addEventListener('click', () => {
+      panelLeyenda.style.display = 'block';
+    });
+
+    cerrarLeyenda.addEventListener('click', () => {
+      panelLeyenda.style.display = 'none';
+    });
+  }
+});
+
+// ===============================
+// Fin del archivo
+// ===============================
