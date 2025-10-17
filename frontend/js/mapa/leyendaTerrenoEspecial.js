@@ -1,61 +1,67 @@
-// --- LEYENDA TERRENOS ESPECIALES ---
+// ===============================
+// Leyenda de Terrenos Especiales
+// frontend/js/mapa/leyendaTerrenoEspecial.js
+// ===============================
 
-document.addEventListener("DOMContentLoaded", () => {
-  const botonLeyenda = document.getElementById("abrirLeyenda");
-  const contenedorLeyenda = document.getElementById("leyenda");
-  const botonCerrar = document.getElementById("cerrarLeyenda");
-  const listaLeyenda = document.getElementById("listaLeyenda");
+const basePath = "./static/img/icons/"; // ruta relativa a index.html
+const botonLeyenda = document.getElementById("abrirLeyenda");
+const cerrarLeyenda = document.getElementById("cerrarLeyenda");
+const contenedorLeyenda = document.getElementById("leyenda");
+const listaLeyenda = document.getElementById("listaLeyenda");
 
-  // --- MAPEADO DE TERRENOS A IMÁGENES ---
-  const basePath = "/frontend/img/terrenos/"; // Carpeta donde están tus imágenes PNG
+const terrenosEspeciales = [
+  { nombre: "Volcán", icono: "volcan.png" },
+  { nombre: "Glaciar", icono: "glaciar.png" },
+  { nombre: "Crater", icono: "crater.png" },
+  { nombre: "Tierras Áridas", icono: "tierras_aridas.png" },
+  { nombre: "Chaparral", icono: "chaparral.png" },
+  { nombre: "Selva", icono: "selva.png" },
+  { nombre: "Manglar", icono: "manglar.png" },
+  { nombre: "Jungla", icono: "jungla.png" },
+  { nombre: "Matorral", icono: "matorral.png" },
+  { nombre: "Cavernas", icono: "cavernas.png" },
+  { nombre: "Montañas del trueno", icono: "montanas.png" },
+  { nombre: "Montañas heladas", icono: "montanas.png" },
+  { nombre: "Desfiladero del eco", icono: "desfiladero.png" },
+  { nombre: "Cañón rojo", icono: "canon.png" },
+  { nombre: "Crater del sol", icono: "crater.png" }
+];
 
-  const terrenosEspeciales = [
-    { nombre: "Montañas del Trueno", icono: "montaña.png" },
-    { nombre: "Montañas Heladas", icono: "montaña_nieve.png" },
-    { nombre: "Desfiladero del Eco", icono: "desfiladero.png" },
-    { nombre: "Cañón Rojo", icono: "cañon.png" },
-    { nombre: "Cráter del Sol", icono: "crater.png" },
-    { nombre: "Río de Plata", icono: "rio.png" },
-    { nombre: "Glaciar del Norte", icono: "glaciar.png" },
-    { nombre: "Tierras Áridas", icono: "tierras_aridas.png" },
-    { nombre: "Chaparral del Oeste", icono: "chaparral.png" },
-    { nombre: "Selva Profunda", icono: "selva.png" },
-    { nombre: "Manglar Sombrío", icono: "manglar.png" },
-    { nombre: "Jungla Esmeralda", icono: "jungla.png" },
-    { nombre: "Matorral Seco", icono: "matorral.png" },
-    { nombre: "Cavernas Antiguas", icono: "cavernas.png" }
-  ];
+// Evitar recargar la leyenda varias veces
+let leyendaGenerada = false;
 
-  // --- FUNCIONES DE LEYENDA ---
-  botonLeyenda.addEventListener("click", () => {
-    contenedorLeyenda.classList.add("visible");
-    listaLeyenda.innerHTML = ""; // Limpia antes de generar
+botonLeyenda.addEventListener("click", () => {
+  contenedorLeyenda.classList.add("visible");
 
-    terrenosEspeciales.forEach(terreno => {
-      const item = document.createElement("div");
-      item.classList.add("item-leyenda");
+  if (leyendaGenerada) return;
 
-      const img = document.createElement("img");
-      img.src = `${basePath}${terreno.icono}`;
-      img.alt = terreno.nombre;
-      img.classList.add("icono-leyenda");
+  listaLeyenda.innerHTML = "";
+  terrenosEspeciales.forEach(terreno => {
+    const item = document.createElement("div");
+    item.classList.add("item-leyenda");
 
-      // Manejo de error si no se carga el icono
-      img.onerror = () => {
-        img.src = `${basePath}tierras_aridas.png`;
-        console.warn(`⚠️ No se encontró el icono: ${terreno.icono}, usando imagen por defecto.`);
-      };
+    const img = document.createElement("img");
+    img.src = `${basePath}${terreno.icono}`;
+    img.alt = terreno.nombre;
+    img.classList.add("icono-leyenda");
 
-      const label = document.createElement("span");
-      label.textContent = terreno.nombre;
+    // fallback si el icono no existe
+    img.onerror = () => {
+      img.src = `${basePath}tierras_aridas.png`;
+      console.warn(`No se encontró icono: ${terreno.icono}`);
+    };
 
-      item.appendChild(img);
-      item.appendChild(label);
-      listaLeyenda.appendChild(item);
-    });
+    const label = document.createElement("span");
+    label.textContent = terreno.nombre;
+
+    item.appendChild(img);
+    item.appendChild(label);
+    listaLeyenda.appendChild(item);
   });
 
-  botonCerrar.addEventListener("click", () => {
-    contenedorLeyenda.classList.remove("visible");
-  });
+  leyendaGenerada = true;
+});
+
+cerrarLeyenda.addEventListener("click", () => {
+  contenedorLeyenda.classList.remove("visible");
 });
