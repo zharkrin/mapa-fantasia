@@ -1,77 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Generador de Mapas de Fantasía</title>
-  <link rel="stylesheet" href="css/estilos.css">
-  <link rel="stylesheet" href="css/leyenda.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador de Mapa Fantástico</title>
 
-  <!-- ===============================
-       ENCABEZADO PRINCIPAL
-       =============================== -->
-  <header id="main-header">
-    <h1>Generador de Mapas de Fantasía</h1>
-    <div class="subtitulo">Crea mundos únicos y detallados</div>
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="./css/estilos.css" />
+  <!-- CSS de la leyenda -->
+  <link rel="stylesheet" href="./css/leyenda.css" />
+</head>
+
+<body>
+  <!-- ==========================
+       CABECERA
+  =========================== -->
+  <header>
+    <h1>🌍 Generador de Mapa Fantástico</h1>
+    <p>Terrenos, biomas y lugares singulares</p>
   </header>
 
-  <!-- ===============================
-       PANEL DE CONTROLES
-       =============================== -->
-  <aside id="panel-controles">
-    <h2>Controles</h2>
-    <button id="generar-mapa">Generar Mapa</button>
-    <button id="guardar-mapa">Guardar Mapa</button>
+  <!-- ==========================
+       CONTENEDOR PRINCIPAL
+  =========================== -->
+  <main id="contenedor-principal">
+    <!-- Panel lateral -->
+    <aside id="panel-leyenda" class="cerrado">
+      <h2>🗺️ Leyenda del Terreno</h2>
+      <button id="btnCerrarLeyenda" class="boton-leyenda">Cerrar</button>
+      <ul id="listaLeyenda"></ul>
+    </aside>
 
-    <div class="opciones">
-      <label><input type="checkbox" id="mostrar-terrenos-especiales" checked> Mostrar terrenos especiales</label>
-      <label><input type="checkbox" id="mostrar-rutas"> Mostrar rutas terrestres</label>
-    </div>
-  </aside>
+    <!-- Botón flotante para abrir la leyenda -->
+    <button id="btnAbrirLeyenda" class="boton-leyenda">📜 Leyenda</button>
 
-  <!-- ===============================
-       CONTENEDOR DEL MAPA
-       =============================== -->
-  <main id="mapa-container">
-    <canvas id="mapa"></canvas>
+    <!-- Canvas del mapa -->
+    <section id="zona-mapa">
+      <canvas id="mapaCanvas" width="1200" height="800"></canvas>
+    </section>
   </main>
 
-  <!-- ===============================
-       LEYENDA DE TERRENOS ESPECIALES
-       =============================== -->
-  <div id="leyenda" class="visible">
-    <h3>Terrenos Especiales</h3>
-    <ul>
-      <li><img src="static/img/icons/volcan.png" alt="Volcán"><span>Volcán</span></li>
-      <li><img src="static/img/icons/glaciar.png" alt="Glaciar"><span>Glaciar</span></li>
-      <li><img src="static/img/icons/bosque.png" alt="Bosque Singular"><span>Bosque Singular</span></li>
-      <li><img src="static/img/icons/rio.png" alt="Río"><span>Río</span></li>
-      <li><img src="static/img/icons/crater.png" alt="Cráter"><span>Cráter</span></li>
-      <li><img src="static/img/icons/tierras_aridas.png" alt="Tierras Áridas"><span>Tierras Áridas</span></li>
-      <li><img src="static/img/icons/chaparral.png" alt="Chaparral"><span>Chaparral</span></li>
-      <li><img src="static/img/icons/selva.png" alt="Selva"><span>Selva</span></li>
-      <li><img src="static/img/icons/manglar.png" alt="Manglar"><span>Manglar</span></li>
-      <li><img src="static/img/icons/jungla.png" alt="Jungla"><span>Jungla</span></li>
-      <li><img src="static/img/icons/matorral.png" alt="Matorral"><span>Matorral</span></li>
-      <li><img src="static/img/icons/cavernas.png" alt="Cavernas"><span>Cavernas</span></li>
-    </ul>
-  </div>
-
-  <!-- BOTÓN PARA MOSTRAR/OCULTAR LEYENDA -->
-  <button id="toggle-leyenda">🗺️</button>
-
-  <!-- ===============================
+  <!-- ==========================
        PIE DE PÁGINA
-       =============================== -->
-  <footer id="main-footer">
-    &copy; 2025 Generador de Mapas de Fantasía - Todos los derechos reservados
+  =========================== -->
+  <footer>
+    <p>Proyecto de Generador de Mapas © 2025</p>
   </footer>
 
-  <!-- ===============================
+  <!-- ==========================
        SCRIPTS
-       =============================== -->
-  <script type="module" src="js/script.js"></script>
+  =========================== -->
+  <script type="module" src="./js/script.js"></script>
 </body>
 </html>
