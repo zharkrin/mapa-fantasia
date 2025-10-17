@@ -1,50 +1,42 @@
-// ===============================
-// Script principal
+// ==================================================
+// Script principal del generador de mapa
 // frontend/js/script.js
-// ===============================
+// ==================================================
 
-// Importación de módulos
-import { generarBiomas } from './mapa/biomas.js';
-import { generarTerreno } from './mapa/generacionTerreno.js';
-import { dibujarMapa } from './mapa/dibujarMapa.js';
-import { dibujarNombres } from './mapa/dibujarNombres.js';
-import { generarRutasTerrestres } from './rutas/rutas.js';
-import { nombresGeograficos } from './mapa/nombresGeograficos.js';
-import { terrenoEspecial } from './mapa/terrenoEspecial.js';
+// === Importaciones ===
+import { generarTerreno, dibujarTerreno } from './mapa/terreno.js';
+import { generarBiomas, dibujarBiomas } from './mapa/biomas.js';
+import { generarTerrenoEspecial, dibujarTerrenoEspecial } from './mapa/terrenoEspecial.js';
+import { inicializarLeyenda } from './mapa/leyenda.js';
 
-// ===============================
-// Función principal para generar el mapa completo
-// ===============================
-function generarMapaCompleto() {
-    // 1️⃣ Generar biomas procedurales
-    const biomas = generarBiomas();
+// === Inicialización ===
+document.addEventListener("DOMContentLoaded", async () => {
+  const canvas = document.getElementById("mapaCanvas");
+  const ctx = canvas.getContext("2d");
+  const ancho = canvas.width;
+  const alto = canvas.height;
 
-    // 2️⃣ Generar terrenos normales y especiales
-    const terrenos = generarTerreno();
-    const especiales = terrenoEspecial(); // volcanes, glaciares, bosques singulares
+  // Mensaje de carga
+  ctx.fillStyle = "#222";
+  ctx.fillRect(0, 0, ancho, alto);
+  ctx.fillStyle = "#fff";
+  ctx.font = "20px sans-serif";
+  ctx.fillText("Generando mapa...", ancho / 2 - 100, alto / 2);
 
-    // 3️⃣ Generar rutas terrestres procedurales
-    const rutas = generarRutasTerrestres();
+  // === 1️⃣ Generar datos de terreno base ===
+  const terreno = generarTerreno(ancho, alto);
+  dibujarTerreno(ctx, terreno);
 
-    // 4️⃣ Dibujar el mapa completo en el canvas
-    dibujarMapa(biomas, terrenos, especiales);
+  // === 2️⃣ Generar y dibujar biomas ===
+  const biomas = generarBiomas(terreno);
+  dibujarBiomas(ctx, biomas);
 
-    // 5️⃣ Dibujar nombres de ciudades, montañas y ríos
-    dibujarNombres(nombresGeograficos, terrenos, especiales);
+  // === 3️⃣ Generar y dibujar terrenos especiales ===
+  const terrenosEspeciales = generarTerrenoEspecial(terreno);
+  await dibujarTerrenoEspecial(ctx, terrenosEspeciales);
 
-    // 6️⃣ Dibujar rutas terrestres en el mapa
-    rutas.forEach(ruta => {
-        // Cada ruta es un array de coordenadas
-        // La función drawRuta está definida en frontend/js/ui/drawRutas.js
-        window.drawRuta(ruta);
-    });
+  // === 4️⃣ Inicializar leyenda ===
+  inicializarLeyenda(terrenosEspeciales);
 
-    console.log('✅ Mapa generado automáticamente con todos los elementos.');
-}
-
-// ===============================
-// Ejecutar al cargar la página
-// ===============================
-window.addEventListener('DOMContentLoaded', () => {
-    generarMapaCompleto();
+  console.log("✅ Mapa generado correctamente.");
 });
