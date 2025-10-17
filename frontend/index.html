@@ -2,137 +2,33 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌍 Generador de Mapa Fantástico</title>
-
-  <!-- Estilos principales -->
-  <link rel="stylesheet" href="./css/estilos.css">
-  <link rel="stylesheet" href="./css/leyenda.css">
-
-  <style>
-    /* Asegurar que el mapa se vea correctamente */
-    body {
-      background-color: #e8e8e8;
-      font-family: "Cinzel", serif;
-      margin: 0;
-      overflow: hidden;
-    }
-
-    #mapa {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background: linear-gradient(to bottom, #b9d3c2, #d6e0db);
-    }
-
-    h1 {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 1.8rem;
-      color: #2c3e50;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 10px 15px;
-      border-radius: 8px;
-    }
-
-    #botonLeyenda {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: #1e2a38;
-      color: #fff;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    #botonLeyenda:hover {
-      background: #32465a;
-    }
-
-    .icono-terreno {
-      width: 48px;
-      height: 48px;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      opacity: 0.9;
-    }
-
-    /* Panel de leyenda */
-    #panelLeyenda {
-      display: none;
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      width: 260px;
-      max-height: 80vh;
-      overflow-y: auto;
-      background: rgba(255, 255, 255, 0.95);
-      border: 2px solid #333;
-      border-radius: 8px;
-      padding: 10px;
-      z-index: 1000;
-    }
-
-    #panelLeyenda h2 {
-      margin-top: 0;
-      text-align: center;
-      color: #222;
-    }
-
-    #cerrarLeyenda {
-      display: block;
-      margin: 5px auto 10px auto;
-      background: #8b0000;
-      color: #fff;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    #cerrarLeyenda:hover {
-      background: #a52a2a;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .item-leyenda {
-      display: flex;
-      align-items: center;
-      margin: 6px 0;
-      gap: 8px;
-    }
-
-    .icono-leyenda {
-      width: 32px;
-      height: 32px;
-    }
-  </style>
+  <title>Generador de Mapa Fantástico</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <link rel="stylesheet" href="css/leyenda.css">
 </head>
-
 <body>
-  <div id="mapa">
-    <h1>🗺️ Generador de Mapa Fantástico</h1>
-    <button id="botonLeyenda">Leyenda</button>
 
-    <!-- Panel de leyenda -->
-    <div id="panelLeyenda">
-      <h2>Leyenda del Terreno</h2>
+  <header>
+    <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
+    <p>Terrenos, biomas y lugares singulares</p>
+  </header>
+
+  <main>
+    <button id="abrirLeyenda">Leyenda</button>
+
+    <!-- Contenedor de la leyenda -->
+    <div id="leyenda" class="leyenda-contenedor">
       <button id="cerrarLeyenda">Cerrar</button>
-      <ul id="listaLeyenda"></ul>
+      <div id="listaLeyenda"></div>
     </div>
-  </div>
+  </main>
 
-  <!-- Script principal -->
-  <script type="module" src="./js/script.js"></script>
+  <footer>
+    <p>© 2025 Proyecto Mapa Fantástico</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/mapa/leyendaTerrenoEspecial.js"></script>
+  <script type="module" src="js/script.js"></script>
 </body>
 </html>
