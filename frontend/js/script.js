@@ -1,23 +1,34 @@
+// ===============================
+// Script principal
 // frontend/js/script.js
+// ===============================
 
 // --- Lista de terrenos especiales ---
 // Solo terrenos naturales o singulares (sin mágicos ni marítimos)
 const terrenosEspeciales = [
-  { nombre: "Bosque Ancestral", icono: "bosque_ancestral.png", descripcion: "Un bosque antiguo, lleno de árboles colosales y secretos olvidados." },
-  { nombre: "Montañas del Trueno", icono: "montanas_trueno.png", descripcion: "Picos imponentes donde las tormentas nunca cesan." },
-  { nombre: "Desierto de Cristal", icono: "desierto_cristal.png", descripcion: "Arenas que reflejan la luz como espejos bajo el sol ardiente." },
-  { nombre: "Ciénaga Sombría", icono: "cienaga_sombría.png", descripcion: "Pantanos densos donde el aire parece pesado y el suelo traicionero." },
-  { nombre: "Llanuras Doradas", icono: "llanuras_doradas.png", descripcion: "Campos interminables de hierba alta que brillan al atardecer." },
-  { nombre: "Bosque Carmesí", icono: "bosque_carmesi.png", descripcion: "Árboles de hojas rojas perpetuas, hogar de criaturas misteriosas." },
-  { nombre: "Montañas Heladas", icono: "montanas_heladas.png", descripcion: "Cordilleras eternamente cubiertas de nieve y hielo." },
-  { nombre: "Desfiladero del Eco", icono: "desfiladero_eco.png", descripcion: "Gargantas profundas donde cada sonido resuena mil veces." },
-  { nombre: "Colinas Verdes", icono: "colinas_verdes.png", descripcion: "Suaves lomas que se pierden en la distancia." },
-  { nombre: "Bosque de Niebla", icono: "bosque_niebla.png", descripcion: "Un bosque perpetuamente cubierto por una neblina mágica." },
-  { nombre: "Cañón Rojo", icono: "canon_rojo.png", descripcion: "Gigantescas formaciones rocosas teñidas de rojo por los minerales." },
-  { nombre: "Tierras Áridas", icono: "tierras_aridas.png", descripcion: "Zonas resecas donde solo las criaturas más resistentes sobreviven." },
-  { nombre: "Praderas del Alba", icono: "praderas_alba.png", descripcion: "Llanuras floridas donde el amanecer pinta los colores más bellos." },
-  { nombre: "Bosque Esmeralda", icono: "bosque_esmeralda.png", descripcion: "Un vasto bosque de tonos verdes intensos y vida abundante." },
-  { nombre: "Acantilados del Viento", icono: "acantilados_viento.png", descripcion: "Moles de piedra que se alzan sobre el horizonte, azotadas por el viento." },
+  { nombre: "Bosque ancestral", icono: "bosque.png", descripcion: "Un bosque antiguo, lleno de árboles colosales y secretos olvidados." },
+  { nombre: "Montañas del trueno", icono: "montanas.png", descripcion: "Picos imponentes donde las tormentas nunca cesan." },
+  { nombre: "Desierto de cristal", icono: "desierto_calido.png", descripcion: "Arenas que reflejan la luz como espejos bajo el sol ardiente." },
+  { nombre: "Ciénaga sombría", icono: "pantano.png", descripcion: "Pantanos densos donde el aire parece pesado y el suelo traicionero." },
+  { nombre: "Llanuras doradas", icono: "pradera.png", descripcion: "Campos interminables de hierba alta que brillan al atardecer." },
+  { nombre: "Bosque carmesí", icono: "bosque_tropical.png", descripcion: "Árboles de hojas rojas perpetuas, hogar de criaturas misteriosas." },
+  { nombre: "Montañas heladas", icono: "montanas.png", descripcion: "Cordilleras eternamente cubiertas de nieve y hielo." },
+  { nombre: "Desfiladero del eco", icono: "canon.png", descripcion: "Gargantas profundas donde cada sonido resuena mil veces." },
+  { nombre: "Colinas verdes", icono: "colina.png", descripcion: "Suaves lomas que se pierden en la distancia." },
+  { nombre: "Bosque de niebla", icono: "bosque_boreal.png", descripcion: "Un bosque perpetuamente cubierto por una neblina misteriosa." },
+  { nombre: "Cañón rojo", icono: "canon.png", descripcion: "Gigantescas formaciones rocosas teñidas de rojo por los minerales." },
+  { nombre: "Tierras áridas", icono: "tierras_aridas.png", descripcion: "Zonas resecas donde solo las criaturas más resistentes sobreviven." },
+  { nombre: "Praderas del alba", icono: "sabana.png", descripcion: "Llanuras floridas donde el amanecer pinta los colores más bellos." },
+  { nombre: "Bosque esmeralda", icono: "bosque.png", descripcion: "Un vasto bosque de tonos verdes intensos y vida abundante." },
+  { nombre: "Acantilados del viento", icono: "acantilado.png", descripcion: "Moles de piedra que se alzan sobre el horizonte, azotadas por el viento." },
+  { nombre: "Glaciar eterno", icono: "glaciar.png", descripcion: "Una vasta extensión de hielo antiguo y grietas azules." },
+  { nombre: "Río plateado", icono: "rio.png", descripcion: "Un ancho río que brilla con reflejos plateados bajo la luna." },
+  { nombre: "Crater del sol", icono: "crater.png", descripcion: "Un enorme cráter formado por un antiguo impacto celeste." },
+  { nombre: "Cavernas profundas", icono: "cavernas.png", descripcion: "Sistemas de cuevas donde la oscuridad parece tener vida." },
+  { nombre: "Matorral seco", icono: "matorral.png", descripcion: "Tierras áridas cubiertas de arbustos retorcidos y resistentes." },
+  { nombre: "Manglar del alba", icono: "manglar.png", descripcion: "Bosque costero donde las raíces emergen del agua como esculturas." },
+  { nombre: "Selva brumosa", icono: "selva.png", descripcion: "Una jungla densa donde el aire está cargado de humedad y vida." },
+  { nombre: "Jungla primigenia", icono: "jungla.png", descripcion: "Vegetación tan espesa que apenas entra la luz." },
 ];
 
 // --- Inicialización ---
@@ -35,9 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
     icono.alt = terreno.nombre;
     icono.classList.add("icono-terreno");
 
-    // Posiciones aleatorias (simple ejemplo)
-    const x = Math.random() * 90 + 5; // margen de 5%
-    const y = Math.random() * 80 + 10; // margen de 10%
+    // Posición aleatoria simple
+    const x = Math.random() * 90 + 5;
+    const y = Math.random() * 80 + 10;
     icono.style.position = "absolute";
     icono.style.left = `${x}%`;
     icono.style.top = `${y}%`;
@@ -45,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     mapa.appendChild(icono);
   });
 
-  // --- Crear la lista de la leyenda ---
+  // --- Crear lista de leyenda ---
   terrenosEspeciales.forEach(terreno => {
     const li = document.createElement("li");
     li.classList.add("item-leyenda");
