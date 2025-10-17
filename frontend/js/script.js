@@ -1,42 +1,47 @@
-// ==================================================
-// Script principal del generador de mapa
+// ===============================
+// Script principal
 // frontend/js/script.js
-// ==================================================
+// ===============================
 
-// === Importaciones ===
-import { generarTerreno, dibujarTerreno } from './mapa/terreno.js';
-import { generarBiomas, dibujarBiomas } from './mapa/biomas.js';
-import { generarTerrenoEspecial, dibujarTerrenoEspecial } from './mapa/terrenoEspecial.js';
-import { inicializarLeyenda } from './mapa/leyenda.js';
+// Importa los módulos necesarios
+import { terrenosEspeciales } from './mapa/nombresTerrenoEspecial.js';
+import { generarLeyenda } from './mapa/leyenda.js';
 
-// === Inicialización ===
-document.addEventListener("DOMContentLoaded", async () => {
-  const canvas = document.getElementById("mapaCanvas");
-  const ctx = canvas.getContext("2d");
-  const ancho = canvas.width;
-  const alto = canvas.height;
+// ===============================
+// INICIALIZACIÓN
+// ===============================
 
-  // Mensaje de carga
-  ctx.fillStyle = "#222";
-  ctx.fillRect(0, 0, ancho, alto);
-  ctx.fillStyle = "#fff";
-  ctx.font = "20px sans-serif";
-  ctx.fillText("Generando mapa...", ancho / 2 - 100, alto / 2);
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('🌍 Generador de mapa cargado correctamente');
 
-  // === 1️⃣ Generar datos de terreno base ===
-  const terreno = generarTerreno(ancho, alto);
-  dibujarTerreno(ctx, terreno);
+  // Inicializar el canvas (aunque aún no dibuja mapa)
+  const canvas = document.getElementById('mapaCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#cfe3f0';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = '20px serif';
+  ctx.fillStyle = '#333';
+  ctx.fillText('Mapa base en desarrollo...', 20, 40);
 
-  // === 2️⃣ Generar y dibujar biomas ===
-  const biomas = generarBiomas(terreno);
-  dibujarBiomas(ctx, biomas);
+  // ===============================
+  // GENERAR LEYENDA DE TERRENOS ESPECIALES
+  // ===============================
+  generarLeyenda(terrenosEspeciales);
 
-  // === 3️⃣ Generar y dibujar terrenos especiales ===
-  const terrenosEspeciales = generarTerrenoEspecial(terreno);
-  await dibujarTerrenoEspecial(ctx, terrenosEspeciales);
+  // ===============================
+  // CONTROL DE PANELES DE LEYENDA
+  // ===============================
+  const panelLeyenda = document.getElementById('panel-leyenda');
+  const btnAbrirLeyenda = document.getElementById('btnAbrirLeyenda');
+  const btnCerrarLeyenda = document.getElementById('btnCerrarLeyenda');
 
-  // === 4️⃣ Inicializar leyenda ===
-  inicializarLeyenda(terrenosEspeciales);
+  btnAbrirLeyenda.addEventListener('click', () => {
+    panelLeyenda.classList.remove('cerrado');
+    btnAbrirLeyenda.style.display = 'none';
+  });
 
-  console.log("✅ Mapa generado correctamente.");
+  btnCerrarLeyenda.addEventListener('click', () => {
+    panelLeyenda.classList.add('cerrado');
+    btnAbrirLeyenda.style.display = 'block';
+  });
 });
