@@ -3,8 +3,6 @@
 // frontend/js/script.js
 // ===============================
 
-// --- Lista de terrenos especiales ---
-// Solo terrenos naturales o singulares (sin mágicos ni marítimos)
 const terrenosEspeciales = [
   { nombre: "Bosque ancestral", icono: "bosque.png", descripcion: "Un bosque antiguo, lleno de árboles colosales y secretos olvidados." },
   { nombre: "Montañas del trueno", icono: "montanas.png", descripcion: "Picos imponentes donde las tormentas nunca cesan." },
@@ -23,7 +21,7 @@ const terrenosEspeciales = [
   { nombre: "Acantilados del viento", icono: "acantilado.png", descripcion: "Moles de piedra que se alzan sobre el horizonte, azotadas por el viento." },
   { nombre: "Glaciar eterno", icono: "glaciar.png", descripcion: "Una vasta extensión de hielo antiguo y grietas azules." },
   { nombre: "Río plateado", icono: "rio.png", descripcion: "Un ancho río que brilla con reflejos plateados bajo la luna." },
-  { nombre: "Crater del sol", icono: "crater.png", descripcion: "Un enorme cráter formado por un antiguo impacto celeste." },
+  { nombre: "Cráter del sol", icono: "crater.png", descripcion: "Un enorme cráter formado por un antiguo impacto celeste." },
   { nombre: "Cavernas profundas", icono: "cavernas.png", descripcion: "Sistemas de cuevas donde la oscuridad parece tener vida." },
   { nombre: "Matorral seco", icono: "matorral.png", descripcion: "Tierras áridas cubiertas de arbustos retorcidos y resistentes." },
   { nombre: "Manglar del alba", icono: "manglar.png", descripcion: "Bosque costero donde las raíces emergen del agua como esculturas." },
@@ -31,7 +29,6 @@ const terrenosEspeciales = [
   { nombre: "Jungla primigenia", icono: "jungla.png", descripcion: "Vegetación tan espesa que apenas entra la luz." },
 ];
 
-// --- Inicialización ---
 document.addEventListener("DOMContentLoaded", () => {
   const mapa = document.getElementById("mapa");
   const listaLeyenda = document.getElementById("listaLeyenda");
@@ -42,11 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Mostrar íconos de terrenos especiales ---
   terrenosEspeciales.forEach(terreno => {
     const icono = document.createElement("img");
-    icono.src = `./static/img/icons/${terreno.icono}`;
+    icono.src = `static/img/icons/${terreno.icono}`;
     icono.alt = terreno.nombre;
     icono.classList.add("icono-terreno");
 
-    // Posición aleatoria simple
+    // Fallback si no carga
+    icono.onerror = () => {
+      console.warn(`⚠️ No se pudo cargar el icono: ${terreno.icono}`);
+      icono.src = "static/img/icons/tierras_aridas.png";
+    };
+
     const x = Math.random() * 90 + 5;
     const y = Math.random() * 80 + 10;
     icono.style.position = "absolute";
@@ -62,9 +64,14 @@ document.addEventListener("DOMContentLoaded", () => {
     li.classList.add("item-leyenda");
 
     const icono = document.createElement("img");
-    icono.src = `./static/img/icons/${terreno.icono}`;
+    icono.src = `static/img/icons/${terreno.icono}`;
     icono.alt = terreno.nombre;
     icono.classList.add("icono-leyenda");
+
+    icono.onerror = () => {
+      console.warn(`⚠️ No se pudo cargar icono de leyenda: ${terreno.icono}`);
+      icono.src = "static/img/icons/tierras_aridas.png";
+    };
 
     const texto = document.createElement("span");
     texto.textContent = terreno.nombre;
