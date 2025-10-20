@@ -1,58 +1,116 @@
-/* ===============================
-   Leyenda visual de terrenos especiales
-   frontend/css/leyenda.css
-=============================== */
+/* ===========================================================
+   leyenda.css
+   Estilos del panel de leyenda de terrenos especiales
+   =========================================================== */
 
-#panel-leyenda {
+.leyenda-terreno {
   position: fixed;
-  top: 60px;
-  right: 0;
-  width: 250px;
-  height: calc(100% - 60px);
-  background-color: rgba(255, 255, 255, 0.95);
-  border-left: 2px solid #ccc;
-  padding: 15px;
+  top: 80px;
+  right: 20px;
+  width: 320px;
+  max-height: 80vh;
   overflow-y: auto;
-  box-shadow: -4px 0 6px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
-  z-index: 100;
+  background: rgba(20, 20, 20, 0.9);
+  border: 2px solid #888;
+  border-radius: 10px;
+  padding: 15px 20px;
+  color: #f0f0f0;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+  z-index: 10000;
+  backdrop-filter: blur(6px);
 }
 
-#panel-leyenda.cerrado {
-  transform: translateX(100%);
+.leyenda-terreno h3 {
+  margin-top: 0;
+  font-size: 1.2em;
+  text-align: center;
+  color: #ffdd88;
+  border-bottom: 1px solid #666;
+  padding-bottom: 8px;
+  letter-spacing: 0.5px;
 }
 
-#listaLeyenda {
+.lista-terrenos-especiales {
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
-.item-leyenda {
+.item-terreno {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
-}
-
-.icono-leyenda {
-  width: 32px;
-  height: 32px;
-  margin-right: 10px;
-}
-
-.boton-leyenda {
-  position: fixed;
-  right: 10px;
-  bottom: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
+  gap: 10px;
+  margin: 8px 0;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
-  font-size: 14px;
+  transition: background 0.3s ease;
+  cursor: pointer;
 }
 
-.boton-leyenda:hover {
-  background-color: #0056b3;
+.item-terreno:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.icono-terreno {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #666;
+  background: #222;
+}
+
+.texto-terreno {
+  display: flex;
+  flex-direction: column;
+  color: #f5f5f5;
+}
+
+.texto-terreno strong {
+  color: #ffcc66;
+  font-size: 0.95em;
+}
+
+.texto-terreno span {
+  font-size: 0.85em;
+  color: #cccccc;
+}
+
+.boton-cerrar {
+  display: block;
+  margin: 10px auto 0 auto;
+  padding: 6px 14px;
+  font-size: 0.9em;
+  background: #444;
+  color: #eee;
+  border: 1px solid #777;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.boton-cerrar:hover {
+  background: #666;
+  color: #fff;
+}
+
+/* Scrollbar minimalista para la leyenda */
+.leyenda-terreno::-webkit-scrollbar {
+  width: 8px;
+}
+
+.leyenda-terreno::-webkit-scrollbar-track {
+  background: rgba(40, 40, 40, 0.6);
+  border-radius: 10px;
+}
+
+.leyenda-terreno::-webkit-scrollbar-thumb {
+  background: #777;
+  border-radius: 10px;
+}
+
+.leyenda-terreno::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
