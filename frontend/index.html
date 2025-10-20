@@ -1,34 +1,93 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Generador de Mapa Fantástico</title>
-  <link rel="stylesheet" href="css/estilo.css">
-  <link rel="stylesheet" href="css/leyenda.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador de mapa fantástico</title>
+
+  <!-- ============================
+       Hojas de estilo
+  ============================ -->
+  <link rel="stylesheet" href="css/estilos.css" />
+  <link rel="stylesheet" href="css/leyenda.css" />
 </head>
 <body>
 
+  <!-- ============================
+       ENCABEZADO
+  ============================ -->
   <header>
-    <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
+    <h1>Generador de mapa fantástico</h1>
     <p>Terrenos, biomas y lugares singulares</p>
   </header>
 
+  <!-- ============================
+       CONTENEDOR PRINCIPAL
+  ============================ -->
   <main>
-    <button id="abrirLeyenda">Leyenda</button>
+    <!-- Contenedor del mapa -->
+    <section id="mapa-container">
+      <canvas id="mapa" width="1280" height="720"></canvas>
+    </section>
 
-    <!-- Contenedor de la leyenda -->
-    <div id="leyenda" class="leyenda-contenedor">
-      <button id="cerrarLeyenda">Cerrar</button>
-      <div id="listaLeyenda"></div>
-    </div>
+    <!-- Botones principales -->
+    <section id="panel-controles">
+      <button id="btn-generar">Generar nuevo mapa</button>
+      <button id="btn-guardar">Guardar mapa</button>
+      <button id="btn-leyenda">Leyenda del terreno</button>
+    </section>
   </main>
 
-  <footer>
-    <p>© 2025 Proyecto Mapa Fantástico</p>
-  </footer>
+  <!-- ============================
+       PANEL DE LEYENDA DEL TERRENO
+  ============================ -->
+  <div id="panel-leyenda" class="leyenda-terreno" style="display: none;">
+    <h3>Leyenda del Terreno</h3>
+    <ul id="lista-terrenos-especiales" class="lista-terrenos-especiales">
+      <!-- Aquí se insertarán dinámicamente los elementos -->
+    </ul>
+    <button id="cerrar-leyenda" class="boton-cerrar">Cerrar</button>
+  </div>
 
-  <!-- Scripts -->
-  <script type="module" src="js/mapa/leyendaTerrenoEspecial.js"></script>
-  <script type="module" src="js/script.js"></script>
+  <!-- ============================
+       SCRIPTS PRINCIPALES
+  ============================ -->
+  <script src="js/perlin.js"></script>
+  <script src="js/generacionProcedural.js"></script>
+
+  <!-- Módulos del mapa -->
+  <script src="js/mapa/generacionTerreno.js"></script>
+  <script src="js/mapa/biomas.js"></script>
+  <script src="js/mapa/coloresTerreno.js"></script>
+  <script src="js/mapa/nombresGeograficos.js"></script>
+  <script src="js/mapa/terrenoEspecial.js"></script>
+  <script src="js/mapa/leyendaTerrenoEspecial.js"></script>
+
+  <!-- Script principal -->
+  <script src="js/script.js"></script>
+
+  <!-- ============================
+       INICIALIZACIÓN
+  ============================ -->
+  <script>
+    document.getElementById("btn-leyenda").addEventListener("click", () => {
+      const panel = document.getElementById("panel-leyenda");
+      panel.style.display = panel.style.display === "none" ? "block" : "none";
+    });
+
+    document.getElementById("cerrar-leyenda").addEventListener("click", () => {
+      document.getElementById("panel-leyenda").style.display = "none";
+    });
+
+    // Inicialización del mapa al cargar la página
+    window.addEventListener("DOMContentLoaded", () => {
+      if (typeof inicializarMapa === "function") {
+        inicializarMapa();
+      }
+      if (typeof cargarLeyendaTerrenoEspecial === "function") {
+        cargarLeyendaTerrenoEspecial();
+      }
+    });
+  </script>
 </body>
 </html>
