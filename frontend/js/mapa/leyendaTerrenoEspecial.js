@@ -1,67 +1,50 @@
-// ===============================
-// Leyenda de Terrenos Especiales
-// frontend/js/mapa/leyendaTerrenoEspecial.js
-// ===============================
+// =====================================================
+// leyendaTerrenoEspecial.js
+// Crea y gestiona el panel de leyenda para los terrenos especiales
+// =====================================================
 
-const basePath = "./static/img/icons/"; // ruta relativa a index.html
-const botonLeyenda = document.getElementById("abrirLeyenda");
-const cerrarLeyenda = document.getElementById("cerrarLeyenda");
-const contenedorLeyenda = document.getElementById("leyenda");
-const listaLeyenda = document.getElementById("listaLeyenda");
+import { terrenosEspeciales } from "./nombresTerrenoEspecial.js";
 
-const terrenosEspeciales = [
-  { nombre: "Volcán", icono: "volcan.png" },
-  { nombre: "Glaciar", icono: "glaciar.png" },
-  { nombre: "Crater", icono: "crater.png" },
-  { nombre: "Tierras Áridas", icono: "tierras_aridas.png" },
-  { nombre: "Chaparral", icono: "chaparral.png" },
-  { nombre: "Selva", icono: "selva.png" },
-  { nombre: "Manglar", icono: "manglar.png" },
-  { nombre: "Jungla", icono: "jungla.png" },
-  { nombre: "Matorral", icono: "matorral.png" },
-  { nombre: "Cavernas", icono: "cavernas.png" },
-  { nombre: "Montañas del trueno", icono: "montanas.png" },
-  { nombre: "Montañas heladas", icono: "montanas.png" },
-  { nombre: "Desfiladero del eco", icono: "desfiladero.png" },
-  { nombre: "Cañón rojo", icono: "canon.png" },
-  { nombre: "Crater del sol", icono: "crater.png" }
-];
+export function crearLeyendaTerrenoEspecial() {
+  const contenedorLeyenda = document.createElement("div");
+  contenedorLeyenda.id = "leyendaTerrenoEspecial";
+  contenedorLeyenda.classList.add("leyenda-terreno");
 
-// Evitar recargar la leyenda varias veces
-let leyendaGenerada = false;
+  const titulo = document.createElement("h3");
+  titulo.textContent = "Lugares Singulares del Mundo";
+  contenedorLeyenda.appendChild(titulo);
 
-botonLeyenda.addEventListener("click", () => {
-  contenedorLeyenda.classList.add("visible");
+  const lista = document.createElement("ul");
+  lista.classList.add("lista-terrenos-especiales");
 
-  if (leyendaGenerada) return;
+  terrenosEspeciales.forEach((terreno) => {
+    const item = document.createElement("li");
+    item.classList.add("item-terreno");
 
-  listaLeyenda.innerHTML = "";
-  terrenosEspeciales.forEach(terreno => {
-    const item = document.createElement("div");
-    item.classList.add("item-leyenda");
+    const icono = document.createElement("img");
+    icono.src = terreno.icono;
+    icono.alt = terreno.nombre;
+    icono.classList.add("icono-terreno");
 
-    const img = document.createElement("img");
-    img.src = `${basePath}${terreno.icono}`;
-    img.alt = terreno.nombre;
-    img.classList.add("icono-leyenda");
+    const texto = document.createElement("div");
+    texto.classList.add("texto-terreno");
+    texto.innerHTML = `<strong>${terreno.nombre}</strong><br><span>${terreno.descripcion}</span>`;
 
-    // fallback si el icono no existe
-    img.onerror = () => {
-      img.src = `${basePath}tierras_aridas.png`;
-      console.warn(`No se encontró icono: ${terreno.icono}`);
-    };
-
-    const label = document.createElement("span");
-    label.textContent = terreno.nombre;
-
-    item.appendChild(img);
-    item.appendChild(label);
-    listaLeyenda.appendChild(item);
+    item.appendChild(icono);
+    item.appendChild(texto);
+    lista.appendChild(item);
   });
 
-  leyendaGenerada = true;
-});
+  contenedorLeyenda.appendChild(lista);
 
-cerrarLeyenda.addEventListener("click", () => {
-  contenedorLeyenda.classList.remove("visible");
-});
+  // Botón para cerrar
+  const botonCerrar = document.createElement("button");
+  botonCerrar.textContent = "Cerrar";
+  botonCerrar.classList.add("boton-cerrar");
+  botonCerrar.addEventListener("click", () => {
+    contenedorLeyenda.remove();
+  });
+
+  contenedorLeyenda.appendChild(botonCerrar);
+  document.body.appendChild(contenedorLeyenda);
+}
