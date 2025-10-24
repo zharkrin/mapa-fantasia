@@ -5,34 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Generador de mapa fantástico</title>
 
-  <!-- Estilos principales -->
+  <!-- Estilos -->
   <link rel="stylesheet" href="frontend/css/estilo.css" />
   <link rel="stylesheet" href="frontend/css/leyenda.css" />
 
-  <!-- Fuente decorativa -->
   <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- Contenedor principal -->
   <div id="contenedor-principal">
     <h1 id="titulo-principal">🗺️ Generador de mapa fantástico</h1>
 
-    <!-- Panel de controles -->
     <div id="panel-controles">
       <button id="boton-generar">Generar mapa</button>
       <button id="boton-leyenda">Leyenda</button>
     </div>
 
-    <!-- Contenedor del mapa -->
     <div id="contenedor-mapa">
-      <canvas id="mapa" width="800" height="600"></canvas>
+      <canvas id="mapa" width="900" height="650"></canvas>
     </div>
   </div>
 
-  <!-- Contenedor de leyenda -->
+  <!-- Leyenda -->
   <div id="contenido-leyenda" style="display: none;">
-    <h2>Leyenda del terreno especial</h2>
+    <h2>Leyenda de terrenos, biomas y lugares especiales</h2>
     <div id="lista-terrenos-especiales"></div>
     <div style="text-align:center; margin-top:10px;">
       <button id="cerrar-leyenda">Cerrar</button>
@@ -42,51 +38,97 @@
   <!-- Scripts -->
   <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
 
-  <!-- Simulación del generador -->
   <script>
     // ===============================
-    // frontend/js/mapa/generadorMapa.js (versión base integrada)
+    // SCRIPT PRINCIPAL - frontend/js/script.js
     // ===============================
 
     document.getElementById('boton-generar').addEventListener('click', generarMapa);
+    document.getElementById('boton-leyenda').addEventListener('click', () => {
+      document.getElementById('contenido-leyenda').style.display = 'block';
+    });
+    document.getElementById('cerrar-leyenda').addEventListener('click', () => {
+      document.getElementById('contenido-leyenda').style.display = 'none';
+    });
 
+    // Función principal de generación
     function generarMapa() {
       const canvas = document.getElementById('mapa');
       const ctx = canvas.getContext('2d');
-
-      // Limpiar mapa previo
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Fondo tipo “fantasía”
+      // Fondo degradado
       const gradiente = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradiente.addColorStop(0, '#c9e9ff');
-      gradiente.addColorStop(1, '#89c07a');
+      gradiente.addColorStop(0, '#b9e2ff');
+      gradiente.addColorStop(1, '#94d18d');
       ctx.fillStyle = gradiente;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Simular algunos terrenos (solo visuales)
-      const terrenos = ['bosque_especial', 'volcan_especial', 'pantano_especial', 'glaciar_especial', 'montañas_especial'];
-      for (let i = 0; i < terrenos.length; i++) {
+      // ===============================
+      // Biomas
+      // ===============================
+      const biomas = [
+        'bosque', 'bosque_boreal', 'bosque_tropical',
+        'desierto_calido', 'desierto_frio',
+        'estepa', 'humedal', 'pradera', 'sabana',
+        'selva', 'selva_tropical', 'tundra',
+        'tierras_aridas', 'chaparral', 'manglar', 'jungla', 'matorral'
+      ];
+
+      for (let i = 0; i < 15; i++) {
+        const biome = biomas[Math.floor(Math.random() * biomas.length)];
         const img = new Image();
-        img.src = `frontend/static/img/icons/terreno_especial/${terrenos[i]}.png`;
+        img.src = `frontend/static/img/icons/biomas/${biome}.png`;
         const x = Math.random() * (canvas.width - 100);
         const y = Math.random() * (canvas.height - 100);
         img.onload = () => ctx.drawImage(img, x, y, 64, 64);
       }
+
+      // ===============================
+      // Terrenos (montañas, ríos, etc.)
+      // ===============================
+      const terrenos = [
+        'acantilado', 'canon', 'colina', 'costa', 'lago',
+        'mar', 'montanas', 'pantano', 'playa', 'valle',
+        'volcan', 'glaciar', 'rio', 'crater', 'cavernas'
+      ];
+
+      for (let i = 0; i < 12; i++) {
+        const terreno = terrenos[Math.floor(Math.random() * terrenos.length)];
+        const img = new Image();
+        img.src = `frontend/static/img/icons/terreno/${terreno}.png`;
+        const x = Math.random() * (canvas.width - 100);
+        const y = Math.random() * (canvas.height - 100);
+        img.onload = () => ctx.drawImage(img, x, y, 72, 72);
+      }
+
+      // ===============================
+      // Terrenos Especiales
+      // ===============================
+      const terrenosEspeciales = [
+        'bosque_especial', 'desierto_calido_especial',
+        'glaciar_especial', 'lago_especial', 'montañas_especial',
+        'pantano_especial', 'volcan_especial'
+      ];
+
+      for (let i = 0; i < 6; i++) {
+        const especial = terrenosEspeciales[Math.floor(Math.random() * terrenosEspeciales.length)];
+        const img = new Image();
+        img.src = `frontend/static/img/icons/terreno_especial/${especial}.png`;
+        const x = Math.random() * (canvas.width - 100);
+        const y = Math.random() * (canvas.height - 100);
+        img.onload = () => ctx.drawImage(img, x, y, 80, 80);
+      }
+
+      // Marco decorativo
+      ctx.strokeStyle = '#3e3e3e';
+      ctx.lineWidth = 5;
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = "20px 'Uncial Antiqua'";
+      ctx.fillStyle = "#2b2b2b";
+      ctx.fillText("Mapa generado - Terrenos, biomas y lugares especiales", 20, 30);
     }
-
-    // ===============================
-    // Integración de la leyenda
-    // ===============================
-
-    document.getElementById('boton-leyenda').addEventListener('click', () => {
-      const leyenda = document.getElementById('contenido-leyenda');
-      leyenda.style.display = 'block';
-    });
-
-    document.getElementById('cerrar-leyenda').addEventListener('click', () => {
-      document.getElementById('contenido-leyenda').style.display = 'none';
-    });
   </script>
 
 </body>
