@@ -1,153 +1,156 @@
-/**
- * terrenoEspecial.js
- * -----------------------------------------------------
- * Genera y coloca terrenos especiales en el mapa.
- * Usa los datos y nombres definidos en leyendaTerrenoEspecial.js.
- * -----------------------------------------------------
- */
+// ==========================================================
+// Terrenos Especiales - Generador de accidentes fantásticos
+// frontend/js/mapa/terrenoEspecial.js
+// ==========================================================
 
-// Aseguramos dependencia con leyendaTerrenoEspecial.js
-if (typeof obtenerTerrenosEspeciales !== "function") {
-  console.error(
-    "⚠️ No se encontró la función obtenerTerrenosEspeciales(). Asegúrate de cargar 'leyendaTerrenoEspecial.js' antes de este archivo."
-  );
+// Este módulo genera elementos singulares (volcanes, glaciares, bosques sagrados, etc.)
+// según el relieve y los biomas del mapa base.
+
+function generarTerrenoEspecial(mapaBiomas) {
+  const ancho = mapaBiomas.length;
+  const alto = mapaBiomas[0].length;
+  const terrenos = [];
+
+  const tiposEspeciales = [
+    { nombre: "bosque_especial", biomas: ["bosque", "bosque_boreal", "bosque_tropical"], probabilidad: 0.002 },
+    { nombre: "desierto_calido_especial", biomas: ["desierto_calido", "tierras_aridas"], probabilidad: 0.002 },
+    { nombre: "glaciar_especial", biomas: ["nieve", "tundra"], probabilidad: 0.002 },
+    { nombre: "lago_especial", biomas: ["costa", "pradera", "pantano"], probabilidad: 0.002 },
+    { nombre: "montanas_especial", biomas: ["montanas", "colina"], probabilidad: 0.002 },
+    { nombre: "pantano_especial", biomas: ["pantano", "humedal"], probabilidad: 0.002 },
+    { nombre: "volcan_especial", biomas: ["montanas", "desierto_calido"], probabilidad: 0.002 },
+  ];
+
+  for (let x = 0; x < ancho; x++) {
+    for (let y = 0; y < alto; y++) {
+      const bioma = mapaBiomas[x][y];
+
+      tiposEspeciales.forEach(tipo => {
+        if (tipo.biomas.includes(bioma) && Math.random() < tipo.probabilidad) {
+          terrenos.push({
+            tipo: tipo.nombre,
+            x,
+            y,
+            nombreFantasia: generarNombreFantasia(tipo.nombre),
+            icono: obtenerIconoTerrenoEspecial(tipo.nombre)
+          });
+        }
+      });
+    }
+  }
+
+  return terrenos;
 }
 
-const cantidadTerrenosEspeciales = 10; // número de terrenos especiales a generar
-let terrenosEspecialesGenerados = [];
-
-/**
- * Genera un nombre aleatorio ligeramente distinto al base,
- * añadiendo un 25 % de fantasía (títulos, elementos mágicos, etc.).
- */
-function generarNombreFantasia(baseNombre) {
+// ==========================================================
+// Función para generar nombres fantásticos automáticos
+// ==========================================================
+function generarNombreFantasia(tipo) {
   const prefijos = [
-    "Antiguo ",
-    "Sagrado ",
-    "Perdido ",
-    "Brillante ",
-    "Sombrío ",
-    "Eterno ",
-    "Oculto ",
-    "Maldito ",
-    "Místico ",
-    "Resplandeciente ",
+    "Montañas",
+    "Valle",
+    "Bosque",
+    "Cráter",
+    "Desierto",
+    "Lago",
+    "Ruinas",
+    "Ciénaga",
+    "Cumbre",
+    "Agujero",
+    "Fortaleza",
+    "Santuario"
   ];
 
   const sufijos = [
-    " del Alba",
-    " del Ocaso",
-    " del Destino",
-    " del Silencio",
-    " de los Susurros",
-    " de las Sombras",
-    " del Eco",
-    " del Trueno",
-    " del Dragón",
-    " de los Dioses",
+    "del Trueno",
+    "de los Ecos",
+    "del Sol",
+    "de la Luna",
+    "de las Sombras",
+    "del Dragón",
+    "del Silencio",
+    "del Alba",
+    "del Viento",
+    "de Fuego",
+    "del Invierno",
+    "de Cristal"
   ];
 
-  // 25% de probabilidad de alterar el nombre
-  if (Math.random() < 0.25) {
-    const prefijo = Math.random() < 0.5 ? prefijos[Math.floor(Math.random() * prefijos.length)] : "";
-    const sufijo = Math.random() < 0.5 ? sufijos[Math.floor(Math.random() * sufijos.length)] : "";
-    return `${prefijo}${baseNombre}${sufijo}`;
-  }
+  let base = tipo.split("_")[0];
+  let prefijo = prefijos[Math.floor(Math.random() * prefijos.length)];
+  let sufijo = sufijos[Math.floor(Math.random() * sufijos.length)];
 
-  return baseNombre;
+  // Combina de forma más natural con un toque de fantasía
+  if (base === "volcan") base = "Volcán";
+  else if (base === "bosque") base = "Bosque";
+  else if (base === "glaciar") base = "Glaciar";
+  else if (base === "pantano") base = "Pantano";
+  else if (base === "lago") base = "Lago";
+  else if (base === "montanas") base = "Montañas";
+  else if (base === "desierto_calido") base = "Desierto";
+
+  return `${base} ${sufijo}`;
 }
 
-/**
- * Genera posiciones aleatorias para los terrenos especiales
- * dentro de los límites visibles del mapa.
- */
-function generarPosicionAleatoria(mapaAncho, mapaAlto) {
-  const margen = 50; // margen para no colocar iconos fuera del mapa
-  return {
-    x: Math.floor(Math.random() * (mapaAncho - margen * 2)) + margen,
-    y: Math.floor(Math.random() * (mapaAlto - margen * 2)) + margen,
+// ==========================================================
+// Función para obtener iconos coherentes de terreno especial
+// ==========================================================
+function obtenerIconoTerrenoEspecial(tipo) {
+  const rutaBase = "frontend/static/Img/icons/terreno_especial/";
+  const iconos = {
+    bosque_especial: `${rutaBase}bosque_especial.png`,
+    desierto_calido_especial: `${rutaBase}desierto_calido_especial.png`,
+    glaciar_especial: `${rutaBase}glaciar_especial.png`,
+    lago_especial: `${rutaBase}lago_especial.png`,
+    montanas_especial: `${rutaBase}montanas_especial.png`,
+    pantano_especial: `${rutaBase)pantano_especial.png`,
+    volcan_especial: `${rutaBase}volcan_especial.png`
   };
+
+  return iconos[tipo] || `${rutaBase}placeholder.png`;
 }
 
-/**
- * Crea y coloca visualmente los terrenos especiales en el mapa.
- * Debe llamarse después de que el contenedor del mapa esté disponible.
- */
-function generarTerrenosEspeciales() {
-  const contenedorMapa = document.getElementById("mapa");
-  if (!contenedorMapa) {
-    console.error("No se encontró el elemento #mapa en el DOM.");
-    return;
-  }
-
-  const anchoMapa = contenedorMapa.offsetWidth;
-  const altoMapa = contenedorMapa.offsetHeight;
-
-  const tipos = obtenerTerrenosEspeciales();
-  terrenosEspecialesGenerados = [];
-
-  for (let i = 0; i < cantidadTerrenosEspeciales; i++) {
-    const tipo = tipos[Math.floor(Math.random() * tipos.length)];
-    const nombre = generarNombreFantasia(tipo.nombre);
-    const posicion = generarPosicionAleatoria(anchoMapa, altoMapa);
-
-    const icono = document.createElement("img");
-    icono.src = tipo.icono;
-    icono.alt = nombre;
-    icono.classList.add("icono-terreno-especial");
-    icono.title = nombre;
-
-    // Posicionamiento absoluto sobre el mapa
-    icono.style.position = "absolute";
-    icono.style.left = `${posicion.x}px`;
-    icono.style.top = `${posicion.y}px`;
-    icono.style.width = "32px";
-    icono.style.height = "32px";
-    icono.style.zIndex = "10";
-    icono.style.transition = "transform 0.2s ease";
-
-    // Pequeña animación interactiva
-    icono.addEventListener("mouseenter", () => {
-      icono.style.transform = "scale(1.3)";
-    });
-    icono.addEventListener("mouseleave", () => {
-      icono.style.transform = "scale(1)";
-    });
-
-    contenedorMapa.appendChild(icono);
-
-    terrenosEspecialesGenerados.push({
-      nombre,
-      tipo: tipo.id,
-      x: posicion.x,
-      y: posicion.y,
-    });
-  }
-
-  console.info(`✅ Generados ${terrenosEspecialesGenerados.length} terrenos especiales.`);
+// ==========================================================
+// Dibuja los iconos de los terrenos especiales en el mapa
+// ==========================================================
+function dibujarTerrenoEspecial(ctx, terrenos) {
+  terrenos.forEach(t => {
+    const img = new Image();
+    img.src = t.icono;
+    img.onload = () => {
+      ctx.drawImage(img, t.x - 8, t.y - 8, 24, 24);
+    };
+  });
 }
 
-/**
- * Limpia los terrenos especiales generados del mapa.
- */
-function limpiarTerrenosEspeciales() {
-  const contenedorMapa = document.getElementById("mapa");
-  if (!contenedorMapa) return;
-
-  const iconos = contenedorMapa.querySelectorAll(".icono-terreno-especial");
-  iconos.forEach((icono) => icono.remove());
-  terrenosEspecialesGenerados = [];
-  console.info("🧹 Terrenos especiales eliminados.");
+// ==========================================================
+// Genera la lista visible de la leyenda
+// ==========================================================
+function obtenerIconosTerrenoEspecial() {
+  const rutaBase = "frontend/static/Img/icons/terreno_especial/";
+  return [
+    { nombre: "Bosque mágico", src: `${rutaBase}bosque_especial.png` },
+    { nombre: "Desierto ardiente", src: `${rutaBase}desierto_calido_especial.png` },
+    { nombre: "Glaciar ancestral", src: `${rutaBase}glaciar_especial.png` },
+    { nombre: "Lago encantado", src: `${rutaBase}lago_especial.png` },
+    { nombre: "Montañas sagradas", src: `${rutaBase}montanas_especial.png` },
+    { nombre: "Pantano maldito", src: `${rutaBase}pantano_especial.png` },
+    { nombre: "Volcán dormido", src: `${rutaBase}volcan_especial.png` }
+  ];
 }
 
-/**
- * Devuelve la lista de terrenos especiales actualmente en el mapa.
- */
-function obtenerTerrenosEspecialesGenerados() {
-  return terrenosEspecialesGenerados;
-}
+// ==========================================================
+// Muestra los nombres en el mapa (textos flotantes)
+// ==========================================================
+function dibujarNombres(ctx, terrenos) {
+  ctx.font = "12px 'Uncial Antiqua', serif";
+  ctx.fillStyle = "#fff";
+  ctx.strokeStyle = "#000";
+  ctx.lineWidth = 2;
+  ctx.textAlign = "center";
 
-// Exportaciones globales
-window.generarTerrenosEspeciales = generarTerrenosEspeciales;
-window.limpiarTerrenosEspeciales = limpiarTerrenosEspeciales;
-window.obtenerTerrenosEspecialesGenerados = obtenerTerrenosEspecialesGenerados;
+  terrenos.forEach(t => {
+    ctx.strokeText(t.nombreFantasia, t.x, t.y - 12);
+    ctx.fillText(t.nombreFantasia, t.x, t.y - 12);
+  });
+}
