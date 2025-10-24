@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="frontend/css/estilo.css" />
   <link rel="stylesheet" href="frontend/css/leyenda.css" />
 
-  <!-- Fuente opcional -->
+  <!-- Fuente decorativa -->
   <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet" />
 </head>
 <body>
@@ -18,7 +18,7 @@
   <div id="contenedor-principal">
     <h1 id="titulo-principal">🗺️ Generador de mapa fantástico</h1>
 
-    <!-- Controles superiores -->
+    <!-- Panel de controles -->
     <div id="panel-controles">
       <button id="boton-generar">Generar mapa</button>
       <button id="boton-leyenda">Leyenda</button>
@@ -30,21 +30,64 @@
     </div>
   </div>
 
-  <!-- Leyenda de terrenos especiales -->
+  <!-- Contenedor de leyenda -->
   <div id="contenido-leyenda" style="display: none;">
     <h2>Leyenda del terreno especial</h2>
-
-    <!-- Los elementos se generan dinámicamente -->
     <div id="lista-terrenos-especiales"></div>
-
-    <!-- Botón cerrar -->
     <div style="text-align:center; margin-top:10px;">
       <button id="cerrar-leyenda">Cerrar</button>
     </div>
   </div>
 
   <!-- Scripts -->
-  <script src="frontend/js/mapa/generadorMapa.js"></script>
   <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
+
+  <!-- Simulación del generador -->
+  <script>
+    // ===============================
+    // frontend/js/mapa/generadorMapa.js (versión base integrada)
+    // ===============================
+
+    document.getElementById('boton-generar').addEventListener('click', generarMapa);
+
+    function generarMapa() {
+      const canvas = document.getElementById('mapa');
+      const ctx = canvas.getContext('2d');
+
+      // Limpiar mapa previo
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Fondo tipo “fantasía”
+      const gradiente = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradiente.addColorStop(0, '#c9e9ff');
+      gradiente.addColorStop(1, '#89c07a');
+      ctx.fillStyle = gradiente;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Simular algunos terrenos (solo visuales)
+      const terrenos = ['bosque_especial', 'volcan_especial', 'pantano_especial', 'glaciar_especial', 'montañas_especial'];
+      for (let i = 0; i < terrenos.length; i++) {
+        const img = new Image();
+        img.src = `frontend/static/img/icons/terreno_especial/${terrenos[i]}.png`;
+        const x = Math.random() * (canvas.width - 100);
+        const y = Math.random() * (canvas.height - 100);
+        img.onload = () => ctx.drawImage(img, x, y, 64, 64);
+      }
+    }
+
+    // ===============================
+    // Integración de la leyenda
+    // ===============================
+
+    document.getElementById('boton-leyenda').addEventListener('click', () => {
+      const leyenda = document.getElementById('contenido-leyenda');
+      leyenda.style.display = 'block';
+    });
+
+    document.getElementById('cerrar-leyenda').addEventListener('click', () => {
+      document.getElementById('contenido-leyenda').style.display = 'none';
+    });
+  </script>
+
 </body>
 </html>
