@@ -3,50 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador de Mapa Fantástico</title>
+  <title>Generador de mapa fantástico</title>
 
-  <!-- Estilos -->
+  <!-- ===============================
+       Hojas de estilo
+  ================================ -->
   <link rel="stylesheet" href="css/estilos.css" />
   <link rel="stylesheet" href="css/leyenda.css" />
+
+  <!-- Fuente decorativa para nombres -->
+  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
 </head>
+
 <body>
+  <!-- ===============================
+       Encabezado principal
+  ================================ -->
   <header>
-    <h1>🌍 Generador de Mapa Fantástico</h1>
-    <p>Distribución coherente de biomas, terrenos y lugares singulares</p>
+    <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
+    <p>Terrenos, biomas y lugares singulares</p>
   </header>
 
-  <main>
-    <!-- Contenedor principal del mapa -->
-    <div id="mapa-container">
-      <canvas id="mapa" width="1024" height="768"></canvas>
-    </div>
-
-    <!-- Panel lateral de leyenda -->
-    <aside id="panel-leyenda" class="oculto">
-      <button id="cerrar-leyenda">Cerrar</button>
-      <h2>Leyenda del Terreno</h2>
-      <div id="leyenda"></div>
-    </aside>
-
-    <div id="controles">
-      <button id="btn-generar">Generar Mapa</button>
-      <button id="btn-leyenda">Mostrar Leyenda</button>
-    </div>
+  <!-- ===============================
+       Contenedor principal del mapa
+  ================================ -->
+  <main id="mapaContainer">
+    <canvas id="mapaCanvas"></canvas>
   </main>
 
-  <footer>
-    <p>© 2025 Mapa Fantástico - Generación Procedimental Simplificada</p>
-  </footer>
+  <!-- ===============================
+       Panel lateral de control
+  ================================ -->
+  <aside id="panelControles">
+    <h2>Controles</h2>
+    <button id="btnGenerarMapa">Generar nuevo mapa</button>
+    <button id="btnMostrarLeyenda">Mostrar leyenda</button>
+  </aside>
 
-  <!-- Scripts principales -->
+  <!-- ===============================
+       Leyenda de terrenos especiales
+  ================================ -->
+  <!-- El contenedor de la leyenda se genera dinámicamente
+       desde el archivo: frontend/js/mapa/leyendaTerrenoEspecial.js -->
+
+  <!-- ===============================
+       Scripts principales
+  ================================ -->
   <script src="js/perlin.js"></script>
+  <script src="js/generacionProcedural.js"></script>
+
+  <!-- Módulos del mapa -->
   <script src="js/mapa/biomas.js"></script>
-  <script src="js/mapa/coloresTerreno.js"></script>
-  <script src="js/mapa/generacionTerreno.js"></script>
+  <script src="js/mapa/caminos.js"></script>
+  <script src="js/mapa/dibujarMapa.js"></script>
+  <script src="js/mapa/nombres.js"></script>
   <script src="js/mapa/nombresGeograficos.js"></script>
   <script src="js/mapa/terrenoEspecial.js"></script>
-  <script src="js/mapa/dibujarMapa.js"></script>
   <script src="js/mapa/leyendaTerrenoEspecial.js"></script>
+
+  <!-- Script principal -->
   <script src="js/script.js"></script>
+
+  <footer>
+    <p>© 2025 Generador de Mapas Fantásticos — Proyecto de desarrollo procedural</p>
+  </footer>
 </body>
 </html>
