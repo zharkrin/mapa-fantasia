@@ -1,97 +1,93 @@
+<!-- =========================================================
+     Generador de Mapas Fantásticos
+     frontend/index.html
+     ========================================================= -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador de Mapa Fantástico</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Mapa Fantástico</title>
 
-  <!-- ================= CSS ================= -->
-  <link rel="stylesheet" href="frontend/css/estilo.css" />
-  <link rel="stylesheet" href="frontend/css/leyenda.css" />
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="css/estilos.css">
+    <!-- Estilos específicos de la leyenda -->
+    <link rel="stylesheet" href="css/leyenda.css">
 </head>
-
 <body>
-  <header>
-    <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
-    <p>Terrenos, biomas y lugares singulares</p>
-  </header>
+    <header>
+        <h1>🌍 Generador de Mapa Fantástico</h1>
+        <p>Terrenos, biomas y lugares singulares</p>
+    </header>
 
-  <main>
-    <section id="mapa-container">
-      <canvas id="mapaCanvas" width="1024" height="768"></canvas>
-    </section>
+    <main>
+        <section id="mapa-container">
+            <canvas id="mapaCanvas" width="1024" height="768">
+                Tu navegador no soporta el elemento canvas.
+            </canvas>
+        </section>
 
-    <!-- Botón y panel de leyenda -->
-    <button id="btnLeyenda">Leyenda del Terreno</button>
+        <section id="panel-controles">
+            <button id="btnGenerarMapa">Generar nuevo mapa</button>
+            <button id="btnMostrarLeyenda">Mostrar leyenda</button>
+        </section>
+    </main>
 
+    <!-- =========================================================
+         Panel de Leyenda de Terrenos Especiales
+         ========================================================= -->
     <div id="panelLeyenda" class="oculto">
-      <div id="leyenda-header">
-        <h2>Leyenda</h2>
-        <button id="cerrarLeyenda">Cerrar</button>
-      </div>
-      <div id="leyenda-contenido">
-        <ul id="listaLeyenda"></ul>
-      </div>
+        <div class="leyenda-header">
+            <h2>🗺️ Leyenda del Terreno</h2>
+            <button id="btnCerrarLeyenda">Cerrar</button>
+        </div>
+        <div id="contenedorLeyenda" class="leyenda-contenedor"></div>
     </div>
-  </main>
 
-  <footer>
-    <p>© 2025 Generador de Mapa Fantástico — Proyecto en desarrollo</p>
-  </footer>
+    <!-- =========================================================
+         Scripts principales
+         ========================================================= -->
 
-  <!-- ================= JAVASCRIPT ================= -->
-  <!-- Librerías base -->
-  <script src="frontend/js/perlin.js"></script>
+    <!-- Dependencias base -->
+    <script src="js/perlin.js"></script>
+    <script src="js/generacionProcedural.js"></script>
 
-  <!-- Scripts del mapa -->
-  <script src="frontend/js/mapa/biomas.js"></script>
-  <script src="frontend/js/mapa/coloresTerreno.js"></script>
-  <script src="frontend/js/mapa/dibujarMapa.js"></script>
-  <script src="frontend/js/mapa/nombresGeograficos.js"></script>
-  <script src="frontend/js/mapa/terrenoEspecial.js"></script>
-  <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
-  <script src="frontend/js/mapa/generarTerrenoEspecial.js"></script>
+    <!-- Módulos de mapa -->
+    <script src="js/mapa/biomas.js"></script>
+    <script src="js/mapa/coloresTerreno.js"></script>
+    <script src="js/mapa/generacionTerreno.js"></script>
+    <script src="js/mapa/dibujarMapa.js"></script>
+    <script src="js/mapa/nombresGeograficos.js"></script>
+    <script src="js/mapa/terrenoEspecial.js"></script>
+    <script src="js/mapa/leyendaTerrenoEspecial.js"></script>
 
-  <!-- Script principal -->
-  <script src="frontend/js/script.js"></script>
+    <!-- Script principal -->
+    <script src="js/script.js"></script>
 
-  <!-- ================= INICIALIZACIÓN ================= -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const canvas = document.getElementById("mapaCanvas");
-      const ctx = canvas.getContext("2d");
-      const ancho = canvas.width;
-      const alto = canvas.height;
+    <script>
+        // Inicialización básica de eventos de interfaz
+        document.addEventListener("DOMContentLoaded", () => {
+            const btnGenerar = document.getElementById("btnGenerarMapa");
+            const btnLeyenda = document.getElementById("btnMostrarLeyenda");
+            const btnCerrar = document.getElementById("btnCerrarLeyenda");
+            const panelLeyenda = document.getElementById("panelLeyenda");
 
-      // Fondo inicial del mapa
-      ctx.fillStyle = "#b8d0f0";
-      ctx.fillRect(0, 0, ancho, alto);
+            btnGenerar.addEventListener("click", () => {
+                // Generar mapa y terreno especial
+                if (typeof generarMapa === "function") generarMapa();
+                if (typeof generarTerrenoEspecial === "function") generarTerrenoEspecial();
+            });
 
-      // === Generar terrenos especiales ===
-      if (typeof generarTerrenosEspeciales === "function") {
-        generarTerrenosEspeciales(ctx, ancho, alto);
-      } else {
-        console.warn("⚠️ generarTerrenosEspeciales() no está definido.");
-      }
+            btnLeyenda.addEventListener("click", () => {
+                panelLeyenda.classList.remove("oculto");
+                if (typeof mostrarLeyendaTerrenoEspecial === "function")
+                    mostrarLeyendaTerrenoEspecial();
+            });
 
-      // === Configurar panel de leyenda ===
-      const btnLeyenda = document.getElementById("btnLeyenda");
-      const panelLeyenda = document.getElementById("panelLeyenda");
-      const cerrarLeyenda = document.getElementById("cerrarLeyenda");
-      const listaLeyenda = document.getElementById("listaLeyenda");
-
-      if (typeof inicializarLeyendaTerrenoEspecial === "function") {
-        inicializarLeyendaTerrenoEspecial(listaLeyenda);
-      }
-
-      btnLeyenda.addEventListener("click", () => {
-        panelLeyenda.classList.toggle("oculto");
-      });
-
-      cerrarLeyenda.addEventListener("click", () => {
-        panelLeyenda.classList.add("oculto");
-      });
-    });
-  </script>
+            btnCerrar.addEventListener("click", () => {
+                panelLeyenda.classList.add("oculto");
+            });
+        });
+    </script>
 </body>
 </html>
