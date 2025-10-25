@@ -1,45 +1,65 @@
-// ==========================================================
-// Leyenda de Terrenos Especiales
-// frontend/js/mapa/leyendaTerrenoEspecial.js
-// ==========================================================
+/* =========================================================
+   leyendaTerrenoEspecial.js
+   Muestra la leyenda visual de los terrenos especiales
+   ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
-  const btnToggle = document.getElementById("toggle-leyenda");
-  const btnCerrar = document.getElementById("cerrar-leyenda");
-  const leyenda = document.getElementById("leyenda");
-  const listaLeyenda = document.getElementById("lista-leyenda");
+function crearLeyendaTerrenoEspecial() {
+    const contenedorLeyenda = document.getElementById("leyendaTerrenoEspecial");
+    if (!contenedorLeyenda) {
+        console.warn("⚠️ No se encontró el contenedor #leyendaTerrenoEspecial");
+        return;
+    }
 
-  // Mostrar/ocultar la leyenda
-  btnToggle.addEventListener("click", () => {
-    leyenda.classList.toggle("oculta");
-  });
+    contenedorLeyenda.innerHTML = ""; // limpiar antes de volver a generar
 
-  btnCerrar.addEventListener("click", () => {
-    leyenda.classList.add("oculta");
-  });
+    const terrenos = obtenerTerrenosEspeciales();
+    if (!terrenos || terrenos.length === 0) {
+        const vacio = document.createElement("p");
+        vacio.textContent = "No hay terrenos especiales generados.";
+        vacio.classList.add("texto-vacio");
+        contenedorLeyenda.appendChild(vacio);
+        return;
+    }
 
-  // Cargar iconos desde terrenoEspecial.js
-  if (typeof obtenerIconosTerrenoEspecial === "function") {
-    const iconos = obtenerIconosTerrenoEspecial();
-    listaLeyenda.innerHTML = "";
+    terrenos.forEach(t => {
+        const item = document.createElement("div");
+        item.classList.add("item-leyenda");
 
-    iconos.forEach(item => {
-      const elemento = document.createElement("div");
-      elemento.classList.add("item-leyenda");
+        const icono = document.createElement("img");
+        icono.src = t.icono;
+        icono.alt = t.nombre;
+        icono.classList.add("icono-leyenda");
 
-      const img = document.createElement("img");
-      img.src = item.src;
-      img.alt = item.nombre;
-      img.onerror = () => {
-        img.src = "frontend/static/img/icons/terreno_especial/placeholder.png";
-      };
+        const nombre = document.createElement("span");
+        nombre.textContent = formatearNombreTerrenoEspecial(t.nombre);
 
-      const texto = document.createElement("span");
-      texto.textContent = item.nombre;
-
-      elemento.appendChild(img);
-      elemento.appendChild(texto);
-      listaLeyenda.appendChild(elemento);
+        item.appendChild(icono);
+        item.appendChild(nombre);
+        contenedorLeyenda.appendChild(item);
     });
-  }
+}
+
+/**
+ * Convierte un nombre técnico como "montanas_especial"
+ * en un nombre legible: "Montañas Especiales"
+ */
+function formatearNombreTerrenoEspecial(nombre) {
+    return nombre
+        .replaceAll("_", " ")
+        .replace(/\b\w/g, l => l.toUpperCase())
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // quitar tildes
+}
+
+/**
+ * Inicializa la leyenda automáticamente si existe el contenedor
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    const btnLeyenda = document.getElementById("btnLeyendaEspecial");
+    if (btnLeyenda) {
+        btnLeyenda.addEventListener("click", () => {
+            crearLeyendaTerrenoEspecial();
+            const panel = document.getElementById("panelLeyendaEspecial");
+            if (panel) panel.classList.toggle("visible");
+        });
+    }
 });
