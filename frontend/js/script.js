@@ -1,47 +1,124 @@
-// ===============================
-// Script principal
-// frontend/js/script.js
-// ===============================
+// ============================
+// script.js — Generador de mapa fantástico
+// ============================
 
-// Importar módulos (si se usa sistema de módulos ES6)
-import { generarTerreno } from "./mapa/generacionTerreno.js";
-import { generarBiomas } from "./mapa/biomas.js";
-import { inicializarTerrenosEspeciales, terrenosEspeciales } from "./mapa/terrenoEspecial.js";
-import { renderLeyendaTerrenoEspecial } from "./mapa/leyendaTerrenoEspecial.js";
-import { dibujarMapa } from "./mapa/dibujarMapa.js";
-import { dibujarNombres } from "./mapa/dibujarNombres.js";
+import { inicializarLeyendaTerrenoEspecial } from './leyendaTerrenoEspecial.js';
 
-// Inicialización al cargar la página
-document.addEventListener("DOMContentLoaded", () => {
-    const canvas = document.getElementById("canvasMapa");
-    canvas.width = 1024;
-    canvas.height = 768;
+// -----------------------------
+// CONFIGURACIONES GENERALES
+// -----------------------------
+
+const CANVAS_ID = "mapaCanvas";
+const BOTON_GENERAR_ID = "btnGenerarMapa";
+
+const RUTA_ICONOS_TERRENO = "static/img/icons/terreno/";
+const RUTA_ICONOS_BIOMAS = "static/img/icons/biomas/";
+const RUTA_ICONOS_ESPECIALES = "static/img/icons/terreno_especial/";
+
+const DIMENSIONES_MAPA = { ancho: 1000, alto: 600 };
+const NUM_TILES_X = 10;
+const NUM_TILES_Y = 6;
+
+// -----------------------------
+// LISTAS DE ELEMENTOS
+// -----------------------------
+
+const TERRENOS = [
+    "acantilado", "canon", "colina", "costa", "lago", "mar", "mesera",
+    "montanas", "oceano", "pantano", "playa", "valle", "volcan",
+    "glaciar", "rio", "crater", "cavernas"
+];
+
+const BIOMAS = [
+    "bosque_boreal", "bosque_tropical", "bosque", "desierto_calido",
+    "desierto_frio", "estepa", "humedal", "pradera", "sabana",
+    "selva_tropical", "tundra", "tierras_aridas", "chaparral",
+    "selva", "manglar", "jungla", "matorral"
+];
+
+const TERRENOS_ESPECIALES = [
+    "bosque_especial", "desierto_calido_especial", "glaciar_especial",
+    "lago_especial", "montanas_especial", "pantano_especial", "volcan_especial"
+];
+
+// -----------------------------
+// INICIALIZACIÓN DEL MAPA
+// -----------------------------
+
+function inicializarMapa() {
+    const canvas = document.getElementById(CANVAS_ID);
+    if (!canvas) {
+        console.error("No se encontró el canvas del mapa.");
+        return;
+    }
+
     const ctx = canvas.getContext("2d");
+    canvas.width = DIMENSIONES_MAPA.ancho;
+    canvas.height = DIMENSIONES_MAPA.alto;
 
-    // 1. Generar el terreno base
-    const terreno = generarTerreno(canvas.width, canvas.height);
+    generarMapa(ctx);
+}
 
-    // 2. Generar biomas sobre el terreno
-    const biomas = generarBiomas(terreno);
+// -----------------------------
+// GENERACIÓN DEL MAPA
+// -----------------------------
 
-    // 3. Dibujar mapa base con terreno y biomas
-    dibujarMapa(ctx, terreno, biomas);
+function generarMapa(ctx) {
+    ctx.clearRect(0, 0, DIMENSIONES_MAPA.ancho, DIMENSIONES_MAPA.alto);
 
-    // 4. Dibujar nombres de lugares, ciudades y montañas
-    dibujarNombres(ctx, terreno, biomas);
+    const tileWidth = DIMENSIONES_MAPA.ancho / NUM_TILES_X;
+    const tileHeight = DIMENSIONES_MAPA.alto / NUM_TILES_Y;
 
-    // 5. Inicializar terrenos especiales y dibujarlos sobre el mapa
-    inicializarTerrenosEspeciales(canvas);
+    for (let y = 0; y < NUM_TILES_Y; y++) {
+        for (let x = 0; x < NUM_TILES_X; x++) {
+            const tipo = Math.random();
+            let imagen = new Image();
 
-    // 6. Renderizar leyenda de terrenos especiales
-    renderLeyendaTerrenoEspecial();
+            // 80% terrenos normales o biomas
+            if (tipo < 0.8) {
+                const lista = tipo < 0.4 ? TERRENOS : BIOMAS;
+                const nombre = lista[Math.floor(Math.random() * lista.length)];
+                const ruta = tipo < 0.4 ? RUTA_ICONOS_TERRENO : RUTA_ICONOS_BIOMAS;
+                imagen.src = `${ruta}${nombre}.png`;
+            }
+            // 20% terrenos especiales
+            else {
+                const nombreEspecial = TERRENOS_ESPECIALES[Math.floor(Math.random() * TERRENOS_ESPECIALES.length)];
+                imagen.src = `${RUTA_ICONOS_ESPECIALES}${nombreEspecial}.png`;
+            }
 
-    // 7. Configurar panel de leyenda (desplegable)
-    const btn = document.getElementById("btnLeyendaEspecial");
-    const panel = document.getElementById("panelLeyendaEspecial");
-    btn.addEventListener("click", () => {
-        panel.classList.toggle("activo");
+            imagen.onerror = () => { imagen.src = `${RUTA_ICONOS_ESPECIALES}placeholder.png`; };
+
+            imagen.onload = () => {
+                ctx.drawImage(imagen, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+            };
+        }
+    }
+}
+
+// -----------------------------
+// EVENTOS Y BOTONES
+// -----------------------------
+
+function inicializarBotones() {
+    const botonGenerar = document.getElementById(BOTON_GENERAR_ID);
+    if (!botonGenerar) return;
+
+    botonGenerar.addEventListener("click", () => {
+        const canvas = document.getElementById(CANVAS_ID);
+        if (canvas) {
+            const ctx = canvas.getContext("2d");
+            generarMapa(ctx);
+        }
     });
+}
 
-    console.log("Mapa generado con biomas y terrenos especiales:", terrenosEspeciales);
+// -----------------------------
+// INICIALIZACIÓN GLOBAL
+// -----------------------------
+
+window.addEventListener("DOMContentLoaded", () => {
+    inicializarMapa();
+    inicializarBotones();
+    inicializarLeyendaTerrenoEspecial();
 });
