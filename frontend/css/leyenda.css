@@ -1,152 +1,159 @@
-/* ============================================================
-   LEYENDA DEL TERRENO — frontend/css/leyenda.css
-   ============================================================ */
+/* ==========================================
+   frontend/css/leyenda.css
+   ==========================================
+   Hoja de estilo dedicada a la leyenda
+   del terreno especial y su panel desplegable.
+   ========================================== */
 
-/* ====== BOTÓN PRINCIPAL ====== */
-#btnLeyenda {
+/* ======= Panel de Leyenda ======= */
+#panel-leyenda {
   position: fixed;
-  bottom: 20px;
+  top: 80px;
   right: 20px;
-  background-color: #3c3f41;
-  color: #f5f5f5;
-  font-family: 'Cinzel', serif;
-  font-size: 1.1em;
-  padding: 10px 18px;
-  border: 2px solid #8faadc;
+  width: 320px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background-color: rgba(20, 20, 20, 0.95);
+  color: #f0f0f0;
+  border: 2px solid #555;
   border-radius: 8px;
-  cursor: pointer;
-  z-index: 50;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 10px 15px;
+  z-index: 2000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: none;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
-#btnLeyenda:hover {
-  background-color: #50627a;
+#panel-leyenda h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #f9d65c;
+  text-align: center;
+  border-bottom: 1px solid #777;
+  padding-bottom: 5px;
+}
+
+/* ======= Botón de Mostrar Leyenda ======= */
+#boton-leyenda {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #333;
+  color: #fff;
+  border: 2px solid #888;
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  z-index: 2001;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#boton-leyenda:hover {
+  background-color: #555;
   transform: scale(1.05);
 }
 
-/* ====== PANEL DE LEYENDA ====== */
-#panelLeyenda {
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 340px;
-  max-height: 60vh;
-  background-color: rgba(25, 30, 40, 0.9);
-  border: 2px solid #7aa7ff;
-  border-radius: 10px;
-  color: #f0f0f0;
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.95em;
-  overflow: hidden;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(6px);
-  z-index: 100;
+/* ======= Cerrar Panel ======= */
+#cerrar-leyenda {
+  background: #a00;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  display: block;
+  margin: 10px auto;
 }
 
-/* Ocultar / Mostrar */
-.oculto {
+#cerrar-leyenda:hover {
+  background: #d33;
+}
+
+/* ======= Lista de Iconos ======= */
+.lista-iconos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.icono {
+  text-align: center;
+  width: 80px;
+}
+
+.icono img {
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  background-color: #222;
+  border: 1px solid #444;
+  transition: transform 0.2s ease, border-color 0.3s ease;
+  object-fit: contain;
+}
+
+.icono img:hover {
+  transform: scale(1.1);
+  border-color: #f9d65c;
+}
+
+.icono span {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: #ccc;
+  word-wrap: break-word;
+}
+
+/* ==========================================
+   Imagen de respaldo (placeholder virtual)
+   ========================================== */
+.icono img {
+  position: relative;
+  background-color: #cfcfcf;
+  border: 1px solid #999;
+}
+
+.icono img::before {
+  content: "?";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 64px;
+  height: 64px;
+  line-height: 64px;
+  text-align: center;
+  font-size: 32px;
+  color: #555;
+  font-weight: bold;
+  background-color: #cfcfcf;
+  border-radius: 6px;
   display: none;
 }
 
-/* ====== CABECERA DEL PANEL ====== */
-#leyenda-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(90deg, #1b2735 0%, #283e51 100%);
-  padding: 10px 14px;
-  border-bottom: 1px solid #50627a;
+.icono img:empty::before,
+.icono img[src=""]::before,
+.icono img:not([src])::before,
+.icono img[src*="undefined"]::before,
+.icono img[src*="null"]::before,
+.icono img[src*="error"]::before {
+  display: block;
 }
 
-#leyenda-header h2 {
-  margin: 0;
-  font-family: 'Cinzel', serif;
-  font-size: 1.2em;
-  color: #bcdcff;
-}
-
-#cerrarLeyenda {
-  background-color: transparent;
-  border: none;
-  color: #ffaaaa;
-  font-size: 1em;
-  cursor: pointer;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-
-#cerrarLeyenda:hover {
-  transform: scale(1.2);
-  color: #ff6f6f;
-}
-
-/* ====== CONTENIDO DE LA LEYENDA ====== */
-#leyenda-contenido {
-  padding: 8px 12px;
-  overflow-y: auto;
-  max-height: 50vh;
-  scrollbar-width: thin;
-  scrollbar-color: #4b6079 #1c232e;
-}
-
-#leyenda-contenido::-webkit-scrollbar {
+/* Scroll personalizado */
+#panel-leyenda::-webkit-scrollbar {
   width: 8px;
 }
 
-#leyenda-contenido::-webkit-scrollbar-thumb {
-  background-color: #4b6079;
-  border-radius: 6px;
-}
-
-/* ====== LISTA DE ELEMENTOS ====== */
-#listaLeyenda {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-#listaLeyenda li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 6px 0;
-  padding: 6px 8px;
-  border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.05);
-  transition: background-color 0.2s ease;
-}
-
-#listaLeyenda li:hover {
-  background-color: rgba(255, 255, 255, 0.12);
-}
-
-/* ====== ICONOS ====== */
-#listaLeyenda img {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
+#panel-leyenda::-webkit-scrollbar-thumb {
+  background-color: #666;
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.08);
 }
 
-/* ====== TEXTO ====== */
-#listaLeyenda span {
-  color: #f2f5ff;
-  font-size: 0.95em;
-}
-
-/* ====== ADAPTACIÓN MÓVIL ====== */
-@media (max-width: 600px) {
-  #panelLeyenda {
-    width: 90%;
-    right: 5%;
-    bottom: 10%;
-    max-height: 70vh;
-  }
-
-  #btnLeyenda {
-    bottom: 15px;
-    right: 15px;
-    font-size: 1em;
-  }
+#panel-leyenda::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
 }
