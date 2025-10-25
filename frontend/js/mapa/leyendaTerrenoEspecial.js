@@ -1,65 +1,49 @@
-/* =========================================================
-   leyendaTerrenoEspecial.js
-   Muestra la leyenda visual de los terrenos especiales
-   ========================================================= */
+// ===============================
+// Leyenda de Terrenos Especiales
+// frontend/js/mapa/leyendaTerrenoEspecial.js
+// ===============================
 
-function crearLeyendaTerrenoEspecial() {
-    const contenedorLeyenda = document.getElementById("leyendaTerrenoEspecial");
-    if (!contenedorLeyenda) {
-        console.warn("⚠️ No se encontró el contenedor #leyendaTerrenoEspecial");
-        return;
-    }
+const terrenoEspecial = [
+    { nombre: "Bosque Especial", icono: "frontend/static/img/icons/terreno_especial/bosque_especial.png" },
+    { nombre: "Desierto Cálido Especial", icono: "frontend/static/img/icons/terreno_especial/desierto_calido_especial.png" },
+    { nombre: "Glaciar Especial", icono: "frontend/static/img/icons/terreno_especial/glaciar_especial.png" },
+    { nombre: "Lago Especial", icono: "frontend/static/img/icons/terreno_especial/lago_especial.png" },
+    { nombre: "Montañas Especiales", icono: "frontend/static/img/icons/terreno_especial/montanas_especial.png" },
+    { nombre: "Pantano Especial", icono: "frontend/static/img/icons/terreno_especial/pantano_especial.png" },
+    { nombre: "Volcán Especial", icono: "frontend/static/img/icons/terreno_especial/volcan_especial.png" }
+];
 
-    contenedorLeyenda.innerHTML = ""; // limpiar antes de volver a generar
+// Función para renderizar la leyenda
+function renderLeyendaTerrenoEspecial() {
+    const contenedor = document.getElementById("leyendaTerrenoEspecial");
+    contenedor.innerHTML = ""; // Limpiar contenido
 
-    const terrenos = obtenerTerrenosEspeciales();
-    if (!terrenos || terrenos.length === 0) {
-        const vacio = document.createElement("p");
-        vacio.textContent = "No hay terrenos especiales generados.";
-        vacio.classList.add("texto-vacio");
-        contenedorLeyenda.appendChild(vacio);
-        return;
-    }
+    terrenoEspecial.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item-leyenda";
 
-    terrenos.forEach(t => {
-        const item = document.createElement("div");
-        item.classList.add("item-leyenda");
+        const img = document.createElement("img");
+        img.src = item.icono;
+        img.alt = item.nombre;
+        img.onerror = () => { img.src = "frontend/static/img/icons/placeholder.png"; }; // placeholder si falla
 
-        const icono = document.createElement("img");
-        icono.src = t.icono;
-        icono.alt = t.nombre;
-        icono.classList.add("icono-leyenda");
+        const span = document.createElement("span");
+        span.textContent = item.nombre;
 
-        const nombre = document.createElement("span");
-        nombre.textContent = formatearNombreTerrenoEspecial(t.nombre);
-
-        item.appendChild(icono);
-        item.appendChild(nombre);
-        contenedorLeyenda.appendChild(item);
+        div.appendChild(img);
+        div.appendChild(span);
+        contenedor.appendChild(div);
     });
 }
 
-/**
- * Convierte un nombre técnico como "montanas_especial"
- * en un nombre legible: "Montañas Especiales"
- */
-function formatearNombreTerrenoEspecial(nombre) {
-    return nombre
-        .replaceAll("_", " ")
-        .replace(/\b\w/g, l => l.toUpperCase())
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // quitar tildes
-}
-
-/**
- * Inicializa la leyenda automáticamente si existe el contenedor
- */
+// Inicializar leyenda al cargar la página
 document.addEventListener("DOMContentLoaded", () => {
-    const btnLeyenda = document.getElementById("btnLeyendaEspecial");
-    if (btnLeyenda) {
-        btnLeyenda.addEventListener("click", () => {
-            crearLeyendaTerrenoEspecial();
-            const panel = document.getElementById("panelLeyendaEspecial");
-            if (panel) panel.classList.toggle("visible");
-        });
-    }
+    renderLeyendaTerrenoEspecial();
+
+    // Toggle panel
+    const btn = document.getElementById("btnLeyendaEspecial");
+    const panel = document.getElementById("panelLeyendaEspecial");
+    btn.addEventListener("click", () => {
+        panel.classList.toggle("activo");
+    });
 });
