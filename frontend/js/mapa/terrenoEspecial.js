@@ -2,12 +2,6 @@
 // Terrenos Especiales
 // frontend/js/mapa/terrenoEspecial.js
 // ==========================================================
-//
-// Este archivo contiene la definición de los terrenos especiales,
-// sus nombres generados proceduralmente y la ruta de sus iconos.
-// Se integra con leyendaTerrenoEspecial.js para mostrar la leyenda.
-//
-// ==========================================================
 
 const terrenoEspecial = [
   {
@@ -48,7 +42,7 @@ const terrenoEspecial = [
 ];
 
 // ==========================================================
-// Función para obtener iconos y nombres para la leyenda
+// Devuelve los iconos y nombres para la leyenda
 // ==========================================================
 function obtenerIconosTerrenoEspecial() {
   return terrenoEspecial.map(t => ({
@@ -56,14 +50,3 @@ function obtenerIconosTerrenoEspecial() {
     src: t.icono
   }));
 }
-
-// ==========================================================
-// Función de prueba: mostrar en consola los terrenos especiales
-// ==========================================================
-function mostrarTerrenosEspeciales() {
-  console.log("Terrenos especiales disponibles:");
-  terrenoEspecial.forEach(t => console.log(`${t.nombre} -> ${t.icono}`));
-}
-
-// Ejecutar prueba al cargar el documento
-document.addEventListener("DOMContentLoaded", mostrarTerrenosEspeciales);
