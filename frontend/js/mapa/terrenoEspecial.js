@@ -1,77 +1,49 @@
-/* =========================================================
-   terrenoEspecial.js
-   Genera y gestiona los terrenos especiales del mapa
-   ========================================================= */
+// ===============================
+// Terrenos Especiales sobre el Mapa
+// frontend/js/mapa/terrenoEspecial.js
+// ===============================
 
-const TERRENOS_ESPECIALES = [
-    "bosque_especial",
-    "desierto_calido_especial",
-    "glaciar_especial",
-    "lago_especial",
-    "montanas_especial",
-    "pantano_especial",
-    "volcan_especial"
+// Lista de terrenos especiales con propiedades
+const terrenosEspeciales = [
+    { nombre: "Bosque Especial", icono: "frontend/static/img/icons/terreno_especial/bosque_especial.png", x: null, y: null },
+    { nombre: "Desierto Cálido Especial", icono: "frontend/static/img/icons/terreno_especial/desierto_calido_especial.png", x: null, y: null },
+    { nombre: "Glaciar Especial", icono: "frontend/static/img/icons/terreno_especial/glaciar_especial.png", x: null, y: null },
+    { nombre: "Lago Especial", icono: "frontend/static/img/icons/terreno_especial/lago_especial.png", x: null, y: null },
+    { nombre: "Montañas Especiales", icono: "frontend/static/img/icons/terreno_especial/montanas_especial.png", x: null, y: null },
+    { nombre: "Pantano Especial", icono: "frontend/static/img/icons/terreno_especial/pantano_especial.png", x: null, y: null },
+    { nombre: "Volcán Especial", icono: "frontend/static/img/icons/terreno_especial/volcan_especial.png", x: null, y: null }
 ];
 
-let terrenosEspecialesGenerados = [];
-
-/**
- * Devuelve una ruta de imagen válida según el nombre del terreno especial
- * Ejemplo: frontend/static/img/icons/terreno_especial/bosque_especial.png
- */
-function obtenerIconoTerrenoEspecial(nombre) {
-    return `static/img/icons/terreno_especial/${nombre}.png`;
-}
-
-/**
- * Genera una cantidad limitada de terrenos especiales (por defecto entre 3 y 4)
- * y los almacena en el arreglo global `terrenosEspecialesGenerados`.
- */
-function generarTerrenoEspecial(cantidad = 3 + Math.floor(Math.random() * 2)) {
-    terrenosEspecialesGenerados = [];
-
-    // Evitar generar más de lo necesario
-    const seleccion = [...TERRENOS_ESPECIALES]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, cantidad);
-
-    seleccion.forEach(nombre => {
-        const x = Math.floor(Math.random() * 1024);
-        const y = Math.floor(Math.random() * 768);
-        const icono = obtenerIconoTerrenoEspecial(nombre);
-
-        terrenosEspecialesGenerados.push({ nombre, x, y, icono });
+// Función para generar posiciones aleatorias dentro del mapa
+function asignarPosicionesEspeciales(mapaWidth, mapaHeight) {
+    terrenosEspeciales.forEach(terreno => {
+        // Genera coordenadas aleatorias dentro del mapa
+        terreno.x = Math.floor(Math.random() * (mapaWidth - 50)) + 25;
+        terreno.y = Math.floor(Math.random() * (mapaHeight - 50)) + 25;
     });
-
-    console.log(`🌋 Terrenos especiales generados:`, terrenosEspecialesGenerados);
-
-    // Si existe el canvas principal, dibujarlos
-    if (typeof dibujarTerrenosEspeciales === "function") {
-        dibujarTerrenosEspeciales();
-    }
 }
 
-/**
- * Dibuja los terrenos especiales generados sobre el canvas principal del mapa
- */
-function dibujarTerrenosEspeciales() {
-    const canvas = document.getElementById("mapaCanvas");
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-
-    terrenosEspecialesGenerados.forEach(t => {
+// Función para dibujar los terrenos especiales en el canvas del mapa
+function dibujarTerrenosEspeciales(ctx) {
+    terrenosEspeciales.forEach(terreno => {
         const img = new Image();
-        img.src = t.icono;
+        img.src = terreno.icono;
+        img.alt = terreno.nombre;
         img.onload = () => {
-            ctx.drawImage(img, t.x - 16, t.y - 16, 32, 32);
+            ctx.drawImage(img, terreno.x - 16, terreno.y - 16, 32, 32); // Ajuste tamaño icono 32x32
+        };
+        img.onerror = () => {
+            console.warn(`No se pudo cargar el icono de ${terreno.nombre}`);
         };
     });
 }
 
-/**
- * Devuelve la lista actual de terrenos especiales generados
- */
-function obtenerTerrenosEspeciales() {
-    return terrenosEspecialesGenerados;
+// Inicializar terrenos especiales cuando el mapa esté listo
+function inicializarTerrenosEspeciales(canvas) {
+    const ctx = canvas.getContext("2d");
+    asignarPosicionesEspeciales(canvas.width, canvas.height);
+    dibujarTerrenosEspeciales(ctx);
 }
+
+// Exportar función para que script principal pueda invocarla
+export { inicializarTerrenosEspeciales, terrenosEspeciales };
