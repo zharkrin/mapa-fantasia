@@ -8,86 +8,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Mapa Fantástico</title>
-
-    <!-- Estilos principales -->
     <link rel="stylesheet" href="css/estilos.css">
-    <!-- Estilos específicos de la leyenda -->
     <link rel="stylesheet" href="css/leyenda.css">
 </head>
 <body>
+
     <header>
-        <h1>🌍 Generador de Mapa Fantástico</h1>
+        <h1>Generador de Mapa Fantástico</h1>
         <p>Terrenos, biomas y lugares singulares</p>
     </header>
 
     <main>
-        <section id="mapa-container">
-            <canvas id="mapaCanvas" width="1024" height="768">
-                Tu navegador no soporta el elemento canvas.
-            </canvas>
-        </section>
+        <!-- Contenedor principal del mapa -->
+        <div id="mapaContainer">
+            <canvas id="mapaCanvas"></canvas>
+        </div>
 
-        <section id="panel-controles">
-            <button id="btnGenerarMapa">Generar nuevo mapa</button>
-            <button id="btnMostrarLeyenda">Mostrar leyenda</button>
-        </section>
+        <!-- Botón para abrir/cerrar la leyenda de terrenos especiales -->
+        <button id="btnLeyendaEspecial" class="boton-leyenda">Leyenda de Terrenos Especiales</button>
+
+        <!-- Panel lateral para leyenda -->
+        <div id="panelLeyendaEspecial" class="panel-leyenda">
+            <h3>Leyenda de Terrenos Especiales</h3>
+            <div id="leyendaTerrenoEspecial"></div>
+        </div>
     </main>
 
-    <!-- =========================================================
-         Panel de Leyenda de Terrenos Especiales
-         ========================================================= -->
-    <div id="panelLeyenda" class="oculto">
-        <div class="leyenda-header">
-            <h2>🗺️ Leyenda del Terreno</h2>
-            <button id="btnCerrarLeyenda">Cerrar</button>
-        </div>
-        <div id="contenedorLeyenda" class="leyenda-contenedor"></div>
-    </div>
+    <footer>
+        <p>&copy; 2025 Generador de Mapas de Fantasía</p>
+    </footer>
 
-    <!-- =========================================================
-         Scripts principales
-         ========================================================= -->
-
-    <!-- Dependencias base -->
-    <script src="js/perlin.js"></script>
-    <script src="js/generacionProcedural.js"></script>
-
-    <!-- Módulos de mapa -->
-    <script src="js/mapa/biomas.js"></script>
-    <script src="js/mapa/coloresTerreno.js"></script>
+    <!-- Scripts -->
+    <script src="js/mapa/perlin.js"></script>
     <script src="js/mapa/generacionTerreno.js"></script>
-    <script src="js/mapa/dibujarMapa.js"></script>
-    <script src="js/mapa/nombresGeograficos.js"></script>
     <script src="js/mapa/terrenoEspecial.js"></script>
     <script src="js/mapa/leyendaTerrenoEspecial.js"></script>
-
-    <!-- Script principal -->
     <script src="js/script.js"></script>
 
-    <script>
-        // Inicialización básica de eventos de interfaz
-        document.addEventListener("DOMContentLoaded", () => {
-            const btnGenerar = document.getElementById("btnGenerarMapa");
-            const btnLeyenda = document.getElementById("btnMostrarLeyenda");
-            const btnCerrar = document.getElementById("btnCerrarLeyenda");
-            const panelLeyenda = document.getElementById("panelLeyenda");
-
-            btnGenerar.addEventListener("click", () => {
-                // Generar mapa y terreno especial
-                if (typeof generarMapa === "function") generarMapa();
-                if (typeof generarTerrenoEspecial === "function") generarTerrenoEspecial();
-            });
-
-            btnLeyenda.addEventListener("click", () => {
-                panelLeyenda.classList.remove("oculto");
-                if (typeof mostrarLeyendaTerrenoEspecial === "function")
-                    mostrarLeyendaTerrenoEspecial();
-            });
-
-            btnCerrar.addEventListener("click", () => {
-                panelLeyenda.classList.add("oculto");
-            });
-        });
-    </script>
 </body>
 </html>
