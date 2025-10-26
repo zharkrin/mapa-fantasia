@@ -1,98 +1,88 @@
-// ===================================================
-// Script principal del generador de mapa fantástico
+// ===========================================
+// script.js (principal)
 // frontend/js/script.js
-// ===================================================
+// ===========================================
 
-import { dibujarMapa } from './mapa/dibujarMapa.js';
-import { inicializarLeyendaTerrenoEspecial } from './mapa/leyendaTerrenoEspecial.js';
-import { generarTerrenoEspecial, obtenerTerrenosEspeciales } from './mapa/terrenoEspecial.js';
+import { generarTerrenosEspeciales } from "./mapa/terrenoEspecial.js";
+import { crearLeyendaTerrenosEspeciales, inicializarLeyenda } from "./mapa/leyendaTerrenoEspecial.js";
 
-// ===============================
-// Inicialización general
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("🗺️ Generador de mapa fantástico iniciado.");
+// =====================================================
+// VARIABLES GLOBALES
+// =====================================================
+let terrenosEspeciales = [];
+let canvas, ctx;
 
-    inicializarInterfaz();
-    inicializarEventos();
-    inicializarLeyendaTerrenoEspecial(); // Muestra la leyenda en el panel lateral
+// =====================================================
+// FUNCIÓN PRINCIPAL DE INICIO
+// =====================================================
+window.addEventListener("DOMContentLoaded", () => {
+    console.log("🌍 Iniciando mapa interactivo...");
 
-    // Generar el mapa base al inicio
-    dibujarMapa();
+    canvas = document.getElementById("mapa");
+    ctx = canvas.getContext("2d");
+
+    inicializarMapa();
+    inicializarLeyenda();
+    crearLeyendaTerrenosEspeciales();
+
+    // Generar los terrenos especiales de inicio
+    terrenosEspeciales = generarTerrenosEspeciales(3);
+    dibujarTerrenosEspeciales();
 });
 
-// ===============================
-// Funciones de inicialización
-// ===============================
-function inicializarInterfaz() {
-    const leyendaContainer = document.getElementById('leyenda-container');
-    const toggleBtn = document.getElementById('toggle-leyenda');
+// =====================================================
+// MAPA BASE
+// =====================================================
+function inicializarMapa() {
+    canvas.width = 1280;
+    canvas.height = 720;
+    ctx.fillStyle = "#9fd6c2";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (leyendaContainer && toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-            leyendaContainer.classList.toggle('visible');
-        });
-    }
-
-    // Generar terrenos especiales al iniciar
-    generarTerrenoEspecial();
-
-    console.log("✅ Interfaz y leyenda de terreno especial listas.");
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "#1b4332";
+    ctx.fillText("🗺️ Mapa del Mundo - Terrenos Especiales", 40, 40);
 }
 
-function inicializarEventos() {
-    const botonGenerar = document.getElementById('generar-mapa');
-    if (botonGenerar) {
-        botonGenerar.addEventListener('click', () => {
-            console.log("🌍 Regenerando mapa completo...");
-            dibujarMapa();
-            generarTerrenoEspecial();
-        });
-    }
+// =====================================================
+// DIBUJAR TERRENOS ESPECIALES
+// =====================================================
+function dibujarTerrenosEspeciales() {
+    terrenosEspeciales.forEach((terreno) => {
+        const img = new Image();
+        img.src = terreno.icono;
+
+        img.onload = () => {
+            ctx.drawImage(img, terreno.x, terreno.y, 64, 64);
+
+            // Etiqueta con nombre
+            ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+            ctx.fillRect(terreno.x, terreno.y + 64, ctx.measureText(terreno.nombre).width + 10, 24);
+            ctx.fillStyle = "white";
+            ctx.fillText(terreno.nombre, terreno.x + 5, terreno.y + 82);
+        };
+
+        img.onerror = () => {
+            console.warn(`⚠️ No se pudo cargar el icono de ${terreno.nombre}: ${terreno.icono}`);
+        };
+    });
 }
 
-// ===============================
-// Renderizado del mapa
-// ===============================
-export function actualizarMapa() {
-    dibujarMapa();
-
-    // Cargar terrenos especiales generados
-    const terrenosEspeciales = obtenerTerrenosEspeciales();
-    const contenedor = document.getElementById("contenedor-terrenos-especiales");
-
-    if (contenedor && terrenosEspeciales.length > 0) {
-        contenedor.innerHTML = "";
-        terrenosEspeciales.forEach(terreno => {
-            const icono = document.createElement("img");
-            icono.src = terreno.icono;
-            icono.alt = terreno.nombre;
-            icono.classList.add("icono-terreno-especial");
-
-            const etiqueta = document.createElement("p");
-            etiqueta.textContent = terreno.nombre;
-
-            const bloque = document.createElement("div");
-            bloque.classList.add("bloque-terreno-especial");
-            bloque.appendChild(icono);
-            bloque.appendChild(etiqueta);
-
-            contenedor.appendChild(bloque);
-        });
-    }
-
-    console.log("🗾 Terrenos especiales actualizados en el mapa.");
+// =====================================================
+// REGENERAR TERRENOS (si se desea hacerlo dinámico)
+// =====================================================
+const btnRegenerar = document.getElementById("regenerar-especiales");
+if (btnRegenerar) {
+    btnRegenerar.addEventListener("click", () => {
+        terrenosEspeciales = generarTerrenosEspeciales(3);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        inicializarMapa();
+        dibujarTerrenosEspeciales();
+    });
 }
 
-// ===============================
-// Depuración
-// ===============================
-window.debugMapa = {
-    regenerar: () => {
-        console.log("🔄 Regenerando mapa desde consola...");
-        actualizarMapa();
-    },
-    listarTerrenosEspeciales: () => {
-        console.table(obtenerTerrenosEspeciales());
-    }
-};
+// =====================================================
+// PLACEHOLDER (fallback visual desde CSS)
+// =====================================================
+// No se requiere imagen "placeholder.png" porque se usa desde CSS:
+// .placeholder { background: repeating-linear-gradient(...); }
