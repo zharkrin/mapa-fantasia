@@ -1,193 +1,55 @@
-<!-- ==========================================
-     frontend/index.html
-     ==========================================
-     Interfaz principal del generador de mapas
-     fantásticos con soporte para biomas, terrenos
-     y lugares especiales.
-     ========================================== -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador de mapa fantástico</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Mapa Fantástico</title>
 
-  <!-- Estilos principales -->
-  <link rel="stylesheet" href="css/estilos.css" />
-  <link rel="stylesheet" href="css/leyenda.css" />
-
-  <style>
-    body {
-      background-color: #0f0f0f;
-      color: #f0f0f0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-    }
-
-    header {
-      text-align: center;
-      background: #1c1c1c;
-      padding: 20px 10px;
-      border-bottom: 2px solid #333;
-    }
-
-    header h1 {
-      color: #f9d65c;
-      font-size: 28px;
-      margin-bottom: 5px;
-    }
-
-    header p {
-      color: #aaa;
-      font-size: 16px;
-      margin: 0;
-    }
-
-    main {
-      text-align: center;
-      padding: 30px;
-    }
-
-    #canvas-container {
-      position: relative;
-      display: inline-block;
-      background-color: #222;
-      border: 2px solid #555;
-      border-radius: 8px;
-      padding: 10px;
-    }
-
-    canvas {
-      display: block;
-      margin: 0 auto;
-      background-color: #1a1a1a;
-      border-radius: 6px;
-    }
-
-    /* Botón de generación */
-    #generar {
-      background-color: #333;
-      color: #fff;
-      border: 2px solid #777;
-      border-radius: 6px;
-      padding: 10px 20px;
-      margin-top: 20px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    #generar:hover {
-      background-color: #555;
-      transform: scale(1.05);
-    }
-  </style>
+    <!-- ============================= -->
+    <!-- Estilos principales -->
+    <!-- ============================= -->
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/leyenda.css">
 </head>
 
 <body>
-  <header>
-    <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
-    <p>Terrenos, biomas y lugares singulares</p>
-  </header>
+    <header>
+        <h1>🗺️ Generador de Mapa Fantástico</h1>
+        <h2>Terrenos, Biomas y Lugares Singulares</h2>
+    </header>
 
-  <main>
-    <div id="canvas-container">
-      <canvas id="mapCanvas" width="1024" height="768"></canvas>
-    </div>
-    <br />
-    <button id="generar">Generar mapa</button>
-  </main>
+    <!-- ============================= -->
+    <!-- Controles principales -->
+    <!-- ============================= -->
+    <section id="panel-controles">
+        <button id="generar-mapa" class="btn-principal">Generar Nuevo Mapa</button>
+        <button id="toggle-leyenda" class="btn-secundario">Mostrar / Ocultar Leyenda</button>
+    </section>
 
-  <!-- ======= Panel de Leyenda ======= -->
-  <button id="boton-leyenda">Leyenda</button>
+    <!-- ============================= -->
+    <!-- Contenedor principal del mapa -->
+    <!-- ============================= -->
+    <main id="mapa-container">
+        <canvas id="mapa" width="1280" height="720">
+            Tu navegador no soporta Canvas.
+        </canvas>
 
-  <div id="panel-leyenda">
-    <h2>Leyenda del Terreno</h2>
-    <div class="lista-iconos" id="lista-leyenda"></div>
-    <button id="cerrar-leyenda">Cerrar</button>
-  </div>
+        <!-- Bloque dinámico para terrenos especiales -->
+        <div id="contenedor-terrenos-especiales" class="contenedor-terrenos"></div>
+    </main>
 
-  <!-- ======= Scripts Principales ======= -->
-  <script src="js/mapa/biomas.js"></script>
-  <script src="js/mapa/nombresGeograficos.js"></script>
-  <script src="js/mapa/terrenoEspecial.js"></script>
-  <script src="js/mapa/generacionTerreno.js"></script>
-  <script src="js/mapa/dibujarMapa.js"></script>
-  <script src="js/script.js"></script>
+    <!-- ============================= -->
+    <!-- Panel lateral: Leyenda -->
+    <!-- ============================= -->
+    <aside id="leyenda-container" class="panel-lateral">
+        <h3>Leyenda del Terreno</h3>
+        <button id="cerrar-leyenda" class="btn-cerrar">Cerrar</button>
+        <div id="contenido-leyenda"></div>
+    </aside>
 
-  <!-- ======= Script de la Leyenda ======= -->
-  <script>
-    // Mostrar/Ocultar leyenda
-    const botonLeyenda = document.getElementById('boton-leyenda');
-    const panelLeyenda = document.getElementById('panel-leyenda');
-    const cerrarLeyenda = document.getElementById('cerrar-leyenda');
-
-    botonLeyenda.addEventListener('click', () => {
-      panelLeyenda.style.display = 'block';
-    });
-
-    cerrarLeyenda.addEventListener('click', () => {
-      panelLeyenda.style.display = 'none';
-    });
-
-    // Generar lista de iconos desde carpeta
-    const listaLeyenda = document.getElementById('lista-leyenda');
-
-    const categorias = {
-      "Terrenos": [
-        "acantilado", "canon", "colina", "costa", "lago",
-        "mar", "mesera", "montanas", "oceano", "pantano",
-        "playa", "valle", "volcan", "glaciar", "rio", "crater", "cavernas"
-      ],
-      "Biomas": [
-        "bosque_boreal", "bosque_tropical", "bosque", "desierto_calido",
-        "desierto_frio", "estepa", "humedal", "pradera", "sabana",
-        "selva_tropical", "tundra", "tierras_aridas", "chaparral",
-        "selva", "manglar", "jungla", "matorral"
-      ],
-      "Terrenos Especiales": [
-        "bosque_especial", "desierto_calido_especial", "glaciar_especial",
-        "lago_especial", "montanas_especial", "pantano_especial", "volcan_especial"
-      ]
-    };
-
-    const rutas = {
-      "Terrenos": "static/img/icons/terreno/",
-      "Biomas": "static/img/icons/biomas/",
-      "Terrenos Especiales": "static/img/icons/terreno_especial/"
-    };
-
-    Object.keys(categorias).forEach(categoria => {
-      const titulo = document.createElement('h3');
-      titulo.textContent = categoria;
-      titulo.style.textAlign = "center";
-      titulo.style.color = "#f9d65c";
-      titulo.style.marginTop = "15px";
-      listaLeyenda.appendChild(titulo);
-
-      categorias[categoria].forEach(nombre => {
-        const div = document.createElement('div');
-        div.className = "icono";
-
-        const img = document.createElement('img');
-        img.src = `${rutas[categoria]}${nombre}.png`;
-        img.alt = nombre;
-        img.onerror = () => {
-          img.removeAttribute('src');
-          img.alt = "No disponible";
-        };
-
-        const span = document.createElement('span');
-        span.textContent = nombre.replace(/_/g, ' ');
-
-        div.appendChild(img);
-        div.appendChild(span);
-        listaLeyenda.appendChild(div);
-      });
-    });
-  </script>
+    <!-- ============================= -->
+    <!-- Scripts principales -->
+    <!-- ============================= -->
+    <script type="module" src="js/script.js"></script>
 </body>
 </html>
