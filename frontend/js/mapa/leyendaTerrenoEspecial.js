@@ -1,55 +1,57 @@
-// ======================================================
-// leyendaTerrenoEspecial.js
-// ------------------------------------------------------
-// Muestra la leyenda de los elementos del mapa:
-// terrenos, biomas y terrenos especiales
-// ======================================================
+// ===========================================
+// Leyenda de Terrenos Especiales
+// frontend/js/mapa/leyendaTerrenoEspecial.js
+// ===========================================
 
-const botonLeyenda = document.getElementById("botonLeyenda");
-const contenedorLeyenda = document.getElementById("contenedorLeyenda");
+import { terrenosEspeciales } from "./terrenoEspecial.js";
 
-botonLeyenda.addEventListener("click", () => {
-  contenedorLeyenda.classList.toggle("visible");
-});
+// ============================
+// Función para crear la leyenda
+// ============================
+export function crearLeyendaTerrenosEspeciales(contenedorId = "contenido-leyenda") {
+    const contenedor = document.getElementById(contenedorId);
+    contenedor.innerHTML = "";
 
-// ======================================================
-// ACTUALIZAR LEYENDA COMPLETA
-// ======================================================
-function actualizarLeyenda(terrenos, biomas, terrenosEspeciales) {
-  contenedorLeyenda.innerHTML = `
-    <h3>Leyenda del terreno</h3>
-    <ul class="leyenda-lista">
-      ${generarListaLeyenda("Terrenos", terrenos, "terreno")}
-      ${generarListaLeyenda("Biomas", biomas, "biomas")}
-      ${generarListaLeyenda("Terrenos Especiales", terrenosEspeciales, "terreno_especial")}
-    </ul>
-  `;
+    const titulo = document.createElement("h4");
+    titulo.textContent = "🌋 Lugares Singulares del Mundo";
+    contenedor.appendChild(titulo);
+
+    const lista = document.createElement("ul");
+    lista.classList.add("lista-leyenda");
+
+    terrenosEspeciales.forEach((terreno) => {
+        const item = document.createElement("li");
+        item.classList.add("item-leyenda");
+
+        const icono = document.createElement("img");
+        icono.src = terreno.icono;
+        icono.alt = terreno.nombre;
+        icono.classList.add("icono-leyenda");
+
+        const texto = document.createElement("span");
+        texto.textContent = terreno.nombre;
+
+        item.appendChild(icono);
+        item.appendChild(texto);
+        lista.appendChild(item);
+    });
+
+    contenedor.appendChild(lista);
 }
 
-// ======================================================
-// Genera cada sección de la leyenda
-// ======================================================
-function generarListaLeyenda(titulo, elementos, carpeta) {
-  if (!elementos || elementos.length === 0) return "";
+// ============================
+// Mostrar / Ocultar Leyenda
+// ============================
+export function inicializarLeyenda() {
+    const btnToggle = document.getElementById("toggle-leyenda");
+    const btnCerrar = document.getElementById("cerrar-leyenda");
+    const panel = document.getElementById("leyenda-container");
 
-  const tiposUnicos = [...new Set(elementos.map(e => e.tipo))];
+    btnToggle.addEventListener("click", () => {
+        panel.classList.toggle("visible");
+    });
 
-  const lista = tiposUnicos
-    .map(tipo => {
-      const ruta = `static/img/icons/${carpeta}/${tipo}.png`;
-      return `
-        <li>
-          <img src="${ruta}" alt="${tipo}" onerror="this.src='static/img/icons/placeholder.png'">
-          <span>${tipo.replace(/_/g, " ")}</span>
-        </li>
-      `;
-    })
-    .join("");
-
-  return `
-    <li class="leyenda-seccion">
-      <h4>${titulo}</h4>
-      <ul>${lista}</ul>
-    </li>
-  `;
+    btnCerrar.addEventListener("click", () => {
+        panel.classList.remove("visible");
+    });
 }
