@@ -5,51 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Mapa Fantástico</title>
 
-    <!-- ============================= -->
-    <!-- Estilos principales -->
-    <!-- ============================= -->
-    <link rel="stylesheet" href="css/estilos.css">
-    <link rel="stylesheet" href="css/leyenda.css">
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="frontend/css/style.css">
 </head>
-
 <body>
     <header>
         <h1>🗺️ Generador de Mapa Fantástico</h1>
-        <h2>Terrenos, Biomas y Lugares Singulares</h2>
+        <h2>Terrenos, biomas y lugares singulares</h2>
     </header>
 
-    <!-- ============================= -->
-    <!-- Controles principales -->
-    <!-- ============================= -->
-    <section id="panel-controles">
-        <button id="generar-mapa" class="btn-principal">Generar Nuevo Mapa</button>
-        <button id="toggle-leyenda" class="btn-secundario">Mostrar / Ocultar Leyenda</button>
-    </section>
+    <main>
+        <!-- Contenedor principal -->
+        <div id="contenedor-mapa">
+            <canvas id="mapa"></canvas>
 
-    <!-- ============================= -->
-    <!-- Contenedor principal del mapa -->
-    <!-- ============================= -->
-    <main id="mapa-container">
-        <canvas id="mapa" width="1280" height="720">
-            Tu navegador no soporta Canvas.
-        </canvas>
+            <!-- Botón para regenerar terrenos especiales -->
+            <button id="regenerar-especiales" class="boton-generar">
+                🔄 Regenerar Terrenos Especiales
+            </button>
 
-        <!-- Bloque dinámico para terrenos especiales -->
-        <div id="contenedor-terrenos-especiales" class="contenedor-terrenos"></div>
+            <!-- Panel lateral de leyenda -->
+            <aside id="panel-leyenda">
+                <button id="toggle-leyenda" class="boton-leyenda">📜 Leyenda</button>
+
+                <div id="contenedor-leyenda" class="oculto">
+                    <h3>Leyenda de Terrenos Especiales</h3>
+                    <ul id="lista-leyenda"></ul>
+                </div>
+            </aside>
+        </div>
     </main>
 
-    <!-- ============================= -->
-    <!-- Panel lateral: Leyenda -->
-    <!-- ============================= -->
-    <aside id="leyenda-container" class="panel-lateral">
-        <h3>Leyenda del Terreno</h3>
-        <button id="cerrar-leyenda" class="btn-cerrar">Cerrar</button>
-        <div id="contenido-leyenda"></div>
-    </aside>
+    <footer>
+        <p>🌟 Proyecto de Generador de Mapas — v1.0</p>
+    </footer>
 
-    <!-- ============================= -->
-    <!-- Scripts principales -->
-    <!-- ============================= -->
-    <script type="module" src="js/script.js"></script>
+    <!-- Scripts -->
+    <script type="module" src="frontend/js/script.js"></script>
 </body>
 </html>
