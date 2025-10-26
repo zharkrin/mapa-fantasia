@@ -1,101 +1,84 @@
-// =============================================================
-// Leyenda del Terreno y Terrenos Especiales
-// frontend/js/mapa/leyendaTerrenoEspecial.js
-// =============================================================
+// --- leyendaTerrenoEspecial.js ---
+// Genera la leyenda visual a partir de los iconos disponibles
 
-const LeyendaTerreno = (() => {
-    const iconPaths = {
-        terreno: "frontend/static/img/icons/terreno/",
-        biomas: "frontend/static/img/icons/biomas/",
-        terrenoEspecial: "frontend/static/img/icons/terreno_especial/"
+document.addEventListener("DOMContentLoaded", () => {
+    const btnMostrarLeyenda = document.getElementById("btnMostrarLeyenda");
+    const btnCerrarLeyenda = document.getElementById("btnCerrarLeyenda");
+    const leyenda = document.getElementById("leyenda");
+    const contenedorLeyenda = document.getElementById("leyenda-contenido");
+
+    // Categorías con sus rutas
+    const categorias = {
+        "Terrenos": "static/img/icons/terreno/",
+        "Biomas": "static/img/icons/biomas/",
+        "Terrenos Especiales": "static/img/icons/terreno_especial/"
     };
 
-    const terrenos = [
-        "acantilado", "canon", "colina", "costa", "lago", "mar",
-        "mesera", "montanas", "oceano", "pantano", "playa", "valle",
-        "volcan", "glaciar", "rio", "crater", "cavernas"
-    ];
+    // Archivos conocidos por categoría
+    const iconos = {
+        "Terrenos": [
+            "acantilado.png", "canon.png", "colina.png", "costa.png", "lago.png",
+            "mar.png", "meseta.png", "montanas.png", "oceano.png", "pantano.png",
+            "playa.png", "valle.png", "volcan.png", "glaciar.png", "rio.png",
+            "crater.png", "cavernas.png"
+        ],
+        "Biomas": [
+            "bosque_boreal.png", "bosque_tropical.png", "bosque.png", "desierto_calido.png",
+            "desierto_frio.png", "estepa.png", "humedal.png", "pradera.png", "sabana.png",
+            "selva_tropical.png", "tundra.png", "tierras_aridas.png", "chaparral.png",
+            "selva.png", "manglar.png", "jungla.png", "matorral.png"
+        ],
+        "Terrenos Especiales": [
+            "bosque_especial.png", "desierto_calido_especial.png", "glaciar_especial.png",
+            "lago_especial.png", "montanas_especial.png", "pantano_especial.png", "volcan_especial.png"
+        ]
+    };
 
-    const biomas = [
-        "bosque_boreal", "bosque_tropical", "bosque",
-        "desierto_calido", "desierto_frio", "estepa", "humedal",
-        "pradera", "sabana", "selva_tropical", "tundra",
-        "tierras_aridas", "chaparral", "selva", "manglar",
-        "jungla", "matorral"
-    ];
+    // --- Construir la leyenda ---
+    function construirLeyenda() {
+        contenedorLeyenda.innerHTML = ""; // limpiar
+        for (const categoria in categorias) {
+            const ruta = categorias[categoria];
 
-    const terrenosEspeciales = [
-        "bosque_especial", "desierto_calido_especial",
-        "glaciar_especial", "lago_especial", "montanas_especial",
-        "pantano_especial", "volcan_especial"
-    ];
-
-    function crearElemento(nombre, tipo) {
-        const contenedor = document.createElement("div");
-        contenedor.classList.add("leyenda-item");
-
-        const img = document.createElement("img");
-        img.src = `${iconPaths[tipo]}${nombre}.png`;
-        img.alt = nombre;
-        img.onerror = () => {
-            console.warn(`⚠️ No se pudo cargar el icono: ${nombre}.png`);
-            img.style.display = "none";
-        };
-
-        const label = document.createElement("span");
-        label.textContent = nombre.replace(/_/g, " ");
-
-        contenedor.appendChild(img);
-        contenedor.appendChild(label);
-        return contenedor;
-    }
-
-    function generarLeyenda() {
-        const contenedor = document.getElementById("leyenda-contenido");
-        if (!contenedor) return;
-
-        contenedor.innerHTML = ""; // limpia todo
-
-        const secciones = [
-            { titulo: "Terrenos", lista: terrenos, tipo: "terreno" },
-            { titulo: "Biomas", lista: biomas, tipo: "biomas" },
-            { titulo: "Terrenos Especiales", lista: terrenosEspeciales, tipo: "terrenoEspecial" }
-        ];
-
-        secciones.forEach(seccion => {
+            // Título de categoría
             const titulo = document.createElement("h3");
-            titulo.textContent = seccion.titulo;
-            contenedor.appendChild(titulo);
+            titulo.textContent = categoria;
+            contenedorLeyenda.appendChild(titulo);
 
-            const grid = document.createElement("div");
-            grid.classList.add("leyenda-grid");
+            const gridCategoria = document.createElement("div");
+            gridCategoria.classList.add("categoria-grid");
 
-            seccion.lista.forEach(nombre => {
-                grid.appendChild(crearElemento(nombre, seccion.tipo));
+            // Crear ítems
+            iconos[categoria].forEach(nombreArchivo => {
+                const item = document.createElement("div");
+                item.classList.add("leyenda-item");
+
+                const img = document.createElement("img");
+                img.src = ruta + nombreArchivo;
+                img.alt = nombreArchivo.replace(".png", "").replace(/_/g, " ");
+                img.onerror = () => {
+                    img.src = "static/img/icons/placeholder.png";
+                };
+
+                const etiqueta = document.createElement("span");
+                etiqueta.textContent = img.alt;
+
+                item.appendChild(img);
+                item.appendChild(etiqueta);
+                gridCategoria.appendChild(item);
             });
 
-            contenedor.appendChild(grid);
-        });
-    }
-
-    function inicializarBoton() {
-        const boton = document.getElementById("leyenda-toggle");
-        const panel = document.getElementById("leyenda");
-
-        if (boton && panel) {
-            boton.addEventListener("click", () => {
-                panel.classList.toggle("visible");
-            });
+            contenedorLeyenda.appendChild(gridCategoria);
         }
     }
 
-    function init() {
-        generarLeyenda();
-        inicializarBoton();
-    }
+    // Mostrar / ocultar
+    btnMostrarLeyenda.addEventListener("click", () => {
+        construirLeyenda();
+        leyenda.classList.remove("oculto");
+    });
 
-    return { init };
-})();
-
-// Inicializar al cargar
-document.addEventListener("DOMContentLoaded", LeyendaTerreno.init);
+    btnCerrarLeyenda.addEventListener("click", () => {
+        leyenda.classList.add("oculto");
+    });
+});
