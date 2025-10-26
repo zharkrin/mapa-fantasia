@@ -46,20 +46,18 @@
     </div>
 
     <script>
-        // Generador simple de nombres de fantasía para terrenos especiales
+        // Generador de nombres de fantasía
         function generarNombreFantastico(tipo) {
             const prefijos = ["Al", "Bel", "Cal", "Dor", "El", "Fal", "Gal", "Har", "Il", "Jar"];
             const sufijos = ["dor", "mir", "thas", "wen", "gorn", "lith", "nar", "vorn", "dell", "crest"];
             const adjetivos = ["del Trueno", "Helado", "del Eco", "Rojo", "del Sol", "Sombrío", "Escondido"];
-            
             const prefijo = prefijos[Math.floor(Math.random() * prefijos.length)];
             const sufijo = sufijos[Math.floor(Math.random() * sufijos.length)];
             const adjetivo = adjetivos[Math.floor(Math.random() * adjetivos.length)];
-
             return `${tipo} ${prefijo}${sufijo} ${adjetivo}`;
         }
 
-        // Lista de iconos
+        // Lista de iconos y tipos
         const iconos = [
             // Biomas
             { nombre: "Bosque Boreal", ruta: "frontend/static/img/icons/biomas/bosque_boreal.png" },
@@ -106,7 +104,12 @@
             { tipo: "Lago", ruta: "frontend/static/img/icons/terreno_especial/lago_especial.png" },
             { tipo: "Montañas", ruta: "frontend/static/img/icons/terreno_especial/montanas_especial.png" },
             { tipo: "Pantano", ruta: "frontend/static/img/icons/terreno_especial/pantano_especial.png" },
-            { tipo: "Desierto Cálido", ruta: "frontend/static/img/icons/terreno_especial/desierto_calido_especial.png" }
+            { tipo: "Desierto Cálido", ruta: "frontend/static/img/icons/terreno_especial/desierto_calido_especial.png" },
+
+            // Ríos, montañas y cráteres
+            { tipo: "Río", ruta: "frontend/static/img/icons/terreno/rio.png" },
+            { tipo: "Montañas", ruta: "frontend/static/img/icons/terreno/montanas.png" },
+            { tipo: "Crater", ruta: "frontend/static/img/icons/terreno/crater.png" }
         ];
 
         const lista = document.getElementById("lista-leyenda");
@@ -114,12 +117,13 @@
             const li = document.createElement("li");
             const img = document.createElement("img");
             img.src = item.ruta;
+
             if(item.nombre) {
                 img.alt = item.nombre;
                 li.appendChild(img);
                 li.appendChild(document.createTextNode(item.nombre));
             } else if(item.tipo) {
-                // Terreno especial: genera nombre de fantasía
+                // Nombres fantásticos para terrenos especiales y geográficos
                 const nombreFant = generarNombreFantastico(item.tipo);
                 img.alt = nombreFant;
                 li.appendChild(img);
