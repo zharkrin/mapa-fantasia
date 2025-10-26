@@ -1,104 +1,76 @@
-// ======================================================
-// terrenoEspecial.js
-// ------------------------------------------------------
-// Módulo para la creación de terrenos especiales.
-// Estos son lugares únicos o destacados del mapa,
-// como volcanes, bosques encantados, lagos místicos, etc.
-// ======================================================
+// ===========================================
+// Terreno Especial
+// frontend/js/mapa/terrenoEspecial.js
+// ===========================================
 
-/**
- * Lista base de tipos de terrenos especiales.
- * Se pueden ampliar manualmente en el futuro.
- */
-const TIPOS_TERRENOS_ESPECIALES = [
-  "bosque_especial",
-  "desierto_calido_especial",
-  "glaciar_especial",
-  "lago_especial",
-  "montanas_especial",
-  "pantano_especial",
-  "volcan_especial"
+// Esta función genera lugares únicos como volcanes, glaciares o bosques legendarios.
+// Cada terreno especial se asocia a un icono y coordenadas dentro del mapa.
+
+export const terrenosEspeciales = [
+    {
+        nombre: "Bosque Encantado",
+        tipo: "bosque_especial",
+        descripcion: "Un bosque antiguo donde la magia aún respira.",
+        icono: "frontend/static/img/icons/terreno_especial/bosque_especial.png"
+    },
+    {
+        nombre: "Desierto de las Almas",
+        tipo: "desierto_calido_especial",
+        descripcion: "Dunas infinitas donde el viento canta historias olvidadas.",
+        icono: "frontend/static/img/icons/terreno_especial/desierto_calido_especial.png"
+    },
+    {
+        nombre: "Glaciar del Silencio",
+        tipo: "glaciar_especial",
+        descripcion: "Una extensión helada donde el tiempo parece detenido.",
+        icono: "frontend/static/img/icons/terreno_especial/glaciar_especial.png"
+    },
+    {
+        nombre: "Lago de los Ecos",
+        tipo: "lago_especial",
+        descripcion: "Sus aguas reflejan no solo el cielo, sino también el alma.",
+        icono: "frontend/static/img/icons/terreno_especial/lago_especial.png"
+    },
+    {
+        nombre: "Montañas Eternas",
+        tipo: "montanas_especial",
+        descripcion: "Gigantes de piedra que guardan secretos antiguos.",
+        icono: "frontend/static/img/icons/terreno_especial/montanas_especial.png"
+    },
+    {
+        nombre: "Pantano de las Sombras",
+        tipo: "pantano_especial",
+        descripcion: "Tierras húmedas donde la niebla nunca se levanta.",
+        icono: "frontend/static/img/icons/terreno_especial/pantano_especial.png"
+    },
+    {
+        nombre: "Volcán del Destino",
+        tipo: "volcan_especial",
+        descripcion: "Un coloso de fuego que moldea el mundo a su voluntad.",
+        icono: "frontend/static/img/icons/terreno_especial/volcan_especial.png"
+    }
 ];
 
-/**
- * Genera un número aleatorio de terrenos especiales (por defecto 3–4)
- * dentro de los límites del mapa.
- * @param {number} ancho - Ancho del mapa en píxeles.
- * @param {number} alto - Alto del mapa en píxeles.
- * @param {number} cantidad - Cantidad de lugares especiales a generar.
- * @returns {Array<Object>} Lista de terrenos especiales generados.
- */
-function generarTerrenosEspeciales(ancho, alto, cantidad = 3 + Math.floor(Math.random() * 2)) {
-  const terrenosEspeciales = [];
+// ===========================================
+// Función generadora
+// ===========================================
 
-  for (let i = 0; i < cantidad; i++) {
-    const tipo = TIPOS_TERRENOS_ESPECIALES[Math.floor(Math.random() * TIPOS_TERRENOS_ESPECIALES.length)];
+// Crea un conjunto limitado de terrenos especiales de forma aleatoria
+export function generarTerrenosEspeciales(cantidad = 3) {
+    const seleccionados = [];
+    const indicesUsados = new Set();
 
-    const x = Math.floor(Math.random() * ancho);
-    const y = Math.floor(Math.random() * alto);
-
-    const especial = {
-      tipo,
-      x,
-      y,
-      nombre: generarNombreTerrenoEspecial(tipo)
-    };
-
-    terrenosEspeciales.push(especial);
-  }
-
-  return terrenosEspeciales;
-}
-
-/**
- * Devuelve un nombre temático para cada tipo de terreno especial.
- * @param {string} tipo - Tipo de terreno especial.
- * @returns {string} Nombre generado.
- */
-function generarNombreTerrenoEspecial(tipo) {
-  const prefijos = ["Antiguo", "Místico", "Olvidado", "Sagrado", "Perdido", "Sombrío", "Eterno"];
-  const sufijos = ["de las Sombras", "de la Luna", "del Fuego", "de los Espíritus", "del Silencio", "de la Bruma", "del Alba"];
-
-  const prefijo = prefijos[Math.floor(Math.random() * prefijos.length)];
-  const sufijo = sufijos[Math.floor(Math.random() * sufijos.length)];
-
-  const nombres = {
-    "bosque_especial": `${prefijo} Bosque ${sufijo}`,
-    "desierto_calido_especial": `${prefijo} Desierto ${sufijo}`,
-    "glaciar_especial": `${prefijo} Glaciar ${sufijo}`,
-    "lago_especial": `${prefijo} Lago ${sufijo}`,
-    "montanas_especial": `${prefijo} Cumbres ${sufijo}`,
-    "pantano_especial": `${prefijo} Pantano ${sufijo}`,
-    "volcan_especial": `${prefijo} Volcán ${sufijo}`
-  };
-
-  return nombres[tipo] || `${prefijo} Lugar ${sufijo}`;
-}
-
-/**
- * Dibuja los terrenos especiales sobre el mapa.
- * @param {CanvasRenderingContext2D} ctx - Contexto del canvas.
- * @param {Array<Object>} terrenosEspeciales - Lista de terrenos especiales.
- */
-function dibujarTerrenosEspeciales(ctx, terrenosEspeciales) {
-  terrenosEspeciales.forEach(especial => {
-    const icono = new Image();
-    icono.src = `static/img/icons/terreno_especial/${especial.tipo}.png`;
-
-    icono.onload = () => {
-      ctx.drawImage(icono, especial.x - 16, especial.y - 16, 32, 32);
-    };
-
-    icono.onerror = () => {
-      // En caso de que falte la imagen, dibuja un marcador genérico
-      ctx.fillStyle = "#f9d65c";
-      ctx.beginPath();
-      ctx.arc(especial.x, especial.y, 6, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.font = "10px Arial";
-      ctx.fillStyle = "#fff";
-      ctx.fillText("?", especial.x - 3, especial.y + 3);
-    };
-  });
+    while (seleccionados.length < cantidad && indicesUsados.size < terrenosEspeciales.length) {
+        const indice = Math.floor(Math.random() * terrenosEspeciales.length);
+        if (!indicesUsados.has(indice)) {
+            const base = terrenosEspeciales[indice];
+            seleccionados.push({
+                ...base,
+                x: Math.random() * 1280, // posición dentro del canvas
+                y: Math.random() * 720
+            });
+            indicesUsados.add(indice);
+        }
+    }
+    return seleccionados;
 }
