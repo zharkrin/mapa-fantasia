@@ -2,163 +2,52 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Mapa Fantástico</title>
-    <link rel="stylesheet" href="frontend/css/estilo.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding: 20px;
-        }
-        #leyenda {
-            background-color: #ffffff;
-            padding: 15px;
-            border: 1px solid #ccc;
-            max-width: 450px;
-        }
-        #leyenda h3 {
-            margin-top: 0;
-        }
-        #lista-leyenda {
-            list-style: none;
-            padding: 0;
-        }
-        #lista-leyenda li {
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-        }
-        #lista-leyenda img {
-            width: 32px;
-            height: 32px;
-            margin-right: 8px;
-        }
-        #form-agregar {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        #form-agregar input[type="text"] {
-            padding: 5px;
-        }
-        #form-agregar input[type="submit"] {
-            padding: 5px;
-            cursor: pointer;
-        }
-    </style>
+
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="frontend/css/style.css">
 </head>
 <body>
 
-    <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
-    <p>Terrenos, biomas y lugares singulares</p>
+    <header>
+        <h1>🌍 Generador de Mapa Fantástico</h1>
+        <h2>Terrenos, biomas y lugares singulares</h2>
+    </header>
 
-    <div id="leyenda">
-        <h3>LEYENDA DEL TERRENO</h3>
-        <ul id="lista-leyenda"></ul>
-    </div>
+    <!-- Contenedor del mapa -->
+    <main id="mapa-container">
+        <canvas id="mapa-canvas"></canvas>
+    </main>
 
-    <form id="form-agregar">
-        <h4>Agregar terreno, río o lugar singular</h4>
-        <input type="text" id="nombre-nuevo" placeholder="Nombre del lugar" required>
-        <input type="text" id="ruta-imagen" placeholder="Ruta del icono (png)" required>
-        <input type="submit" value="Agregar">
-    </form>
+    <!-- Botón para mostrar la leyenda -->
+    <button id="leyenda-toggle" class="boton-leyenda">🧭 Leyenda</button>
 
+    <!-- Panel lateral de leyenda -->
+    <aside id="leyenda" class="panel-leyenda">
+        <div class="leyenda-header">
+            <h2>LEYENDA DEL TERRENO</h2>
+            <button id="cerrar-leyenda" class="boton-cerrar">Cerrar</button>
+        </div>
+        <div id="leyenda-contenido" class="leyenda-contenido"></div>
+    </aside>
+
+    <!-- Scripts -->
+    <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
     <script>
-        // Generador de nombres de fantasía
-        function generarNombreFantastico(tipo) {
-            const prefijos = ["Al", "Bel", "Cal", "Dor", "El", "Fal", "Gal", "Har", "Il", "Jar"];
-            const sufijos = ["dor", "mir", "thas", "wen", "gorn", "lith", "nar", "vorn", "dell", "crest"];
-            const adjetivos = ["del Trueno", "Helado", "del Eco", "Rojo", "del Sol", "Sombrío", "Escondido"];
-            const prefijo = prefijos[Math.floor(Math.random() * prefijos.length)];
-            const sufijo = sufijos[Math.floor(Math.random() * sufijos.length)];
-            const adjetivo = adjetivos[Math.floor(Math.random() * adjetivos.length)];
-            return `${tipo} ${prefijo}${sufijo} ${adjetivo}`;
-        }
+        // Control básico de apertura y cierre del panel
+        document.addEventListener("DOMContentLoaded", () => {
+            const boton = document.getElementById("leyenda-toggle");
+            const panel = document.getElementById("leyenda");
+            const cerrar = document.getElementById("cerrar-leyenda");
 
-        // Lista de iconos y tipos
-        const iconos = [
-            // Biomas
-            { nombre: "Bosque Boreal", ruta: "frontend/static/img/icons/biomas/bosque_boreal.png" },
-            { nombre: "Bosque Tropical", ruta: "frontend/static/img/icons/biomas/bosque_tropical.png" },
-            { nombre: "Bosque", ruta: "frontend/static/img/icons/biomas/bosque.png" },
-            { nombre: "Desierto Cálido", ruta: "frontend/static/img/icons/biomas/desierto_calido.png" },
-            { nombre: "Desierto Frío", ruta: "frontend/static/img/icons/biomas/desierto_frio.png" },
-            { nombre: "Estepa", ruta: "frontend/static/img/icons/biomas/estepa.png" },
-            { nombre: "Humedal", ruta: "frontend/static/img/icons/biomas/humedal.png" },
-            { nombre: "Pradera", ruta: "frontend/static/img/icons/biomas/pradera.png" },
-            { nombre: "Sabana", ruta: "frontend/static/img/icons/biomas/sabana.png" },
-            { nombre: "Selva Tropical", ruta: "frontend/static/img/icons/biomas/selva_tropical.png" },
-            { nombre: "Tundra", ruta: "frontend/static/img/icons/biomas/tundra.png" },
-            { nombre: "Tierras Áridas", ruta: "frontend/static/img/icons/biomas/tierras_aridas.png" },
-            { nombre: "Chaparral", ruta: "frontend/static/img/icons/biomas/chaparral.png" },
-            { nombre: "Selva", ruta: "frontend/static/img/icons/biomas/selva.png" },
-            { nombre: "Manglar", ruta: "frontend/static/img/icons/biomas/manglar.png" },
-            { nombre: "Jungla", ruta: "frontend/static/img/icons/biomas/jungla.png" },
-            { nombre: "Matorral", ruta: "frontend/static/img/icons/biomas/matorral.png" },
-
-            // Terrenos
-            { nombre: "Acantilado", ruta: "frontend/static/img/icons/terreno/acantilado.png" },
-            { nombre: "Cañón", ruta: "frontend/static/img/icons/terreno/canon.png" },
-            { nombre: "Colina", ruta: "frontend/static/img/icons/terreno/colina.png" },
-            { nombre: "Costa", ruta: "frontend/static/img/icons/terreno/costa.png" },
-            { nombre: "Lago", ruta: "frontend/static/img/icons/terreno/lago.png" },
-            { nombre: "Mar", ruta: "frontend/static/img/icons/terreno/mar.png" },
-            { nombre: "Meseta", ruta: "frontend/static/img/icons/terreno/mesera.png" },
-            { nombre: "Montañas", ruta: "frontend/static/img/icons/terreno/montanas.png" },
-            { nombre: "Océano", ruta: "frontend/static/img/icons/terreno/oceano.png" },
-            { nombre: "Pantano", ruta: "frontend/static/img/icons/terreno/pantano.png" },
-            { nombre: "Playa", ruta: "frontend/static/img/icons/terreno/playa.png" },
-            { nombre: "Valle", ruta: "frontend/static/img/icons/terreno/valle.png" },
-            { nombre: "Volcán", ruta: "frontend/static/img/icons/terreno/volcan.png" },
-            { nombre: "Glaciar", ruta: "frontend/static/img/icons/terreno/glaciar.png" },
-            { nombre: "Río", ruta: "frontend/static/img/icons/terreno/rio.png" },
-            { nombre: "Crater", ruta: "frontend/static/img/icons/terreno/crater.png" },
-            { nombre: "Cavernas", ruta: "frontend/static/img/icons/terreno/cavernas.png" }
-        ];
-
-        const lista = document.getElementById("lista-leyenda");
-
-        function mostrarIconos() {
-            lista.innerHTML = "";
-            iconos.forEach(item => {
-                const li = document.createElement("li");
-                const img = document.createElement("img");
-                img.src = item.ruta;
-
-                if(item.nombre) {
-                    img.alt = item.nombre;
-                    li.appendChild(img);
-                    li.appendChild(document.createTextNode(item.nombre));
-                } else if(item.tipo) {
-                    const nombreFant = generarNombreFantastico(item.tipo);
-                    img.alt = nombreFant;
-                    li.appendChild(img);
-                    li.appendChild(document.createTextNode(nombreFant));
-                }
-                lista.appendChild(li);
+            boton.addEventListener("click", () => {
+                panel.classList.add("visible");
             });
-        }
 
-        mostrarIconos();
-
-        // Formulario para agregar manualmente
-        const form = document.getElementById("form-agregar");
-        form.addEventListener("submit", function(e){
-            e.preventDefault();
-            const nombreNuevo = document.getElementById("nombre-nuevo").value.trim();
-            const rutaImagen = document.getElementById("ruta-imagen").value.trim();
-
-            if(nombreNuevo && rutaImagen){
-                const nuevoElemento = { nombre: nombreNuevo, ruta: rutaImagen };
-                iconos.push(nuevoElemento);
-                mostrarIconos();
-
-                // Limpiar campos
-                document.getElementById("nombre-nuevo").value = "";
-                document.getElementById("ruta-imagen").value = "";
-            }
+            cerrar.addEventListener("click", () => {
+                panel.classList.remove("visible");
+            });
         });
     </script>
 
