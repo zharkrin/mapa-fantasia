@@ -33,6 +33,19 @@
             height: 32px;
             margin-right: 8px;
         }
+        #form-agregar {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        #form-agregar input[type="text"] {
+            padding: 5px;
+        }
+        #form-agregar input[type="submit"] {
+            padding: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -44,6 +57,13 @@
         <h3>LEYENDA DEL TERRENO</h3>
         <ul id="lista-leyenda"></ul>
     </div>
+
+    <form id="form-agregar">
+        <h4>Agregar terreno, río o lugar singular</h4>
+        <input type="text" id="nombre-nuevo" placeholder="Nombre del lugar" required>
+        <input type="text" id="ruta-imagen" placeholder="Ruta del icono (png)" required>
+        <input type="submit" value="Agregar">
+    </form>
 
     <script>
         // Generador de nombres de fantasía
@@ -95,41 +115,50 @@
             { nombre: "Glaciar", ruta: "frontend/static/img/icons/terreno/glaciar.png" },
             { nombre: "Río", ruta: "frontend/static/img/icons/terreno/rio.png" },
             { nombre: "Crater", ruta: "frontend/static/img/icons/terreno/crater.png" },
-            { nombre: "Cavernas", ruta: "frontend/static/img/icons/terreno/cavernas.png" },
-
-            // Terrenos Especiales
-            { tipo: "Bosque", ruta: "frontend/static/img/icons/terreno_especial/bosque_especial.png" },
-            { tipo: "Volcán", ruta: "frontend/static/img/icons/terreno_especial/volcan_especial.png" },
-            { tipo: "Glaciar", ruta: "frontend/static/img/icons/terreno_especial/glaciar_especial.png" },
-            { tipo: "Lago", ruta: "frontend/static/img/icons/terreno_especial/lago_especial.png" },
-            { tipo: "Montañas", ruta: "frontend/static/img/icons/terreno_especial/montanas_especial.png" },
-            { tipo: "Pantano", ruta: "frontend/static/img/icons/terreno_especial/pantano_especial.png" },
-            { tipo: "Desierto Cálido", ruta: "frontend/static/img/icons/terreno_especial/desierto_calido_especial.png" },
-
-            // Ríos, montañas y cráteres
-            { tipo: "Río", ruta: "frontend/static/img/icons/terreno/rio.png" },
-            { tipo: "Montañas", ruta: "frontend/static/img/icons/terreno/montanas.png" },
-            { tipo: "Crater", ruta: "frontend/static/img/icons/terreno/crater.png" }
+            { nombre: "Cavernas", ruta: "frontend/static/img/icons/terreno/cavernas.png" }
         ];
 
         const lista = document.getElementById("lista-leyenda");
-        iconos.forEach(item => {
-            const li = document.createElement("li");
-            const img = document.createElement("img");
-            img.src = item.ruta;
 
-            if(item.nombre) {
-                img.alt = item.nombre;
-                li.appendChild(img);
-                li.appendChild(document.createTextNode(item.nombre));
-            } else if(item.tipo) {
-                // Nombres fantásticos para terrenos especiales y geográficos
-                const nombreFant = generarNombreFantastico(item.tipo);
-                img.alt = nombreFant;
-                li.appendChild(img);
-                li.appendChild(document.createTextNode(nombreFant));
+        function mostrarIconos() {
+            lista.innerHTML = "";
+            iconos.forEach(item => {
+                const li = document.createElement("li");
+                const img = document.createElement("img");
+                img.src = item.ruta;
+
+                if(item.nombre) {
+                    img.alt = item.nombre;
+                    li.appendChild(img);
+                    li.appendChild(document.createTextNode(item.nombre));
+                } else if(item.tipo) {
+                    const nombreFant = generarNombreFantastico(item.tipo);
+                    img.alt = nombreFant;
+                    li.appendChild(img);
+                    li.appendChild(document.createTextNode(nombreFant));
+                }
+                lista.appendChild(li);
+            });
+        }
+
+        mostrarIconos();
+
+        // Formulario para agregar manualmente
+        const form = document.getElementById("form-agregar");
+        form.addEventListener("submit", function(e){
+            e.preventDefault();
+            const nombreNuevo = document.getElementById("nombre-nuevo").value.trim();
+            const rutaImagen = document.getElementById("ruta-imagen").value.trim();
+
+            if(nombreNuevo && rutaImagen){
+                const nuevoElemento = { nombre: nombreNuevo, ruta: rutaImagen };
+                iconos.push(nuevoElemento);
+                mostrarIconos();
+
+                // Limpiar campos
+                document.getElementById("nombre-nuevo").value = "";
+                document.getElementById("ruta-imagen").value = "";
             }
-            lista.appendChild(li);
         });
     </script>
 
