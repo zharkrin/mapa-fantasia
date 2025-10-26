@@ -1,159 +1,159 @@
-/* ==========================================
-   frontend/css/leyenda.css
-   ==========================================
-   Hoja de estilo dedicada a la leyenda
-   del terreno especial y su panel desplegable.
-   ========================================== */
+/* --- LEYENDA DE TERRENOS, BIOMAS Y TERRENOS ESPECIALES --- */
 
-/* ======= Panel de Leyenda ======= */
-#panel-leyenda {
-  position: fixed;
-  top: 80px;
-  right: 20px;
-  width: 320px;
-  max-height: 85vh;
-  overflow-y: auto;
-  background-color: rgba(20, 20, 20, 0.95);
-  color: #f0f0f0;
-  border: 2px solid #555;
-  border-radius: 8px;
-  padding: 10px 15px;
-  z-index: 2000;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: none;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+/* --- CONTENEDOR PRINCIPAL --- */
+#leyenda {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 10, 10, 0.8);
+    color: #f1f1f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 2000;
+    padding: 20px;
+    overflow-y: auto;
+    backdrop-filter: blur(6px);
+    transition: opacity 0.3s ease;
 }
 
-#panel-leyenda h2 {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #f9d65c;
-  text-align: center;
-  border-bottom: 1px solid #777;
-  padding-bottom: 5px;
+#leyenda.oculto {
+    display: none;
 }
 
-/* ======= Botón de Mostrar Leyenda ======= */
-#boton-leyenda {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #333;
-  color: #fff;
-  border: 2px solid #888;
-  border-radius: 6px;
-  padding: 8px 14px;
-  cursor: pointer;
-  z-index: 2001;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  font-size: 15px;
-  font-weight: bold;
+/* --- TITULO PRINCIPAL --- */
+#leyenda h2 {
+    margin-top: 10px;
+    font-size: 2rem;
+    text-align: center;
+    color: #ffcc66;
+    text-shadow: 0 0 8px rgba(255, 200, 100, 0.8);
 }
 
-#boton-leyenda:hover {
-  background-color: #555;
-  transform: scale(1.05);
+/* --- BOTÓN DE CIERRE --- */
+#btnCerrarLeyenda {
+    background: #c0392b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    transition: background 0.3s;
 }
 
-/* ======= Cerrar Panel ======= */
-#cerrar-leyenda {
-  background: #a00;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 10px;
-  font-size: 13px;
-  cursor: pointer;
-  display: block;
-  margin: 10px auto;
+#btnCerrarLeyenda:hover {
+    background: #e74c3c;
 }
 
-#cerrar-leyenda:hover {
-  background: #d33;
+/* --- CONTENEDOR INTERNO DE LA LEYENDA --- */
+#leyenda-contenido {
+    width: 90%;
+    max-width: 1200px;
+    background: rgba(25, 25, 25, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
 }
 
-/* ======= Lista de Iconos ======= */
-.lista-iconos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 12px;
-  margin-top: 10px;
+/* --- CATEGORÍAS (Terrenos, Biomas, Terrenos Especiales) --- */
+#leyenda-contenido h3 {
+    color: #f4d03f;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 5px;
 }
 
-.icono {
-  text-align: center;
-  width: 80px;
+/* --- GRID DE ICONOS --- */
+.categoria-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 10px;
 }
 
-.icono img {
-  width: 64px;
-  height: 64px;
-  border-radius: 6px;
-  background-color: #222;
-  border: 1px solid #444;
-  transition: transform 0.2s ease, border-color 0.3s ease;
-  object-fit: contain;
+/* --- CADA ELEMENTO DE LA LEYENDA --- */
+.leyenda-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 10px;
+    transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.icono img:hover {
-  transform: scale(1.1);
-  border-color: #f9d65c;
+.leyenda-item:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.15);
 }
 
-.icono span {
-  display: block;
-  margin-top: 4px;
-  font-size: 13px;
-  color: #ccc;
-  word-wrap: break-word;
+/* --- IMÁGENES --- */
+.leyenda-item img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    image-rendering: crisp-edges;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
 }
 
-/* ==========================================
-   Imagen de respaldo (placeholder virtual)
-   ========================================== */
-.icono img {
-  position: relative;
-  background-color: #cfcfcf;
-  border: 1px solid #999;
+/* --- ETIQUETAS DE TEXTO --- */
+.leyenda-item span {
+    font-size: 0.9rem;
+    color: #fafafa;
+    text-align: center;
+    text-transform: capitalize;
 }
 
-.icono img::before {
-  content: "?";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 64px;
-  height: 64px;
-  line-height: 64px;
-  text-align: center;
-  font-size: 32px;
-  color: #555;
-  font-weight: bold;
-  background-color: #cfcfcf;
-  border-radius: 6px;
-  display: none;
+/* --- BOTÓN PARA MOSTRAR LEYENDA --- */
+#btnMostrarLeyenda {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 255, 120, 0.4);
+    z-index: 1500;
+    transition: background 0.3s, transform 0.2s;
 }
 
-.icono img:empty::before,
-.icono img[src=""]::before,
-.icono img:not([src])::before,
-.icono img[src*="undefined"]::before,
-.icono img[src*="null"]::before,
-.icono img[src*="error"]::before {
-  display: block;
+#btnMostrarLeyenda:hover {
+    background: #2ecc71;
+    transform: scale(1.05);
 }
 
-/* Scroll personalizado */
-#panel-leyenda::-webkit-scrollbar {
-  width: 8px;
-}
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .categoria-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
 
-#panel-leyenda::-webkit-scrollbar-thumb {
-  background-color: #666;
-  border-radius: 4px;
-}
+    .leyenda-item img {
+        width: 48px;
+        height: 48px;
+    }
 
-#panel-leyenda::-webkit-scrollbar-thumb:hover {
-  background-color: #888;
+    #leyenda h2 {
+        font-size: 1.6rem;
+    }
 }
