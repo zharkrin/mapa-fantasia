@@ -5,51 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Mapa Fantástico</title>
 
-    <!-- Estilos principales -->
-    <link rel="stylesheet" href="frontend/css/style.css">
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
 
+<body>
     <header>
-        <h1>🌍 Generador de Mapa Fantástico</h1>
-        <h2>Terrenos, biomas y lugares singulares</h2>
+        <h1>Generador de Mapa Fantástico</h1>
+        <p>Terrenos, biomas y lugares singulares</p>
     </header>
 
-    <!-- Contenedor del mapa -->
-    <main id="mapa-container">
-        <canvas id="mapa-canvas"></canvas>
+    <main>
+        <!-- Contenedor principal del mapa -->
+        <section id="mapa-container">
+            <canvas id="mapaCanvas"></canvas>
+        </section>
+
+        <!-- Botones de interacción -->
+        <section id="controles">
+            <button id="btnGenerarMapa">Generar Mapa</button>
+            <button id="btnMostrarLeyenda">Mostrar Leyenda</button>
+        </section>
+
+        <!-- Leyenda -->
+        <section id="leyenda" class="oculto">
+            <h2>Leyenda del Terreno</h2>
+            <button id="btnCerrarLeyenda">Cerrar</button>
+
+            <div class="leyenda-grid" id="leyenda-contenido">
+                <!-- Se rellenará dinámicamente con JS -->
+            </div>
+        </section>
     </main>
 
-    <!-- Botón para mostrar la leyenda -->
-    <button id="leyenda-toggle" class="boton-leyenda">🧭 Leyenda</button>
+    <footer>
+        <p>© 2025 Generador de Mapa Fantástico - Proyecto Procedural</p>
+    </footer>
 
-    <!-- Panel lateral de leyenda -->
-    <aside id="leyenda" class="panel-leyenda">
-        <div class="leyenda-header">
-            <h2>LEYENDA DEL TERRENO</h2>
-            <button id="cerrar-leyenda" class="boton-cerrar">Cerrar</button>
-        </div>
-        <div id="leyenda-contenido" class="leyenda-contenido"></div>
-    </aside>
-
-    <!-- Scripts -->
-    <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
-    <script>
-        // Control básico de apertura y cierre del panel
-        document.addEventListener("DOMContentLoaded", () => {
-            const boton = document.getElementById("leyenda-toggle");
-            const panel = document.getElementById("leyenda");
-            const cerrar = document.getElementById("cerrar-leyenda");
-
-            boton.addEventListener("click", () => {
-                panel.classList.add("visible");
-            });
-
-            cerrar.addEventListener("click", () => {
-                panel.classList.remove("visible");
-            });
-        });
-    </script>
-
+    <!-- Scripts principales -->
+    <script src="js/mapa/generacionTerreno.js"></script>
+    <script src="js/mapa/biomas.js"></script>
+    <script src="js/mapa/nombresGeograficos.js"></script>
+    <script src="js/mapa/terrenoEspecial.js"></script>
+    <script src="js/mapa/leyendaTerrenoEspecial.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
