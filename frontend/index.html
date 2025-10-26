@@ -4,43 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Mapa Fantástico</title>
-
-    <!-- CSS principal -->
+    <!-- Hoja de estilos principal -->
     <link rel="stylesheet" href="frontend/css/style.css">
 </head>
 <body>
+    <!-- ===============================
+         Encabezado
+         ============================== -->
     <header>
-        <h1>🗺️ Generador de Mapa Fantástico</h1>
-        <h2>Terrenos, biomas y lugares singulares</h2>
+        <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
+        <p>Terrenos, biomas y lugares singulares</p>
     </header>
 
+    <!-- ===============================
+         Contenedor del mapa
+         ============================== -->
     <main>
-        <!-- Contenedor principal -->
-        <div id="contenedor-mapa">
-            <canvas id="mapa"></canvas>
-
-            <!-- Botón para regenerar terrenos especiales -->
-            <button id="regenerar-especiales" class="boton-generar">
-                🔄 Regenerar Terrenos Especiales
-            </button>
-
-            <!-- Panel lateral de leyenda -->
-            <aside id="panel-leyenda">
-                <button id="toggle-leyenda" class="boton-leyenda">📜 Leyenda</button>
-
-                <div id="contenedor-leyenda" class="oculto">
-                    <h3>Leyenda de Terrenos Especiales</h3>
-                    <ul id="lista-leyenda"></ul>
-                </div>
-            </aside>
+        <div id="mapa-container">
+            <!-- Aquí se dibujará el mapa generado -->
         </div>
     </main>
 
-    <footer>
-        <p>🌟 Proyecto de Generador de Mapas — v1.0</p>
-    </footer>
+    <!-- ===============================
+         Leyenda del terreno
+         ============================== -->
+    <aside id="leyenda-terreno">
+        <button id="cerrar-leyenda">Cerrar Leyenda</button>
+        <h2>LEYENDA DEL TERRENO</h2>
+        <ul id="lista-leyenda">
+            <!-- Los íconos y nombres de los biomas y terrenos especiales se generarán dinámicamente -->
+        </ul>
+    </aside>
 
-    <!-- Scripts -->
-    <script type="module" src="frontend/js/script.js"></script>
+    <!-- ===============================
+         Scripts
+         ============================== -->
+    <!-- Scripts generales -->
+    <script src="frontend/js/script.js"></script>
+    <script src="frontend/js/etiquetas.js"></script>
+
+    <!-- Scripts de mapa -->
+    <script src="frontend/js/mapa/biomas.js"></script>
+    <script src="frontend/js/mapa/coloresTerreno.js"></script>
+    <script src="frontend/js/mapa/dibujarMapa.js"></script>
+    <script src="frontend/js/mapa/dibujarNombres.js"></script>
+    <script src="frontend/js/mapa/generacionTerreno.js"></script>
+    <script src="frontend/js/mapa/nombresGeograficos.js"></script>
+    <script src="frontend/js/mapa/rios.js"></script>
+    <script src="frontend/js/mapa/rutas.js"></script>
+    <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
 </body>
 </html>
