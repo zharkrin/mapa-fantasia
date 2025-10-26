@@ -1,137 +1,230 @@
-/* ===========================
-   style.css
-   =========================== */
+/* =========================================
+   Estilos generales - Generador de Mapa Fantástico
+   ========================================= */
 
-/* ----- RESET ----- */
-body, html {
+body {
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f2efe8;
-    color: #222;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #101010;
+    color: #f5f5f5;
     overflow: hidden;
 }
 
-/* ----- HEADER ----- */
 header {
-    background-color: #31572c;
-    color: #f0f0f0;
     text-align: center;
-    padding: 1em 0;
+    padding: 20px;
+    background: linear-gradient(180deg, #1c1c1c, #2b2b2b);
+    border-bottom: 2px solid #444;
 }
 
 header h1 {
     margin: 0;
-    font-size: 2em;
+    font-size: 2rem;
+    color: #f5f5f5;
+    text-shadow: 2px 2px 5px #000;
 }
 
 header h2 {
-    margin: 0.2em 0 0;
-    font-weight: normal;
-    font-size: 1.2em;
+    margin: 8px 0 0;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #cccccc;
 }
 
-/* ----- MAPA Y CONTENEDOR ----- */
-#contenedor-mapa {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 1em;
+/* =========================================
+   Contenedor principal del mapa
+   ========================================= */
+
+#mapa-container {
     position: relative;
+    width: 100vw;
+    height: calc(100vh - 140px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #181818;
 }
 
-#mapa {
-    border: 2px solid #264653;
-    background-color: #a8dadc;
-    border-radius: 8px;
+#mapa-canvas {
+    width: 95%;
+    height: 95%;
+    background-color: #000;
+    border: 2px solid #333;
+    border-radius: 6px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
 }
 
-/* ----- BOTÓN DE REGENERAR ----- */
-.boton-generar {
-    position: absolute;
-    top: 20px;
-    right: 260px;
-    background-color: #2a9d8f;
-    color: white;
-    border: none;
-    padding: 0.7em 1em;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s ease;
-}
-
-.boton-generar:hover {
-    background-color: #21867a;
-}
-
-/* ----- PANEL DE LEYENDA ----- */
-#panel-leyenda {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: #ffffffd0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 220px;
-    padding: 1em;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
-}
-
-#contenedor-leyenda {
-    margin-top: 0.5em;
-}
-
-#contenedor-leyenda.oculto {
-    display: none;
-}
+/* =========================================
+   Botón para abrir la leyenda
+   ========================================= */
 
 .boton-leyenda {
-    width: 100%;
-    background-color: #457b9d;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: #3b3b3b;
+    border: 1px solid #555;
     color: #fff;
-    border: none;
-    padding: 0.5em;
-    border-radius: 4px;
+    padding: 12px 18px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    z-index: 1000;
 }
 
 .boton-leyenda:hover {
-    background-color: #1d3557;
+    background-color: #555;
+    transform: scale(1.05);
 }
 
-/* ----- LISTA DE LEYENDA ----- */
-#lista-leyenda {
-    list-style: none;
-    padding: 0;
-    margin: 0.5em 0 0;
+/* =========================================
+   Panel lateral de leyenda
+   ========================================= */
+
+.panel-leyenda {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 350px;
+    height: 100%;
+    background-color: #202020;
+    border-left: 2px solid #333;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    transition: right 0.4s ease;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
 }
 
-#lista-leyenda li {
+.panel-leyenda.visible {
+    right: 0;
+}
+
+/* =========================================
+   Encabezado de la leyenda
+   ========================================= */
+
+.leyenda-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.leyenda-header h2 {
+    font-size: 1.3rem;
+    color: #f5f5f5;
+    margin: 0;
+}
+
+.boton-cerrar {
+    background-color: #444;
+    border: none;
+    color: #fff;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.3s;
+}
+
+.boton-cerrar:hover {
+    background-color: #666;
+}
+
+/* =========================================
+   Contenido de la leyenda
+   ========================================= */
+
+.leyenda-contenido {
+    overflow-y: auto;
+    flex-grow: 1;
+    scrollbar-width: thin;
+    scrollbar-color: #555 #222;
+}
+
+.leyenda-contenido::-webkit-scrollbar {
+    width: 6px;
+}
+.leyenda-contenido::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+/* =========================================
+   Ítems individuales de la leyenda
+   ========================================= */
+
+.item-leyenda {
     display: flex;
     align-items: center;
-    margin: 0.4em 0;
-    font-size: 0.9em;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 6px 8px;
+    background-color: #2a2a2a;
+    border-radius: 6px;
+    transition: background 0.2s ease;
 }
 
-#lista-leyenda img {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
+.item-leyenda:hover {
+    background-color: #333;
+}
+
+.item-leyenda img {
+    width: 42px;
+    height: 42px;
     border-radius: 4px;
-    border: 1px solid #aaa;
+    object-fit: contain;
+    background-color: #1a1a1a;
+    border: 1px solid #444;
 }
 
-/* ----- PLACEHOLDER ----- */
-.placeholder {
-    width: 64px;
-    height: 64px;
+.item-leyenda span {
+    font-size: 0.95rem;
+    color: #e0e0e0;
+    text-shadow: 1px 1px 2px #000;
+}
+
+/* =========================================
+   Placeholder (para iconos faltantes)
+   ========================================= */
+
+.item-leyenda img.placeholder {
     background: repeating-linear-gradient(
         45deg,
-        #ccc,
-        #ccc 10px,
-        #eee 10px,
-        #eee 20px
+        #444,
+        #444 10px,
+        #555 10px,
+        #555 20px
     );
-    border-radius: 4px;
+    border: 1px dashed #777;
+    opacity: 0.8;
+}
+
+/* =========================================
+   Ajustes responsive
+   ========================================= */
+
+@media (max-width: 768px) {
+    .panel-leyenda {
+        width: 85%;
+    }
+
+    .boton-leyenda {
+        bottom: 15px;
+        right: 15px;
+        font-size: 0.9rem;
+    }
+
+    header h1 {
+        font-size: 1.6rem;
+    }
+
+    header h2 {
+        font-size: 1rem;
+    }
 }
