@@ -1,50 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador de Mapa Fantástico</title>
-
-  <!-- Estilos principales -->
-  <link rel="stylesheet" href="frontend/css/estilos.css" />
-
-  <!-- Estilos de la leyenda -->
-  <link rel="stylesheet" href="frontend/css/leyenda.css" />
+<meta charset="UTF-8">
+<title>Generador de Mapa Fantástico</title>
+<link rel="stylesheet" href="frontend/css/style.css">
 </head>
 <body>
-  <h1>🌍 Generador de Mapa Fantástico</h1>
-  <h3>Terrenos, biomas y lugares singulares</h3>
 
-  <!-- Botón para mostrar la leyenda -->
-  <button id="boton-leyenda">Leyenda</button>
+<h1>GENERADOR DE MAPA FANTÁSTICO</h1>
+<p>Terrenos, biomas y lugares singulares</p>
 
-  <!-- Contenedor de la leyenda -->
-  <div id="leyenda-container">
-    <h3>Leyenda del Terreno</h3>
-    <ul id="leyenda-lista"></ul>
-    <button id="boton-cerrar-leyenda">Cerrar</button>
-  </div>
+<!-- Contenedor del mapa -->
+<div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000;">
+  <!-- Los iconos se colocarán aquí de forma absoluta -->
+</div>
 
-  <!-- Scripts principales -->
-  <script src="frontend/js/perlin.js"></script>
-  <script src="frontend/js/generacionProcedural.js"></script>
-  <script src="frontend/js/generacion-biomas.js"></script>
-  <script src="frontend/js/nombres-biomas.js"></script>
-  <script src="frontend/js/nombresCiudadesNaciones.js"></script>
-  <script src="frontend/js/nombresMontañasRios.js"></script>
+<!-- Leyenda de terrenos especiales -->
+<div id="leyenda-terreno-especial" class="leyenda"></div>
 
-  <!-- Scripts de mapa -->
-  <script src="frontend/js/mapa/biomas.js"></script>
-  <script src="frontend/js/mapa/coloresTerreno.js"></script>
-  <script src="frontend/js/mapa/dibujarMapa.js"></script>
-  <script src="frontend/js/mapa/nombres.js"></script>
-  <script src="frontend/js/mapa/nombresGeograficos.js"></script>
-  <script src="frontend/js/mapa/terrenoEspecial.js"></script>
+<!-- Scripts -->
+<script src="frontend/js/mapa/terrenoEspecial.js"></script>
+<script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
 
-  <!-- Leyenda -->
-  <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
-
-  <!-- Script principal -->
-  <script src="frontend/js/script.js"></script>
 </body>
 </html>
