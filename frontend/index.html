@@ -2,56 +2,112 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Mapa Fantástico</title>
-    <!-- Hoja de estilos principal -->
-    <link rel="stylesheet" href="frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/estilo.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        #leyenda {
+            background-color: #ffffff;
+            padding: 15px;
+            border: 1px solid #ccc;
+            max-width: 400px;
+        }
+        #leyenda h3 {
+            margin-top: 0;
+        }
+        #lista-leyenda {
+            list-style: none;
+            padding: 0;
+        }
+        #lista-leyenda li {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        #lista-leyenda img {
+            width: 32px;
+            height: 32px;
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
-    <!-- ===============================
-         Encabezado
-         ============================== -->
-    <header>
-        <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
-        <p>Terrenos, biomas y lugares singulares</p>
-    </header>
 
-    <!-- ===============================
-         Contenedor del mapa
-         ============================== -->
-    <main>
-        <div id="mapa-container">
-            <!-- Aquí se dibujará el mapa generado -->
-        </div>
-    </main>
+    <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
+    <p>Terrenos, biomas y lugares singulares</p>
 
-    <!-- ===============================
-         Leyenda del terreno
-         ============================== -->
-    <aside id="leyenda-terreno">
-        <button id="cerrar-leyenda">Cerrar Leyenda</button>
-        <h2>LEYENDA DEL TERRENO</h2>
-        <ul id="lista-leyenda">
-            <!-- Los íconos y nombres de los biomas y terrenos especiales se generarán dinámicamente -->
-        </ul>
-    </aside>
+    <div id="leyenda">
+        <h3>LEYENDA DEL TERRENO</h3>
+        <ul id="lista-leyenda"></ul>
+    </div>
 
-    <!-- ===============================
-         Scripts
-         ============================== -->
-    <!-- Scripts generales -->
-    <script src="frontend/js/script.js"></script>
-    <script src="frontend/js/etiquetas.js"></script>
+    <!-- Scripts -->
+    <script>
+        // Leyenda de ejemplo con iconos
+        const iconos = [
+            // Biomas
+            { nombre: "Bosque Boreal", ruta: "frontend/static/img/icons/biomas/bosque_boreal.png" },
+            { nombre: "Bosque Tropical", ruta: "frontend/static/img/icons/biomas/bosque_tropical.png" },
+            { nombre: "Bosque", ruta: "frontend/static/img/icons/biomas/bosque.png" },
+            { nombre: "Desierto Cálido", ruta: "frontend/static/img/icons/biomas/desierto_calido.png" },
+            { nombre: "Desierto Frío", ruta: "frontend/static/img/icons/biomas/desierto_frio.png" },
+            { nombre: "Estepa", ruta: "frontend/static/img/icons/biomas/estepa.png" },
+            { nombre: "Humedal", ruta: "frontend/static/img/icons/biomas/humedal.png" },
+            { nombre: "Pradera", ruta: "frontend/static/img/icons/biomas/pradera.png" },
+            { nombre: "Sabana", ruta: "frontend/static/img/icons/biomas/sabana.png" },
+            { nombre: "Selva Tropical", ruta: "frontend/static/img/icons/biomas/selva_tropical.png" },
+            { nombre: "Tundra", ruta: "frontend/static/img/icons/biomas/tundra.png" },
+            { nombre: "Tierras Áridas", ruta: "frontend/static/img/icons/biomas/tierras_aridas.png" },
+            { nombre: "Chaparral", ruta: "frontend/static/img/icons/biomas/chaparral.png" },
+            { nombre: "Selva", ruta: "frontend/static/img/icons/biomas/selva.png" },
+            { nombre: "Manglar", ruta: "frontend/static/img/icons/biomas/manglar.png" },
+            { nombre: "Jungla", ruta: "frontend/static/img/icons/biomas/jungla.png" },
+            { nombre: "Matorral", ruta: "frontend/static/img/icons/biomas/matorral.png" },
 
-    <!-- Scripts de mapa -->
-    <script src="frontend/js/mapa/biomas.js"></script>
-    <script src="frontend/js/mapa/coloresTerreno.js"></script>
-    <script src="frontend/js/mapa/dibujarMapa.js"></script>
-    <script src="frontend/js/mapa/dibujarNombres.js"></script>
-    <script src="frontend/js/mapa/generacionTerreno.js"></script>
-    <script src="frontend/js/mapa/nombresGeograficos.js"></script>
-    <script src="frontend/js/mapa/rios.js"></script>
-    <script src="frontend/js/mapa/rutas.js"></script>
-    <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
+            // Terrenos
+            { nombre: "Acantilado", ruta: "frontend/static/img/icons/terreno/acantilado.png" },
+            { nombre: "Cañón", ruta: "frontend/static/img/icons/terreno/canon.png" },
+            { nombre: "Colina", ruta: "frontend/static/img/icons/terreno/colina.png" },
+            { nombre: "Costa", ruta: "frontend/static/img/icons/terreno/costa.png" },
+            { nombre: "Lago", ruta: "frontend/static/img/icons/terreno/lago.png" },
+            { nombre: "Mar", ruta: "frontend/static/img/icons/terreno/mar.png" },
+            { nombre: "Meseta", ruta: "frontend/static/img/icons/terreno/mesera.png" },
+            { nombre: "Montañas", ruta: "frontend/static/img/icons/terreno/montanas.png" },
+            { nombre: "Océano", ruta: "frontend/static/img/icons/terreno/oceano.png" },
+            { nombre: "Pantano", ruta: "frontend/static/img/icons/terreno/pantano.png" },
+            { nombre: "Playa", ruta: "frontend/static/img/icons/terreno/playa.png" },
+            { nombre: "Valle", ruta: "frontend/static/img/icons/terreno/valle.png" },
+            { nombre: "Volcán", ruta: "frontend/static/img/icons/terreno/volcan.png" },
+            { nombre: "Glaciar", ruta: "frontend/static/img/icons/terreno/glaciar.png" },
+            { nombre: "Río", ruta: "frontend/static/img/icons/terreno/rio.png" },
+            { nombre: "Crater", ruta: "frontend/static/img/icons/terreno/crater.png" },
+            { nombre: "Cavernas", ruta: "frontend/static/img/icons/terreno/cavernas.png" },
+
+            // Terrenos Especiales
+            { nombre: "Bosque Especial", ruta: "frontend/static/img/icons/terreno_especial/bosque_especial.png" },
+            { nombre: "Volcán Especial", ruta: "frontend/static/img/icons/terreno_especial/volcan_especial.png" },
+            { nombre: "Glaciar Especial", ruta: "frontend/static/img/icons/terreno_especial/glaciar_especial.png" },
+            { nombre: "Lago Especial", ruta: "frontend/static/img/icons/terreno_especial/lago_especial.png" },
+            { nombre: "Montañas Especial", ruta: "frontend/static/img/icons/terreno_especial/montanas_especial.png" },
+            { nombre: "Pantano Especial", ruta: "frontend/static/img/icons/terreno_especial/pantano_especial.png" },
+            { nombre: "Desierto Cálido Especial", ruta: "frontend/static/img/icons/terreno_especial/desierto_calido_especial.png" }
+        ];
+
+        const lista = document.getElementById("lista-leyenda");
+        iconos.forEach(item => {
+            const li = document.createElement("li");
+            const img = document.createElement("img");
+            img.src = item.ruta;
+            img.alt = item.nombre;
+            li.appendChild(img);
+            li.appendChild(document.createTextNode(item.nombre));
+            lista.appendChild(li);
+        });
+    </script>
+
 </body>
 </html>
