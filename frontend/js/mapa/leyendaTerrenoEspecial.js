@@ -1,49 +1,55 @@
-// ============================
+// ======================================================
 // leyendaTerrenoEspecial.js
-// ============================
+// ------------------------------------------------------
+// Muestra la leyenda de los elementos del mapa:
+// terrenos, biomas y terrenos especiales
+// ======================================================
 
-const RUTA_ICONOS_ESPECIALES = "static/img/icons/terreno_especial/";
+const botonLeyenda = document.getElementById("botonLeyenda");
+const contenedorLeyenda = document.getElementById("contenedorLeyenda");
 
-const TERRENOS_ESPECIALES = [
-    { nombre: "Bosque Especial", archivo: "bosque_especial.png" },
-    { nombre: "Desierto Cálido Especial", archivo: "desierto_calido_especial.png" },
-    { nombre: "Glaciar Especial", archivo: "glaciar_especial.png" },
-    { nombre: "Lago Especial", archivo: "lago_especial.png" },
-    { nombre: "Montañas Especial", archivo: "montanas_especial.png" },
-    { nombre: "Pantano Especial", archivo: "pantano_especial.png" },
-    { nombre: "Volcán Especial", archivo: "volcan_especial.png" }
-];
+botonLeyenda.addEventListener("click", () => {
+  contenedorLeyenda.classList.toggle("visible");
+});
 
-export function inicializarLeyendaTerrenoEspecial() {
-    const boton = document.getElementById("btnLeyendaEspecial");
-    const panel = document.getElementById("panelLeyendaEspecial");
+// ======================================================
+// ACTUALIZAR LEYENDA COMPLETA
+// ======================================================
+function actualizarLeyenda(terrenos, biomas, terrenosEspeciales) {
+  contenedorLeyenda.innerHTML = `
+    <h3>Leyenda del terreno</h3>
+    <ul class="leyenda-lista">
+      ${generarListaLeyenda("Terrenos", terrenos, "terreno")}
+      ${generarListaLeyenda("Biomas", biomas, "biomas")}
+      ${generarListaLeyenda("Terrenos Especiales", terrenosEspeciales, "terreno_especial")}
+    </ul>
+  `;
+}
 
-    if (!boton || !panel) {
-        console.warn("No se encontraron los elementos de la leyenda especial en el DOM.");
-        return;
-    }
+// ======================================================
+// Genera cada sección de la leyenda
+// ======================================================
+function generarListaLeyenda(titulo, elementos, carpeta) {
+  if (!elementos || elementos.length === 0) return "";
 
-    // Crea dinámicamente los ítems de la leyenda
-    panel.innerHTML = "";
-    TERRENOS_ESPECIALES.forEach(t => {
-        const item = document.createElement("div");
-        item.classList.add("item-leyenda");
+  const tiposUnicos = [...new Set(elementos.map(e => e.tipo))];
 
-        const img = document.createElement("img");
-        img.src = RUTA_ICONOS_ESPECIALES + t.archivo;
-        img.alt = t.nombre;
-        img.onerror = () => { img.src = RUTA_ICONOS_ESPECIALES + "placeholder.png"; };
+  const lista = tiposUnicos
+    .map(tipo => {
+      const ruta = `static/img/icons/${carpeta}/${tipo}.png`;
+      return `
+        <li>
+          <img src="${ruta}" alt="${tipo}" onerror="this.src='static/img/icons/placeholder.png'">
+          <span>${tipo.replace(/_/g, " ")}</span>
+        </li>
+      `;
+    })
+    .join("");
 
-        const texto = document.createElement("span");
-        texto.textContent = t.nombre;
-
-        item.appendChild(img);
-        item.appendChild(texto);
-        panel.appendChild(item);
-    });
-
-    // Evento de mostrar / ocultar
-    boton.addEventListener("click", () => {
-        panel.classList.toggle("activo");
-    });
+  return `
+    <li class="leyenda-seccion">
+      <h4>${titulo}</h4>
+      <ul>${lista}</ul>
+    </li>
+  `;
 }
