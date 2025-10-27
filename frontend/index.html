@@ -3,26 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <title>Generador de Mapa Fantástico</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/leyenda.css">
+
+  <!-- Estilos principales -->
+  <link rel="stylesheet" href="frontend/css/style.css">
+  <link rel="stylesheet" href="frontend/css/leyenda.css">
 </head>
 <body>
 
   <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
   <p>Terrenos, biomas y lugares singulares</p>
 
-  <!-- Contenedor del mapa -->
-  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000;">
-    <!-- Los iconos se colocarán aquí de forma absoluta -->
+  <!-- Contenedor principal del mapa -->
+  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 2px solid #444; margin: 0 auto; background-color: #e6e2d3;">
+    <!-- Los íconos de terrenos, biomas y lugares singulares se generarán aquí -->
   </div>
 
-  <!-- Leyenda de terrenos especiales -->
-  <div id="leyenda-terreno-especial" class="leyenda"></div>
+  <!-- Botón para mostrar la leyenda -->
+  <button id="toggle-leyenda" class="boton-leyenda">Leyenda del Terreno</button>
 
-  <!-- Scripts -->
-  <script src="js/script.js"></script>
-  <script src="js/mapa/terrenoEspecial.js"></script>
-  <script src="js/mapa/leyendaTerrenoEspecial.js"></script>
+  <!-- Contenedor de la leyenda -->
+  <div id="leyenda-terreno-especial" class="leyenda oculto">
+    <div class="leyenda-header">
+      <h3>Leyenda del Terreno</h3>
+      <button id="cerrar-leyenda" class="cerrar-leyenda">✕</button>
+    </div>
+    <div id="contenido-leyenda" class="leyenda-contenido">
+      <!-- Aquí se cargan automáticamente los terrenos especiales con sus íconos -->
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- 📜 Scripts -->
+  <!-- =============================== -->
+
+  <!-- Terrenos especiales -->
+  <script src="frontend/js/mapa/terrenoEspecial.js"></script>
+
+  <!-- Generación de leyenda -->
+  <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
+
+  <!-- Script principal -->
+  <script src="frontend/js/script.js"></script>
 
 </body>
 </html>
