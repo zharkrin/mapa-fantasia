@@ -1,42 +1,28 @@
-// ======================================
-// Leyenda de Terrenos Especiales
-// frontend/js/mapa/leyendaTerrenoEspecial.js
-// ======================================
+/**
+ * @file leyendaTerrenoEspecial.js
+ * @description Crea y actualiza la leyenda visual del mapa con los terrenos especiales generados.
+ */
 
+/**
+ * Inicializa la leyenda de terrenos especiales con los iconos y nombres generados.
+ * @param {Array<Object>} terrenos - Lista de objetos con propiedades `tipo` y `nombre`.
+ */
 function inicializarLeyendaTerrenoEspecial(terrenos) {
-  const leyenda = document.getElementById("leyenda-terreno-especial");
+  const leyendaContainer = document.getElementById("leyenda-terreno-especial");
+  if (!leyendaContainer) {
+    console.warn("⚠️ No se encontró el contenedor de la leyenda.");
+    return;
+  }
 
-  // Crear botón para abrir/cerrar la leyenda
-  const boton = document.createElement("button");
-  boton.textContent = "Leyenda";
-  boton.classList.add("boton-leyenda");
-  leyenda.appendChild(boton);
+  leyendaContainer.innerHTML = ""; // Limpia contenido previo
 
-  // Contenedor del contenido de la leyenda
-  const contenido = document.createElement("div");
-  contenido.classList.add("contenido-leyenda");
-  leyenda.appendChild(contenido);
-
-  // Llenar la leyenda con los terrenos generados
-  terrenos.forEach((terreno) => {
+  terrenos.forEach(({ tipo, nombre }) => {
     const item = document.createElement("div");
-    item.classList.add("item-leyenda");
-
-    const icono = document.createElement("img");
-    icono.src = terreno.icono.src;
-    icono.alt = terreno.nombre;
-    icono.classList.add("icono-leyenda");
-
-    const nombre = document.createElement("span");
-    nombre.textContent = terreno.nombre;
-
-    item.appendChild(icono);
-    item.appendChild(nombre);
-    contenido.appendChild(item);
-  });
-
-  // Mostrar / ocultar la leyenda al pulsar el botón
-  boton.addEventListener("click", () => {
-    contenido.style.display = contenido.style.display === "block" ? "none" : "block";
+    item.className = "leyenda-item";
+    item.innerHTML = `
+      <img src="frontend/static/img/icons/terreno_especial/${tipo}.png" alt="${tipo}">
+      <span>${nombre}</span>
+    `;
+    leyendaContainer.appendChild(item);
   });
 }
