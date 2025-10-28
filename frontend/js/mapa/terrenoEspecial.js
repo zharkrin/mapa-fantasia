@@ -1,64 +1,75 @@
-// ======================================
-// Terrenos Especiales
-// frontend/js/mapa/terrenoEspecial.js
-// ======================================
+/**
+ * @file terrenoEspecial.js
+ * @description Genera los terrenos especiales del mapa con nombres y posiciones aleatorias.
+ */
 
-// Tipos de terrenos especiales disponibles
-const tiposTerrenoEspecial = [
-  "bosque_especial",
-  "desierto_calido_especial",
-  "glaciar_especial",
-  "lago_especial",
-  "montanas_especial",
-  "pantano_especial",
-  "volcan_especial"
-];
-
-// Genera una lista aleatoria de terrenos especiales
+/**
+ * Genera una lista de terrenos especiales y los coloca en el mapa.
+ * @returns {Array<Object>} Lista de objetos con `tipo` y `nombre` de cada terreno.
+ */
 function generarTerrenoEspecial() {
-  const cantidad = Math.floor(Math.random() * 3) + 3; // entre 3 y 5 terrenos
-  const contenedor = document.getElementById("mapa-container");
-  const generados = [];
-
-  for (let i = 0; i < cantidad; i++) {
-    const tipo = tiposTerrenoEspecial[Math.floor(Math.random() * tiposTerrenoEspecial.length)];
-    const nombre = generarNombreTerreno(tipo);
-    const x = Math.random() * (contenedor.clientWidth - 64);
-    const y = Math.random() * (contenedor.clientHeight - 64);
-
-    const icono = document.createElement("img");
-    icono.src = `frontend/static/Img/icons/terreno_especial/${tipo}.png`;
-    icono.alt = nombre;
-    icono.title = nombre;
-    icono.style.position = "absolute";
-    icono.style.left = `${x}px`;
-    icono.style.top = `${y}px`;
-    icono.style.width = "48px";
-    icono.style.height = "48px";
-    icono.style.transition = "transform 0.3s ease";
-    icono.addEventListener("mouseenter", () => (icono.style.transform = "scale(1.2)"));
-    icono.addEventListener("mouseleave", () => (icono.style.transform = "scale(1)"));
-
-    contenedor.appendChild(icono);
-
-    generados.push({ tipo, nombre, icono });
+  const mapaContainer = document.getElementById("mapa-container");
+  if (!mapaContainer) {
+    console.warn("⚠️ No se encontró el contenedor del mapa.");
+    return [];
   }
 
-  return generados;
+  /** @type {string[]} Tipos de terreno especial disponibles */
+  const tipos = [
+    "bosque_especial",
+    "desierto_calido_especial",
+    "glaciar_especial",
+    "lago_especial",
+    "montanas_especial",
+    "pantano_especial",
+    "volcan_especial"
+  ];
+
+  /** @type {string[]} Fragmentos de nombres fantásticos */
+  const nombres = [
+    "del Trueno", "de la Luna", "del Eco", "del Sol",
+    "Sombrío", "Eterno", "Sagrado", "Olvidado"
+  ];
+
+  const terrenos = [];
+
+  for (let i = 0; i < 4; i++) {
+    const tipo = tipos[Math.floor(Math.random() * tipos.length)];
+    const nombre = generarNombreTerreno(tipo, nombres);
+    const x = Math.floor(Math.random() * 900);
+    const y = Math.floor(Math.random() * 500);
+
+    const icono = document.createElement("img");
+    icono.src = `frontend/static/img/icons/terreno_especial/${tipo}.png`;
+    icono.alt = tipo;
+    icono.className = "icono-terreno-especial";
+    icono.style.left = `${x}px`;
+    icono.style.top = `${y}px`;
+
+    mapaContainer.appendChild(icono);
+    terrenos.push({ tipo, nombre });
+  }
+
+  return terrenos;
 }
 
-// Genera nombres simples con un toque fantástico
-function generarNombreTerreno(tipo) {
-  const nombres = {
-    bosque_especial: ["Bosque Antiguo", "Bosque del Crepúsculo", "Bosque de Sombras"],
-    desierto_calido_especial: ["Dunas del Sol", "Desierto Carmesí", "Arenas Eternas"],
-    glaciar_especial: ["Glaciar Azul", "Hielos Eternos", "Campos Helados"],
-    lago_especial: ["Lago del Alba", "Aguas Escondidas", "Lago Sombrío"],
-    montanas_especial: ["Montañas del Trueno", "Cumbres Grises", "Picos del Amanecer"],
-    pantano_especial: ["Pantano de las Almas", "Tierras Enlodadas", "Humedal Esmeralda"],
-    volcan_especial: ["Monte del Destino", "Volcán Carmesí", "Cráter del Sol"]
-  };
+/**
+ * Genera un nombre de terreno fantástico combinando el tipo y un adjetivo.
+ * @param {string} tipo - Tipo de terreno especial (por ejemplo, "volcan_especial").
+ * @param {string[]} nombresFantasia - Lista de nombres o adjetivos fantásticos.
+ * @returns {string} Nombre completo del terreno.
+ */
+function generarNombreTerreno(tipo, nombresFantasia) {
+  const base = tipo.replace("_especial", "").replace("_", " ");
+  const fantasia = nombresFantasia[Math.floor(Math.random() * nombresFantasia.length)];
+  return `${capitalizar(base)} ${fantasia}`;
+}
 
-  const lista = nombres[tipo] || ["Terreno Misterioso"];
-  return lista[Math.floor(Math.random() * lista.length)];
+/**
+ * Convierte la primera letra de un texto a mayúscula.
+ * @param {string} str - Texto a capitalizar.
+ * @returns {string} Texto con la primera letra en mayúscula.
+ */
+function capitalizar(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
