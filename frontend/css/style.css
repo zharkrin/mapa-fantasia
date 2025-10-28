@@ -1,76 +1,145 @@
-/* ===============================
-   GENERADOR DE MAPA FANTÁSTICO
-   frontend/css/style.css
-   =============================== */
-
+/* ==============================
+   ESTILOS GENERALES
+============================== */
 body {
-  background: radial-gradient(circle at center, #1e1e1e, #0c0c0c);
-  color: #e0e0e0;
-  font-family: "Trebuchet MS", sans-serif;
+  background-color: #e7dec3;
+  font-family: 'Trebuchet MS', sans-serif;
+  color: #2b1d0e;
   text-align: center;
   margin: 0;
   padding: 0;
 }
 
 h1 {
-  margin-top: 30px;
-  font-size: 2.2em;
+  font-size: 2em;
+  margin-top: 20px;
   letter-spacing: 2px;
-  color: #ffe082;
-  text-shadow: 2px 2px 4px #000;
 }
 
 p {
-  color: #ccc;
+  font-style: italic;
+  color: #3b2a16;
   margin-bottom: 20px;
 }
 
-/* Contenedor principal del mapa */
+/* ==============================
+   CONTENEDOR DEL MAPA
+============================== */
 #mapa-container {
   position: relative;
   width: 1000px;
   height: 600px;
   margin: 0 auto;
-  border: 2px solid #555;
-  background: #1a1a1a url("../../static/Img/fondo_mapa.png") center/cover no-repeat;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
-  border-radius: 6px;
+  border: 3px solid #3d2c17;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #d7c79e 0%, #e9ddbb 100%);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   overflow: hidden;
 }
 
-/* Iconos dentro del mapa */
-#mapa-container img {
-  transition: transform 0.2s ease, filter 0.2s ease;
+/* Fondo tipo pergamino opcional */
+#mapa-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../static/img/texturas/pergamino.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.25;
+  z-index: 0;
 }
 
-#mapa-container img:hover {
-  transform: scale(1.2);
-  filter: drop-shadow(0 0 6px #ffd54f);
-  z-index: 10;
+/* ==============================
+   ICONOS DEL MAPA
+============================== */
+.icono-mapa {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  z-index: 5;
+  transition: transform 0.2s ease, opacity 0.3s ease;
 }
 
-/* Botón para regenerar el mapa */
-button {
-  background-color: #444;
-  color: #fff;
-  border: 1px solid #777;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 1em;
-  margin-top: 20px;
-  transition: all 0.2s ease;
+.icono-mapa:hover {
+  transform: scale(1.25);
+  opacity: 0.9;
 }
 
-button:hover {
-  background-color: #666;
-  border-color: #aaa;
-  transform: scale(1.05);
+/* Capa de biomas */
+.icono-bioma {
+  z-index: 4;
+  opacity: 0.9;
 }
 
-/* Leyenda */
+/* Capa de terreno especial */
+.icono-especial {
+  z-index: 6;
+  animation: pulsoSuave 2s infinite ease-in-out;
+}
+
+/* ==============================
+   ANIMACIONES
+============================== */
+@keyframes pulsoSuave {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ==============================
+   LEYENDA DE TERRENOS ESPECIALES
+============================== */
 .leyenda {
-  margin-top: 30px;
-  color: #bbb;
-  font-size: 0.95em;
+  width: 300px;
+  margin: 20px auto;
+  padding: 10px 15px;
+  background-color: rgba(245, 237, 210, 0.8);
+  border: 2px solid #3d2c17;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 14px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.leyenda h2 {
+  font-size: 16px;
+  margin-bottom: 8px;
+  text-align: center;
+  color: #3d2c17;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.leyenda-item img {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+}
+
+.leyenda-item span {
+  font-weight: bold;
+  color: #2b1d0e;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+@media (max-width: 1100px) {
+  #mapa-container {
+    width: 90%;
+    height: 500px;
+  }
+
+  .icono-mapa {
+    width: 40px;
+    height: 40px;
+  }
 }
