@@ -1,71 +1,48 @@
-// ======================================================
-// dibujarMapa.js
-// ------------------------------------------------------
-// Dibuja el mapa base, biomas, terrenos, y los terrenos especiales
-// ======================================================
+// =======================================================
+// frontend/js/mapa/dibujarMapa.js
+// Dibuja los iconos del terreno, biomas y lugares especiales
+// =======================================================
 
-// Función principal para dibujar el mapa
-function dibujarMapa(ctx, terrenos, biomas, terrenosEspeciales) {
-  // Limpiar el lienzo
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+import { tiposTerreno } from "./generacionTerreno.js";
+import { tiposBiomas } from "./biomas.js";
 
-  // Fondo general
-  ctx.fillStyle = "#b8d0ff";
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+const rutaTerrenos = "frontend/static/img/icons/terreno/";
+const rutaBiomas = "frontend/static/img/icons/biomas/";
+const rutaEspeciales = "frontend/static/img/icons/terreno_especial/";
 
-  // Dibuja biomas
-  dibujarBiomas(ctx, biomas);
+export function dibujarMapa(terrenos, biomas, especiales) {
+  const contenedor = document.getElementById("mapa-container");
+  contenedor.innerHTML = "";
 
-  // Dibuja terrenos normales
-  dibujarTerrenos(ctx, terrenos);
+  // Dibujar terrenos
+  terrenos.forEach(t => {
+    const img = document.createElement("img");
+    img.src = `${rutaTerrenos}${t.tipo}.png`;
+    img.classList.add("icono-terreno");
+    img.style.left = `${t.x}px`;
+    img.style.top = `${t.y}px`;
+    contenedor.appendChild(img);
+  });
 
-  // Dibuja los terrenos especiales (nuevo)
-  if (terrenosEspeciales && terrenosEspeciales.length > 0) {
-    dibujarTerrenosEspeciales(ctx, terrenosEspeciales);
+  // Dibujar biomas
+  biomas.forEach(b => {
+    const img = document.createElement("img");
+    img.src = `${rutaBiomas}${b.tipo}.png`;
+    img.classList.add("icono-bioma");
+    img.style.left = `${b.x}px`;
+    img.style.top = `${b.y}px`;
+    contenedor.appendChild(img);
+  });
+
+  // Dibujar lugares especiales
+  if (especiales && Array.isArray(especiales)) {
+    especiales.forEach(e => {
+      const img = document.createElement("img");
+      img.src = `${rutaEspeciales}${e.tipo}.png`;
+      img.classList.add("icono-especial");
+      img.style.left = `${e.x}px`;
+      img.style.top = `${e.y}px`;
+      contenedor.appendChild(img);
+    });
   }
-
-  // Dibuja marco o borde decorativo
-  ctx.strokeStyle = "#333";
-  ctx.lineWidth = 4;
-  ctx.strokeRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-}
-
-// ======================================================
-// DIBUJAR BIOMAS
-// ======================================================
-function dibujarBiomas(ctx, biomas) {
-  biomas.forEach(bioma => {
-    const icono = new Image();
-    icono.src = `static/img/icons/biomas/${bioma.tipo}.png`;
-
-    icono.onload = () => {
-      ctx.drawImage(icono, bioma.x - 16, bioma.y - 16, 32, 32);
-    };
-
-    icono.onerror = () => {
-      ctx.fillStyle = "#7bb661";
-      ctx.beginPath();
-      ctx.arc(bioma.x, bioma.y, 5, 0, Math.PI * 2);
-      ctx.fill();
-    };
-  });
-}
-
-// ======================================================
-// DIBUJAR TERRENOS
-// ======================================================
-function dibujarTerrenos(ctx, terrenos) {
-  terrenos.forEach(terreno => {
-    const icono = new Image();
-    icono.src = `static/img/icons/terreno/${terreno.tipo}.png`;
-
-    icono.onload = () => {
-      ctx.drawImage(icono, terreno.x - 16, terreno.y - 16, 32, 32);
-    };
-
-    icono.onerror = () => {
-      ctx.fillStyle = "#9b7653";
-      ctx.fillRect(terreno.x - 2, terreno.y - 2, 4, 4);
-    };
-  });
 }
