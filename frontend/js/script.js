@@ -1,17 +1,23 @@
-/**
- * @file script.js
- * @description Punto de entrada del generador de mapa fantástico. 
- * Coordina la creación de terrenos especiales y la generación de la leyenda.
- */
+// =======================================================
+// frontend/js/script.js
+// Script principal: genera y dibuja el mapa completo
+// =======================================================
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.info("🗺️ Iniciando generador de mapa fantástico...");
+import { generarTerrenoBase } from "./mapa/generacionTerreno.js";
+import { generarBiomas } from "./mapa/biomas.js";
+import { dibujarMapa } from "./mapa/dibujarMapa.js";
+import { generarTerrenoEspecial } from "./mapa/terrenoEspecial.js";
 
-  // Generar los terrenos especiales
-  const terrenosGenerados = generarTerrenoEspecial();
+// Inicializar mapa al cargar
+window.addEventListener("DOMContentLoaded", () => {
+  const ancho = 1000;
+  const alto = 600;
 
-  // Inicializar la leyenda
-  inicializarLeyendaTerrenoEspecial(terrenosGenerados);
+  // Generar terrenos, biomas y especiales
+  const terrenos = generarTerrenoBase(ancho, alto, 25);
+  const biomas = generarBiomas(ancho, alto, 35);
+  const especiales = generarTerrenoEspecial(ancho, alto, 4);
 
-  console.info("✅ Mapa y leyenda generados correctamente.");
+  // Dibujar mapa completo
+  dibujarMapa(terrenos, biomas, especiales);
 });
