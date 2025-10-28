@@ -6,157 +6,23 @@
 
   <!-- Estilos -->
   <link rel="stylesheet" href="frontend/css/style.css">
-  <link rel="stylesheet" href="frontend/css/leyenda.css">
-
-  <style>
-    /* Fondo tipo pergamino integrado */
-    body {
-      margin: 0;
-      font-family: "Cinzel", serif;
-      background: radial-gradient(circle at center, #fdf6e3 0%, #f4e1b2 60%, #e5c07b 100%);
-      color: #2b1d0e;
-      text-align: center;
-      background-attachment: fixed;
-      background-size: cover;
-    }
-
-    h1 {
-      margin-top: 30px;
-      font-size: 2.5em;
-      letter-spacing: 2px;
-      color: #3c2a16;
-      text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
-    }
-
-    p {
-      font-size: 1.2em;
-      color: #4a351a;
-      margin-bottom: 20px;
-    }
-
-    #mapa-container {
-      position: relative;
-      width: 1000px;
-      height: 600px;
-      margin: 0 auto;
-      border: 3px solid #3a2c17;
-      border-radius: 8px;
-      background: linear-gradient(to bottom, #dcd2a8, #c6b47e);
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Botón de leyenda */
-    .boton-leyenda {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 1em;
-      background-color: #a17c48;
-      color: #fff;
-      border: 2px solid #6e4b1b;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .boton-leyenda:hover {
-      background-color: #c49a6c;
-      transform: scale(1.05);
-    }
-
-    /* Leyenda desplegable */
-    .leyenda {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(248, 239, 220, 0.95);
-      border: 2px solid #7c5a33;
-      border-radius: 10px;
-      width: 320px;
-      max-height: 500px;
-      overflow-y: auto;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
-      display: none;
-      transition: opacity 0.4s ease;
-      padding-bottom: 10px;
-    }
-
-    .leyenda.visible {
-      display: block;
-      opacity: 1;
-    }
-
-    .leyenda-header {
-      background-color: #a17c48;
-      color: white;
-      padding: 10px;
-      border-radius: 8px 8px 0 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .cerrar-leyenda {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.2em;
-      cursor: pointer;
-    }
-
-    .leyenda-contenido {
-      padding: 10px;
-      text-align: left;
-    }
-
-    .leyenda-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .leyenda-item img {
-      width: 32px;
-      height: 32px;
-      margin-right: 10px;
-      border: 1px solid #6b4b27;
-      border-radius: 4px;
-      background-color: #e3d2a3;
-    }
-
-    .leyenda-item span {
-      font-size: 1em;
-      color: #3b2a17;
-    }
-  </style>
 </head>
+
 <body>
 
   <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
   <p>Terrenos, biomas y lugares singulares</p>
 
   <!-- Contenedor del mapa -->
-  <div id="mapa-container">
-    <!-- Los iconos del mapa se insertan aquí -->
+  <div id="mapa-container"
+       style="position: relative; width: 1000px; height: 600px; border: 1px solid #000; margin: 0 auto; overflow: hidden;">
   </div>
 
-  <!-- Botón para abrir la leyenda -->
-  <button id="toggle-leyenda" class="boton-leyenda">Leyenda del Terreno</button>
-
-  <!-- Leyenda del terreno -->
-  <div id="leyenda-terreno-especial" class="leyenda">
-    <div class="leyenda-header">
-      <h3>Leyenda del Terreno</h3>
-      <button id="cerrar-leyenda" class="cerrar-leyenda">✕</button>
-    </div>
-    <div id="contenido-leyenda" class="leyenda-contenido">
-      <!-- Aquí se insertan automáticamente los ítems de leyenda -->
-    </div>
-  </div>
+  <!-- Leyenda de terrenos especiales -->
+  <div id="leyenda-terreno-especial" class="leyenda"></div>
 
   <!-- Scripts -->
-  <script src="frontend/js/mapa/terrenoEspecial.js"></script>
-  <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
-  <script src="frontend/js/script.js"></script>
+  <script type="module" src="frontend/js/script.js"></script>
 
 </body>
 </html>
