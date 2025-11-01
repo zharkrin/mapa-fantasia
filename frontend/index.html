@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <title>Generador de Mapa Fantástico</title>
 
-  <!-- Estilos -->
+  <!-- Estilos principales -->
   <link rel="stylesheet" href="frontend/css/style.css">
+
+  <!-- Estilos específicos para la leyenda -->
+  <link rel="stylesheet" href="frontend/css/leyenda.css">
 </head>
 
 <body>
@@ -13,16 +16,17 @@
   <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
   <p>Terrenos, biomas y lugares singulares</p>
 
-  <!-- Contenedor del mapa -->
-  <div id="mapa-container"
-       style="position: relative; width: 1000px; height: 600px; border: 1px solid #000; margin: 0 auto; overflow: hidden;">
+  <!-- Contenedor principal del mapa -->
+  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000;">
+    <!-- Los iconos se generarán aquí dinámicamente -->
   </div>
 
-  <!-- Leyenda de terrenos especiales -->
+  <!-- Panel de leyenda de terrenos especiales -->
   <div id="leyenda-terreno-especial" class="leyenda"></div>
 
-  <!-- Scripts -->
-  <script type="module" src="frontend/js/script.js"></script>
+  <!-- Scripts del mapa -->
+  <script src="frontend/js/mapa/terrenoEspecial.js"></script>
+  <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
 
 </body>
 </html>
