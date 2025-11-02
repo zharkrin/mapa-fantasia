@@ -1,88 +1,55 @@
-// ============================================================
+// =====================================================
+// 🌋 TERRENO ESPECIAL - Generador Automático
 // frontend/js/mapa/terrenoEspecial.js
-// ------------------------------------------------------------
-// Define los terrenos especiales del mapa fantástico
-// Cada terreno tiene un nombre y un icono asociado
-// La lista es usada automáticamente por leyendaTerrenoEspecial.js
-// ============================================================
+// =====================================================
 
-window.terrenosEspeciales = [
-  {
-    nombre: "Bosque Especial",
-    descripcion: "Un bosque antiguo lleno de árboles colosales y misteriosas criaturas.",
-    icono: "bosque_especial.png"
-  },
-  {
-    nombre: "Desierto Cálido Especial",
-    descripcion: "Una vasta extensión de dunas doradas donde soplan vientos abrasadores.",
-    icono: "desierto_calido_especial.png"
-  },
-  {
-    nombre: "Glaciar Especial",
-    descripcion: "Una masa de hielo eterno que guarda secretos en su interior.",
-    icono: "glaciar_especial.png"
-  },
-  {
-    nombre: "Lago Especial",
-    descripcion: "Un lago cristalino cuyas aguas reflejan los cielos más profundos.",
-    icono: "lago_especial.png"
-  },
-  {
-    nombre: "Montañas Especiales",
-    descripcion: "Picos majestuosos que se alzan hacia los cielos, hogar de dragones y leyendas.",
-    icono: "montanas_especial.png"
-  },
-  {
-    nombre: "Pantano Especial",
-    descripcion: "Tierras húmedas envueltas en niebla, donde el aire es espeso y misterioso.",
-    icono: "pantano_especial.png"
-  },
-  {
-    nombre: "Volcán Especial",
-    descripcion: "Una montaña rugiente que exhala fuego y humo, símbolo de poder y destrucción.",
-    icono: "volcan_especial.png"
-  }
-];
+document.addEventListener('DOMContentLoaded', () => {
+  const mapaContainer = document.getElementById('mapa-container');
+  if (!mapaContainer) return;
 
-// ============================================================
-// Función opcional: Generar terrenos especiales en el mapa
-// (puede invocarse desde el script principal)
-// ============================================================
+  const ancho = mapaContainer.offsetWidth;
+  const alto = mapaContainer.offsetHeight;
 
-function generarTerrenosEspeciales(mapaContainer) {
-  if (!mapaContainer) {
-    console.error("❌ No se encontró el contenedor del mapa para generar los terrenos especiales.");
-    return;
-  }
+  // Calcular número de iconos según el tamaño del mapa
+  const areaMapa = ancho * alto;
+  const densidad = 0.000005; // Ajusta este valor para más o menos iconos
+  const NUM_ICONOS_ESPECIALES = Math.max(3, Math.floor(areaMapa * densidad));
 
-  window.terrenosEspeciales.forEach(terreno => {
-    const icono = document.createElement("img");
-    icono.src = `frontend/static/Img/icons/terreno_especial/${terreno.icono}`;
-    icono.alt = terreno.nombre;
-    icono.classList.add("icono-terreno-especial");
+  // Rutas base para los iconos
+  const rutaBase = 'frontend/static/img/icons/terreno_especial/';
 
-    // Si la imagen falla, se usa el placeholder
-    icono.onerror = () => {
-      console.warn(`⚠️ No se pudo cargar ${terreno.icono}, usando placeholder.`);
-      icono.src = "frontend/static/Img/icons/placeholder.png";
-    };
+  // Tipos de terrenos especiales disponibles
+  const terrenosEspeciales = [
+    { nombre: "Bosque especial", icono: "bosque_especial.png" },
+    { nombre: "Desierto cálido especial", icono: "desierto_calido_especial.png" },
+    { nombre: "Glaciar especial", icono: "glaciar_especial.png" },
+    { nombre: "Lago especial", icono: "lago_especial.png" },
+    { nombre: "Montañas especiales", icono: "montanas_especial.png" },
+    { nombre: "Pantano especial", icono: "pantano_especial.png" },
+    { nombre: "Volcán especial", icono: "volcan_especial.png" }
+  ];
 
-    // Posición aleatoria dentro del contenedor
-    const posX = Math.random() * (mapaContainer.clientWidth - 64);
-    const posY = Math.random() * (mapaContainer.clientHeight - 64);
+  const usados = new Set();
 
-    icono.style.position = "absolute";
-    icono.style.left = `${posX}px`;
-    icono.style.top = `${posY}px`;
-    icono.style.width = "64px";
-    icono.style.height = "64px";
-    icono.title = `${terreno.nombre}\n${terreno.descripcion}`;
+  for (let i = 0; i < NUM_ICONOS_ESPECIALES; i++) {
+    const tipo = terrenosEspeciales[Math.floor(Math.random() * terrenosEspeciales.length)];
+    const nombreUnico = `${tipo.nombre} ${i + 1}`;
+    usados.add(nombreUnico);
+
+    const icono = document.createElement('img');
+    icono.src = rutaBase + tipo.icono;
+    icono.alt = nombreUnico;
+    icono.classList.add('icono-terreno-especial');
+
+    // Colocar en posición aleatoria dentro del mapa
+    const x = Math.random() * (ancho - 64);
+    const y = Math.random() * (alto - 64);
+    icono.style.left = `${x}px`;
+    icono.style.top = `${y}px`;
 
     mapaContainer.appendChild(icono);
-  });
-}
+  }
 
-// ============================================================
-// Exportar la función globalmente (para usarla desde index.html)
-// ============================================================
-window.generarTerrenosEspeciales = generarTerrenosEspeciales;
+  // Guardar los nombres generados para la leyenda
+  window.terrenosEspecialesGenerados = Array.from(usados);
+});
