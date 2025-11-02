@@ -1,68 +1,76 @@
 // =====================================================
-// 🌋 GENERADOR DE TERRENOS ESPECIALES
-// Coloca iconos de terrenos especiales en el mapa
-// usando posiciones aleatorias dentro del contenedor.
+// 🗺️ LEYENDA DE TERRENOS ESPECIALES
+// frontend/js/mapa/leyendaTerrenoEspecial.js
 // =====================================================
 
-// Ruta base de iconos
-const RUTA_TERRENO_ESPECIAL = "frontend/static/img/icons/terreno_especial/";
+document.addEventListener('DOMContentLoaded', () => {
+  const contenedorLeyenda = document.getElementById('leyenda-terreno-especial');
+  if (!contenedorLeyenda) return;
 
-// Lista compartida con la leyenda
-const TERRENOS_ESPECIALES = [
-  "bosque_especial",
-  "desierto_calido_especial",
-  "glaciar_especial",
-  "lago_especial",
-  "montanas_especial",
-  "pantano_especial",
-  "volcan_especial"
-];
+  // Esperar a que los terrenos especiales se hayan generado
+  setTimeout(() => {
+    if (!window.terrenosEspecialesGenerados || window.terrenosEspecialesGenerados.length === 0) {
+      contenedorLeyenda.innerHTML = `
+        <h3>LEYENDA DEL TERRENO</h3>
+        <p>No hay terrenos especiales generados aún.</p>
+      `;
+      return;
+    }
 
-// Número máximo de iconos especiales que se generarán automáticamente
-const NUM_ICONOS_ESPECIALES = 4;
+    // Crear contenedor principal
+    const leyenda = document.createElement('div');
+    leyenda.classList.add('leyenda-contenido');
 
-// Esperar a que el DOM esté listo
-document.addEventListener("DOMContentLoaded", generarTerrenosEspeciales);
+    const titulo = document.createElement('h3');
+    titulo.textContent = 'LEYENDA DEL TERRENO';
+    leyenda.appendChild(titulo);
 
-function generarTerrenosEspeciales() {
-  const contenedor = document.getElementById("mapa-container");
-  if (!contenedor) {
-    console.error("❌ No se encontró el contenedor del mapa.");
-    return;
-  }
+    // Crear lista visual con los iconos realmente usados
+    const lista = document.createElement('ul');
+    lista.classList.add('lista-leyenda');
 
-  // Limpiar iconos anteriores si existen
-  const existentes = contenedor.querySelectorAll(".icono-terreno-especial");
-  existentes.forEach(icono => icono.remove());
+    // Ruta base de iconos
+    const rutaBase = 'frontend/static/img/icons/terreno_especial/';
 
-  // Elegir aleatoriamente terrenos especiales
-  const seleccionados = obtenerTerrenosAleatorios(TERRENOS_ESPECIALES, NUM_ICONOS_ESPECIALES);
+    // Diccionario base (para asociar el nombre con el icono real)
+    const iconosDisponibles = {
+      "Bosque especial": "bosque_especial.png",
+      "Desierto cálido especial": "desierto_calido_especial.png",
+      "Glaciar especial": "glaciar_especial.png",
+      "Lago especial": "lago_especial.png",
+      "Montañas especiales": "montanas_especial.png",
+      "Pantano especial": "pantano_especial.png",
+      "Volcán especial": "volcan_especial.png"
+    };
 
-  seleccionados.forEach(nombre => {
-    const icono = document.createElement("img");
-    icono.src = `${RUTA_TERRENO_ESPECIAL}${nombre}.png`;
-    icono.alt = nombre.replace(/_/g, " ");
-    icono.classList.add("icono-terreno-especial");
+    // Evitar duplicados en leyenda
+    const usados = new Set();
 
-    // Posición aleatoria dentro del mapa
-    const x = Math.random() * (contenedor.clientWidth - 64);
-    const y = Math.random() * (contenedor.clientHeight - 64);
-    icono.style.left = `${x}px`;
-    icono.style.top = `${y}px`;
+    window.terrenosEspecialesGenerados.forEach(nombreCompleto => {
+      const tipoBase = Object.keys(iconosDisponibles).find(tipo => nombreCompleto.startsWith(tipo));
+      if (!tipoBase || usados.has(tipoBase)) return;
 
-    contenedor.appendChild(icono);
-  });
-}
+      usados.add(tipoBase);
 
-/**
- * Devuelve una lista con `cantidad` elementos aleatorios del array
- */
-function obtenerTerrenosAleatorios(array, cantidad) {
-  const copia = [...array];
-  const resultado = [];
-  for (let i = 0; i < cantidad && copia.length > 0; i++) {
-    const indice = Math.floor(Math.random() * copia.length);
-    resultado.push(copia.splice(indice, 1)[0]);
-  }
-  return resultado;
-}
+      const li = document.createElement('li');
+      li.classList.add('item-leyenda');
+
+      const img = document.createElement('img');
+      img.src = rutaBase + iconosDisponibles[tipoBase];
+      img.alt = tipoBase;
+      img.classList.add('icono-leyenda');
+
+      const texto = document.createElement('span');
+      texto.textContent = tipoBase;
+
+      li.appendChild(img);
+      li.appendChild(texto);
+      lista.appendChild(li);
+    });
+
+    leyenda.appendChild(lista);
+    contenedorLeyenda.innerHTML = ''; // Limpia cualquier texto previo
+    contenedorLeyenda.appendChild(leyenda);
+
+  }, 500); // medio segundo para asegurar carga de terrenos
+});
