@@ -1,145 +1,138 @@
-/* ==============================
-   ESTILOS GENERALES
-============================== */
+/* =====================================================
+   🎨 ESTILOS GENERALES DEL GENERADOR DE MAPA FANTÁSTICO
+   Ubicación: frontend/css/style.css
+   ===================================================== */
+
+/* ======= CONFIGURACIÓN GLOBAL ======= */
 body {
-  background-color: #e7dec3;
-  font-family: 'Trebuchet MS', sans-serif;
-  color: #2b1d0e;
+  font-family: 'Garamond', serif;
+  background-color: #f4f0e8;
+  color: #2c1a0e;
   text-align: center;
   margin: 0;
   padding: 0;
 }
 
 h1 {
-  font-size: 2em;
   margin-top: 20px;
+  font-size: 2.5em;
+  text-shadow: 2px 2px #d4c3a3;
   letter-spacing: 2px;
 }
 
 p {
-  font-style: italic;
-  color: #3b2a16;
-  margin-bottom: 20px;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #3b2b1b;
 }
 
-/* ==============================
-   CONTENEDOR DEL MAPA
-============================== */
+/* ======= CONTENEDOR DEL MAPA ======= */
 #mapa-container {
   position: relative;
   width: 1000px;
   height: 600px;
-  margin: 0 auto;
-  border: 3px solid #3d2c17;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #d7c79e 0%, #e9ddbb 100%);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-}
-
-/* Fondo tipo pergamino opcional */
-#mapa-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url("../static/img/texturas/pergamino.jpg");
+  margin: 20px auto;
+  background-color: #e7dbc5;
+  border: 2px solid #5e4b3c;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  background-image: url('../static/img/texturas/pergamino_bg.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.25;
-  z-index: 0;
+  overflow: hidden;
 }
 
-/* ==============================
-   ICONOS DEL MAPA
-============================== */
-.icono-mapa {
+/* ======= ICONOS DE TERRENOS ESPECIALES ======= */
+.icono-terreno-especial {
   position: absolute;
-  width: 48px;
-  height: 48px;
-  z-index: 5;
-  transition: transform 0.2s ease, opacity 0.3s ease;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+  image-rendering: auto;
 }
 
-.icono-mapa:hover {
-  transform: scale(1.25);
-  opacity: 0.9;
+.icono-terreno-especial:hover {
+  transform: scale(1.1);
 }
 
-/* Capa de biomas */
-.icono-bioma {
-  z-index: 4;
-  opacity: 0.9;
-}
-
-/* Capa de terreno especial */
-.icono-especial {
-  z-index: 6;
-  animation: pulsoSuave 2s infinite ease-in-out;
-}
-
-/* ==============================
-   ANIMACIONES
-============================== */
-@keyframes pulsoSuave {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.15); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* ==============================
-   LEYENDA DE TERRENOS ESPECIALES
-============================== */
+/* ======= LEYENDA ======= */
 .leyenda {
-  width: 300px;
+  width: 280px;
   margin: 20px auto;
-  padding: 10px 15px;
-  background-color: rgba(245, 237, 210, 0.8);
-  border: 2px solid #3d2c17;
+  background-color: rgba(255, 248, 231, 0.95);
+  border: 2px solid #7c6146;
   border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: 'Georgia', serif;
+  color: #2c1a0e;
   text-align: left;
-  font-size: 14px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-.leyenda h2 {
-  font-size: 16px;
-  margin-bottom: 8px;
+.leyenda h3 {
   text-align: center;
-  color: #3d2c17;
+  margin-top: 0;
+  color: #4a321c;
+  text-shadow: 1px 1px #d7c09a;
 }
 
 .leyenda-item {
   display: flex;
   align-items: center;
   margin: 5px 0;
+  gap: 10px;
 }
 
 .leyenda-item img {
-  width: 28px;
-  height: 28px;
-  margin-right: 10px;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 4px;
+  border: 1px solid #bfa177;
 }
 
-.leyenda-item span {
-  font-weight: bold;
-  color: #2b1d0e;
+/* ======= BOTÓN DE LEYENDA (OCULTAR/MOSTRAR) ======= */
+.boton-leyenda {
+  display: block;
+  margin: 10px auto;
+  background-color: #bfa177;
+  color: #fff8e7;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-family: 'Georgia', serif;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-/* ==============================
-   RESPONSIVE
-============================== */
+.boton-leyenda:hover {
+  background-color: #a78d6f;
+}
+
+/* ======= PLACEHOLDER DE ICONO (FALTA DE IMAGEN) ======= */
+.icono-placeholder {
+  background-color: rgba(150, 130, 100, 0.3);
+  border: 1px dashed #806b55;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8em;
+  color: #5b4a39;
+  width: 64px;
+  height: 64px;
+}
+
+/* ======= RESPONSIVIDAD ======= */
 @media (max-width: 1100px) {
   #mapa-container {
     width: 90%;
     height: 500px;
   }
 
-  .icono-mapa {
-    width: 40px;
-    height: 40px;
+  .leyenda {
+    width: 90%;
   }
 }
