@@ -1,90 +1,69 @@
-// ===============================================================
-// Archivo: frontend/js/mapa/leyendaTerrenoEspecial.js
-// Descripción: Genera automáticamente la leyenda visual de los
-// terrenos especiales en el mapa.
-// ===============================================================
+// =====================================================
+// 📘 LEYENDA DE TERRENOS ESPECIALES
+// Genera automáticamente la leyenda según las imágenes
+// disponibles en la carpeta de terreno especial.
+// =====================================================
 
-import { terrenosEspeciales } from "./terrenoEspecial.js";
+// Ruta base de los iconos de terreno especial
+const RUTA_TERRENO_ESPECIAL = "frontend/static/img/icons/terreno_especial/";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const contenedorLeyenda = document.getElementById("leyenda-terreno-especial");
+// Lista de terrenos especiales existentes
+// Puedes añadir más manualmente si se crean nuevos iconos
+const TERRENOS_ESPECIALES = [
+  "bosque_especial",
+  "desierto_calido_especial",
+  "glaciar_especial",
+  "lago_especial",
+  "montanas_especial",
+  "pantano_especial",
+  "volcan_especial"
+];
 
-  if (!contenedorLeyenda) {
-    console.error("No se encontró el contenedor de leyenda en el HTML.");
+// Generar la leyenda al cargar la página
+document.addEventListener("DOMContentLoaded", generarLeyendaTerrenoEspecial);
+
+function generarLeyendaTerrenoEspecial() {
+  const contenedor = document.getElementById("leyenda-terreno-especial");
+  if (!contenedor) {
+    console.error("❌ No se encontró el contenedor de la leyenda.");
     return;
   }
 
-  // Estilo básico para la leyenda
-  contenedorLeyenda.style.position = "absolute";
-  contenedorLeyenda.style.top = "20px";
-  contenedorLeyenda.style.right = "20px";
-  contenedorLeyenda.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
-  contenedorLeyenda.style.color = "white";
-  contenedorLeyenda.style.padding = "10px";
-  contenedorLeyenda.style.borderRadius = "8px";
-  contenedorLeyenda.style.maxHeight = "400px";
-  contenedorLeyenda.style.overflowY = "auto";
-  contenedorLeyenda.style.fontFamily = "Georgia, serif";
-  contenedorLeyenda.style.fontSize = "14px";
-  contenedorLeyenda.style.width = "220px";
+  contenedor.innerHTML = "<h3>🌋 Terrenos Especiales</h3>";
 
-  // Título de la leyenda
-  const titulo = document.createElement("h3");
-  titulo.textContent = "Leyenda del Terreno";
-  titulo.style.textAlign = "center";
-  titulo.style.marginTop = "0";
-  titulo.style.marginBottom = "10px";
-  titulo.style.textTransform = "uppercase";
-  titulo.style.fontSize = "16px";
-  titulo.style.borderBottom = "1px solid white";
-  contenedorLeyenda.appendChild(titulo);
-
-  // Contenedor de ítems
   const lista = document.createElement("div");
-  lista.style.display = "flex";
-  lista.style.flexDirection = "column";
-  lista.style.gap = "8px";
+  lista.classList.add("leyenda-lista");
 
-  // Crear cada ítem de leyenda
-  terrenosEspeciales.forEach((terreno) => {
+  TERRENOS_ESPECIALES.forEach(nombre => {
     const item = document.createElement("div");
-    item.style.display = "flex";
-    item.style.alignItems = "center";
-    item.style.gap = "10px";
-    item.style.background = "rgba(255, 255, 255, 0.1)";
-    item.style.borderRadius = "6px";
-    item.style.padding = "4px 6px";
+    item.classList.add("leyenda-item");
 
     // Imagen del icono
-    const icono = document.createElement("img");
-    icono.src = terreno.icono;
-    icono.alt = terreno.nombre;
-    icono.style.width = "28px";
-    icono.style.height = "28px";
-    icono.style.objectFit = "contain";
-    icono.onerror = () => {
-      console.warn(`No se pudo cargar el icono: ${terreno.icono}`);
-      icono.src = "frontend/static/img/icons/placeholder.png";
-    };
+    const img = document.createElement("img");
+    img.src = `${RUTA_TERRENO_ESPECIAL}${nombre}.png`;
+    img.alt = nombre.replace(/_/g, " ");
+    img.classList.add("leyenda-icono");
 
-    // Nombre + descripción
-    const texto = document.createElement("div");
-    const nombre = document.createElement("div");
-    nombre.textContent = terreno.nombre;
-    nombre.style.fontWeight = "bold";
+    // Texto del nombre (más legible)
+    const texto = document.createElement("span");
+    texto.textContent = formatearNombre(nombre);
 
-    const descripcion = document.createElement("div");
-    descripcion.textContent = terreno.descripcion;
-    descripcion.style.fontSize = "12px";
-    descripcion.style.opacity = "0.8";
-
-    texto.appendChild(nombre);
-    texto.appendChild(descripcion);
-
-    item.appendChild(icono);
+    // Añadir a la leyenda
+    item.appendChild(img);
     item.appendChild(texto);
     lista.appendChild(item);
   });
 
-  contenedorLeyenda.appendChild(lista);
-});
+  contenedor.appendChild(lista);
+}
+
+/**
+ * Convierte un nombre tipo 'desierto_calido_especial'
+ * en 'Desierto Cálido Especial'
+ */
+function formatearNombre(nombre) {
+  return nombre
+    .split("_")
+    .map(p => p.charAt(0).toUpperCase() + p.slice(1))
+    .join(" ");
+}
