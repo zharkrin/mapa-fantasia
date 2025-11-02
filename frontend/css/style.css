@@ -57,62 +57,7 @@ p {
   transform: scale(1.1);
 }
 
-/* ======= LEYENDA ======= */
-.leyenda {
-  width: 280px;
-  margin: 20px auto;
-  background-color: rgba(255, 248, 231, 0.95);
-  border: 2px solid #7c6146;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  font-family: 'Georgia', serif;
-  color: #2c1a0e;
-  text-align: left;
-}
-
-.leyenda h3 {
-  text-align: center;
-  margin-top: 0;
-  color: #4a321c;
-  text-shadow: 1px 1px #d7c09a;
-}
-
-.leyenda-item {
-  display: flex;
-  align-items: center;
-  margin: 5px 0;
-  gap: 10px;
-}
-
-.leyenda-item img {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  border-radius: 4px;
-  border: 1px solid #bfa177;
-}
-
-/* ======= BOTÓN DE LEYENDA (OCULTAR/MOSTRAR) ======= */
-.boton-leyenda {
-  display: block;
-  margin: 10px auto;
-  background-color: #bfa177;
-  color: #fff8e7;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-family: 'Georgia', serif;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.boton-leyenda:hover {
-  background-color: #a78d6f;
-}
-
-/* ======= PLACEHOLDER DE ICONO (FALTA DE IMAGEN) ======= */
+/* ======= PLACEHOLDER DE ICONO ======= */
 .icono-placeholder {
   background-color: rgba(150, 130, 100, 0.3);
   border: 1px dashed #806b55;
@@ -130,9 +75,5 @@ p {
   #mapa-container {
     width: 90%;
     height: 500px;
-  }
-
-  .leyenda {
-    width: 90%;
   }
 }
