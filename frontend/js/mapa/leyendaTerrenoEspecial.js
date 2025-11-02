@@ -1,14 +1,13 @@
 // =====================================================
-// 📘 LEYENDA DE TERRENOS ESPECIALES
-// Genera automáticamente la leyenda según las imágenes
-// disponibles en la carpeta de terreno especial.
+// 🌋 GENERADOR DE TERRENOS ESPECIALES
+// Coloca iconos de terrenos especiales en el mapa
+// usando posiciones aleatorias dentro del contenedor.
 // =====================================================
 
-// Ruta base de los iconos de terreno especial
+// Ruta base de iconos
 const RUTA_TERRENO_ESPECIAL = "frontend/static/img/icons/terreno_especial/";
 
-// Lista de terrenos especiales existentes
-// Puedes añadir más manualmente si se crean nuevos iconos
+// Lista compartida con la leyenda
 const TERRENOS_ESPECIALES = [
   "bosque_especial",
   "desierto_calido_especial",
@@ -19,51 +18,51 @@ const TERRENOS_ESPECIALES = [
   "volcan_especial"
 ];
 
-// Generar la leyenda al cargar la página
-document.addEventListener("DOMContentLoaded", generarLeyendaTerrenoEspecial);
+// Número máximo de iconos especiales que se generarán automáticamente
+const NUM_ICONOS_ESPECIALES = 4;
 
-function generarLeyendaTerrenoEspecial() {
-  const contenedor = document.getElementById("leyenda-terreno-especial");
+// Esperar a que el DOM esté listo
+document.addEventListener("DOMContentLoaded", generarTerrenosEspeciales);
+
+function generarTerrenosEspeciales() {
+  const contenedor = document.getElementById("mapa-container");
   if (!contenedor) {
-    console.error("❌ No se encontró el contenedor de la leyenda.");
+    console.error("❌ No se encontró el contenedor del mapa.");
     return;
   }
 
-  contenedor.innerHTML = "<h3>🌋 Terrenos Especiales</h3>";
+  // Limpiar iconos anteriores si existen
+  const existentes = contenedor.querySelectorAll(".icono-terreno-especial");
+  existentes.forEach(icono => icono.remove());
 
-  const lista = document.createElement("div");
-  lista.classList.add("leyenda-lista");
+  // Elegir aleatoriamente terrenos especiales
+  const seleccionados = obtenerTerrenosAleatorios(TERRENOS_ESPECIALES, NUM_ICONOS_ESPECIALES);
 
-  TERRENOS_ESPECIALES.forEach(nombre => {
-    const item = document.createElement("div");
-    item.classList.add("leyenda-item");
+  seleccionados.forEach(nombre => {
+    const icono = document.createElement("img");
+    icono.src = `${RUTA_TERRENO_ESPECIAL}${nombre}.png`;
+    icono.alt = nombre.replace(/_/g, " ");
+    icono.classList.add("icono-terreno-especial");
 
-    // Imagen del icono
-    const img = document.createElement("img");
-    img.src = `${RUTA_TERRENO_ESPECIAL}${nombre}.png`;
-    img.alt = nombre.replace(/_/g, " ");
-    img.classList.add("leyenda-icono");
+    // Posición aleatoria dentro del mapa
+    const x = Math.random() * (contenedor.clientWidth - 64);
+    const y = Math.random() * (contenedor.clientHeight - 64);
+    icono.style.left = `${x}px`;
+    icono.style.top = `${y}px`;
 
-    // Texto del nombre (más legible)
-    const texto = document.createElement("span");
-    texto.textContent = formatearNombre(nombre);
-
-    // Añadir a la leyenda
-    item.appendChild(img);
-    item.appendChild(texto);
-    lista.appendChild(item);
+    contenedor.appendChild(icono);
   });
-
-  contenedor.appendChild(lista);
 }
 
 /**
- * Convierte un nombre tipo 'desierto_calido_especial'
- * en 'Desierto Cálido Especial'
+ * Devuelve una lista con `cantidad` elementos aleatorios del array
  */
-function formatearNombre(nombre) {
-  return nombre
-    .split("_")
-    .map(p => p.charAt(0).toUpperCase() + p.slice(1))
-    .join(" ");
+function obtenerTerrenosAleatorios(array, cantidad) {
+  const copia = [...array];
+  const resultado = [];
+  for (let i = 0; i < cantidad && copia.length > 0; i++) {
+    const indice = Math.floor(Math.random() * copia.length);
+    resultado.push(copia.splice(indice, 1)[0]);
+  }
+  return resultado;
 }
