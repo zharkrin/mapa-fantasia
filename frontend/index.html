@@ -3,30 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <title>Generador de Mapa Fantástico</title>
-
-  <!-- Estilos principales -->
   <link rel="stylesheet" href="frontend/css/style.css">
-
-  <!-- Estilos específicos para la leyenda -->
-  <link rel="stylesheet" href="frontend/css/leyenda.css">
 </head>
-
 <body>
 
   <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
   <p>Terrenos, biomas y lugares singulares</p>
 
-  <!-- Contenedor principal del mapa -->
-  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000;">
-    <!-- Los iconos se generarán aquí dinámicamente -->
+  <!-- Controles de configuración -->
+  <div id="configuracion" style="margin-bottom: 20px; text-align: center;">
+    <label for="tamano-mundo">🌍 Tamaño del mundo:</label>
+    <select id="tamano-mundo">
+      <option value="1">1x Tierra</option>
+      <option value="2">2x Tierra</option>
+      <option value="3">3x Tierra</option>
+      <option value="4">4x Tierra</option>
+      <option value="5">5x Tierra</option>
+    </select>
+    <button id="btn-terrenos-especiales">🧭 Añadir terrenos especiales</button>
   </div>
 
-  <!-- Panel de leyenda de terrenos especiales -->
+  <!-- Contenedor del mapa -->
+  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000; margin: 0 auto;">
+    <!-- Los iconos se colocarán aquí -->
+  </div>
+
+  <!-- Leyenda de terrenos especiales -->
   <div id="leyenda-terreno-especial" class="leyenda"></div>
 
-  <!-- Scripts del mapa -->
+  <!-- Scripts -->
   <script src="frontend/js/mapa/terrenoEspecial.js"></script>
   <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
+
+  <script>
+    // Controlador de tamaño del mundo y terrenos especiales
+    document.addEventListener("DOMContentLoaded", () => {
+      const selector = document.getElementById("tamano-mundo");
+      const boton = document.getElementById("btn-terrenos-especiales");
+
+      let factorTamano = 1;
+
+      selector.addEventListener("change", () => {
+        factorTamano = parseInt(selector.value);
+        console.log(`🌍 Tamaño del mundo: ${factorTamano}x Tierra`);
+      });
+
+      boton.addEventListener("click", () => {
+        console.log(`🧭 Generando terrenos especiales para un mundo ${factorTamano}x Tierra`);
+        generarTerrenosEspeciales(factorTamano);
+      });
+    });
+  </script>
 
 </body>
 </html>
