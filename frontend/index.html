@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Generador de Mapa Fantástico</title>
-  <link rel="stylesheet" href="frontend/css/style.css">
+<meta charset="UTF-8">
+<title>Generador de Mapa Fantástico</title>
+<link rel="stylesheet" href="frontend/css/style.css">
+<link rel="stylesheet" href="frontend/css/leyenda.css">
 </head>
 <body>
 
   <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
   <p>Terrenos, biomas y lugares singulares</p>
 
-  <!-- Controles de configuración -->
-  <div id="configuracion" style="margin-bottom: 20px; text-align: center;">
-    <label for="tamano-mundo">🌍 Tamaño del mundo:</label>
-    <select id="tamano-mundo">
-      <option value="1">1x Tierra</option>
-      <option value="2">2x Tierra</option>
-      <option value="3">3x Tierra</option>
-      <option value="4">4x Tierra</option>
-      <option value="5">5x Tierra</option>
+  <!-- Panel de control -->
+  <div id="panel-controles">
+    <label for="tamano-mapa">Tamaño del mundo:</label>
+    <select id="tamano-mapa">
+      <option value="1">1x Tierra (tamaño terrestre)</option>
+      <option value="2">2x Tierra (doble del tamaño terrestre)</option>
+      <option value="3">3x Tierra (triple del tamaño terrestre)</option>
+      <option value="4">4x Tierra (cuatro veces el tamaño terrestre)</option>
+      <option value="5">5x Tierra (mundo colosal)</option>
     </select>
-    <button id="btn-terrenos-especiales">🧭 Añadir terrenos especiales</button>
+
+    <button id="btn-generar-especiales">Generar terrenos especiales</button>
   </div>
 
   <!-- Contenedor del mapa -->
-  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000; margin: 0 auto;">
-    <!-- Los iconos se colocarán aquí -->
+  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000;">
+    <!-- Los iconos se colocarán aquí de forma absoluta -->
   </div>
 
   <!-- Leyenda de terrenos especiales -->
@@ -34,26 +36,6 @@
   <!-- Scripts -->
   <script src="frontend/js/mapa/terrenoEspecial.js"></script>
   <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
-
-  <script>
-    // Controlador de tamaño del mundo y terrenos especiales
-    document.addEventListener("DOMContentLoaded", () => {
-      const selector = document.getElementById("tamano-mundo");
-      const boton = document.getElementById("btn-terrenos-especiales");
-
-      let factorTamano = 1;
-
-      selector.addEventListener("change", () => {
-        factorTamano = parseInt(selector.value);
-        console.log(`🌍 Tamaño del mundo: ${factorTamano}x Tierra`);
-      });
-
-      boton.addEventListener("click", () => {
-        console.log(`🧭 Generando terrenos especiales para un mundo ${factorTamano}x Tierra`);
-        generarTerrenosEspeciales(factorTamano);
-      });
-    });
-  </script>
 
 </body>
 </html>
