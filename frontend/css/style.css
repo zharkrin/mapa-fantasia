@@ -1,79 +1,102 @@
-/* =====================================================
-   🎨 ESTILOS GENERALES DEL GENERADOR DE MAPA FANTÁSTICO
-   Ubicación: frontend/css/style.css
-   ===================================================== */
+/* ==============================
+   ESTILOS GENERALES
+============================== */
 
-/* ======= CONFIGURACIÓN GLOBAL ======= */
 body {
+  background-color: #f4f1e3;
   font-family: 'Garamond', serif;
-  background-color: #f4f0e8;
-  color: #2c1a0e;
   text-align: center;
+  color: #2e2b25;
   margin: 0;
-  padding: 0;
+  padding: 20px;
 }
 
 h1 {
-  margin-top: 20px;
-  font-size: 2.5em;
-  text-shadow: 2px 2px #d4c3a3;
+  font-size: 2.2em;
   letter-spacing: 2px;
+  margin-bottom: 5px;
 }
 
 p {
-  font-size: 1.2em;
-  margin-bottom: 10px;
-  color: #3b2b1b;
+  font-size: 1.1em;
+  margin-top: 0;
+  color: #4b463c;
 }
 
-/* ======= CONTENEDOR DEL MAPA ======= */
+/* ==============================
+   CONTENEDOR DEL MAPA
+============================== */
+
 #mapa-container {
   position: relative;
   width: 1000px;
   height: 600px;
   margin: 20px auto;
-  background-color: #e7dbc5;
-  border: 2px solid #5e4b3c;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  background-image: url('../static/img/texturas/pergamino_bg.png');
+  border: 2px solid #3b3428;
+  background-color: #e9e4d0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
   background-size: cover;
-  background-repeat: no-repeat;
   background-position: center;
   overflow: hidden;
 }
 
-/* ======= ICONOS DE TERRENOS ESPECIALES ======= */
-.icono-terreno-especial {
+/* ==============================
+   PANEL DE CONFIGURACIÓN
+============================== */
+
+#panel-configuracion {
   position: absolute;
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-  pointer-events: none;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(240, 235, 220, 0.95);
+  border: 1px solid #b9a47a;
+  border-radius: 8px;
+  padding: 15px 20px;
+  width: 260px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+#panel-configuracion label {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #3b3428;
+}
+
+#tamano-mapa {
+  padding: 5px 8px;
+  border: 1px solid #b9a47a;
+  border-radius: 4px;
+  background-color: #fffdf7;
+}
+
+#btn-generar {
+  margin-top: 12px;
+  background-color: #c9a66b;
+  border: 1px solid #7b5c2e;
+  color: #2e2b25;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#btn-generar:hover {
+  background-color: #b38b56;
+}
+
+/* ==============================
+   ICONOS EN EL MAPA
+============================== */
+
+.icono-terreno {
+  position: absolute;
+  width: 48px;
+  height: 48px;
   transition: transform 0.3s ease;
-  image-rendering: auto;
 }
 
-.icono-terreno-especial:hover {
-  transform: scale(1.1);
-}
-
-/* ======= PLACEHOLDER DE ICONO ======= */
-.icono-placeholder {
-  background-color: rgba(150, 130, 100, 0.3);
-  border: 1px dashed #806b55;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8em;
-  color: #5b4a39;
-  width: 64px;
-  height: 64px;
-}
-
-/* ======= RESPONSIVIDAD ======= */
-@media (max-width: 1100px) {
-  #mapa-container {
-    width: 90%;
-    height: 500px;
-  }
+.icono-terreno:hover {
+  transform: scale(1.15);
 }
