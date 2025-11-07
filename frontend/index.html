@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Generador de Mapa Fantástico</title>
-<link rel="stylesheet" href="frontend/css/style.css">
-<link rel="stylesheet" href="frontend/css/leyenda.css">
+  <meta charset="UTF-8">
+  <title>Generador de Mapa Fantástico</title>
+  <link rel="stylesheet" href="frontend/css/style.css">
+  <link rel="stylesheet" href="frontend/css/leyenda.css">
 </head>
 <body>
 
   <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
   <p>Terrenos, biomas y lugares singulares</p>
 
-  <!-- Panel de control -->
+  <!-- Contenedor principal del mapa -->
+  <div id="mapa-container">
+    <!-- Aquí se generarán los iconos del mapa -->
+  </div>
+
+  <!-- Panel de control fijo en pantalla -->
   <div id="panel-controles">
     <label for="tamano-mapa">Tamaño del mundo:</label>
     <select id="tamano-mapa">
-      <option value="1">1x Tierra (tamaño terrestre)</option>
-      <option value="2">2x Tierra (doble del tamaño terrestre)</option>
-      <option value="3">3x Tierra (triple del tamaño terrestre)</option>
-      <option value="4">4x Tierra (cuatro veces el tamaño terrestre)</option>
-      <option value="5">5x Tierra (mundo colosal)</option>
+      <option value="1">1× Tierra (base)</option>
+      <option value="2">2× Tierra</option>
+      <option value="3">3× Tierra</option>
+      <option value="4">4× Tierra</option>
+      <option value="5">5× Tierra</option>
     </select>
-
-    <button id="btn-generar-especiales">Generar terrenos especiales</button>
-  </div>
-
-  <!-- Contenedor del mapa -->
-  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000;">
-    <!-- Los iconos se colocarán aquí de forma absoluta -->
+    <button id="generar-mapa">Generar mapa</button>
   </div>
 
   <!-- Leyenda de terrenos especiales -->
