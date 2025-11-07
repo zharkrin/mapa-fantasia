@@ -1,132 +1,166 @@
-/* === ESTILOS GENERALES === */
+/* ===============================
+   ESTILOS GENERALES
+   frontend/css/style.css
+   =============================== */
+
 body {
-  background-color: #f2e9d0;
-  font-family: 'Georgia', serif;
-  color: #2b1b0f;
-  text-align: center;
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  background-color: #f4f1ea;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  text-align: center;
 }
 
 h1 {
-  margin-top: 10px;
-  font-size: 2em;
-  text-shadow: 2px 2px #d8c8a3;
+  margin-top: 20px;
+  font-size: 28px;
   letter-spacing: 1px;
 }
 
 p {
   margin-bottom: 20px;
-  font-style: italic;
+  color: #444;
+  font-size: 16px;
 }
 
-/* === MAPA === */
+/* ===============================
+   CONTENEDOR DEL MAPA
+   =============================== */
+
 #mapa-container {
   position: relative;
+  margin: 20px auto;
   width: 1000px;
   height: 600px;
-  margin: 0 auto;
-  background-color: #f9f4e8;
-  border: 2px solid #4a3b2a;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  background-image: url('../img/texturas/pergamino.jpg'); /* Fondo de mapa (opcional) */
-  background-size: cover;
-  background-position: center;
+  background-color: #e2dbc8;
+  border: 2px solid #333;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
 }
 
-/* === PANEL DE CONTROLES FIJO DENTRO DEL MAPA === */
-#panel-controles {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 248, 230, 0.9);
-  border: 1px solid #b7a47a;
-  border-radius: 8px;
-  padding: 6px 10px;
-  z-index: 100;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-}
+/* ===============================
+   PANEL DE CONTROL FIJO (ESQUINA DERECHA)
+   =============================== */
 
-#panel-controles label {
-  font-weight: bold;
-  color: #3d2b1f;
-}
-
-/* === SELECTOR DE TAMAÑO === */
-#tamano-mapa {
-  background-color: #f8f4ec;
-  border: 1px solid #b5a88c;
-  padding: 5px 8px;
-  border-radius: 5px;
-  font-family: 'Georgia', serif;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-#tamano-mapa:hover {
-  background-color: #e0d5b9;
-}
-
-/* === BOTÓN DE GENERAR === */
-#btn-generar-especiales {
-  background-color: #a67c52;
-  border: 2px solid #5a3e27;
-  color: #fff7e6;
-  padding: 6px 14px;
+.panel-fijo {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid #999;
   border-radius: 6px;
-  font-family: 'Georgia', serif;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-#btn-generar-especiales:hover {
-  background-color: #8b633d;
-  transform: scale(1.05);
-}
-
-/* === ICONOS DE TERRENOS ESPECIALES === */
-.icono-terreno-especial {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  pointer-events: none;
-  transition: transform 0.3s;
-}
-
-.icono-terreno-especial:hover {
-  transform: scale(1.15);
-  filter: drop-shadow(0 0 4px #000);
-}
-
-/* === LEYENDA === */
-.leyenda {
-  margin: 20px auto;
-  width: 800px;
-  background-color: #f6edd8;
-  border: 2px solid #b5a37a;
-  border-radius: 8px;
-  padding: 10px;
+  padding: 10px 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 1000;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  align-items: center;
+  gap: 10px;
+}
+
+.panel-fijo label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.panel-fijo select {
+  padding: 4px 6px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  background-color: #fafafa;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.panel-fijo button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #ddd;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.panel-fijo button:hover {
+  background-color: #ccc;
+}
+
+/* ===============================
+   ICONOS DE TERRENOS Y BIOMAS
+   =============================== */
+
+.icono-terreno {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* ===============================
+   LEYENDA (SE MANTIENE SIMPLE)
+   =============================== */
+
+.leyenda {
+  position: fixed;
+  bottom: 15px;
+  left: 15px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid #999;
+  border-radius: 6px;
+  padding: 10px 15px;
+  max-width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  font-size: 14px;
+  text-align: left;
+}
+
+.leyenda h3 {
+  margin-top: 0;
+  font-size: 16px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .leyenda-item {
   display: flex;
   align-items: center;
-  margin: 6px 12px;
+  margin-bottom: 5px;
 }
 
 .leyenda-item img {
-  width: 30px;
-  height: 30px;
-  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* ===============================
+   SCROLLBAR PERSONALIZADO
+   =============================== */
+
+.leyenda::-webkit-scrollbar {
+  width: 6px;
+}
+
+.leyenda::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 3px;
+}
+
+/* ===============================
+   PLACEHOLDER DE ICONOS (en caso de fallo)
+   =============================== */
+
+.icono-placeholder {
+  background-color: #aaa;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
 }
