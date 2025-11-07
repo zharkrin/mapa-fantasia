@@ -1,43 +1,89 @@
-/* ==============================
-   LEYENDA DE TERRENOS ESPECIALES
-============================== */
+/* =======================================
+   LEYENDA DE TERRENOS Y BIOMAS
+   frontend/css/leyenda.css
+   ======================================= */
 
 .leyenda {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background-color: rgba(240, 235, 220, 0.95);
-  border: 1px solid #3b3428;
+  bottom: 15px;
+  left: 15px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid #999;
   border-radius: 6px;
-  padding: 12px;
-  width: 240px;
-  max-height: 70vh;
+  padding: 10px 15px;
+  max-width: 250px;
+  max-height: 400px;
   overflow-y: auto;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
-  display: none;
-  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  font-size: 14px;
+  text-align: left;
+  z-index: 900;
 }
 
-.leyenda.visible {
-  display: block;
-}
-
+/* Título de la leyenda */
 .leyenda h3 {
   margin-top: 0;
-  font-size: 1.2em;
-  color: #2e2b25;
-  border-bottom: 1px solid #a49372;
+  font-size: 16px;
+  border-bottom: 1px solid #ccc;
   padding-bottom: 4px;
+  margin-bottom: 8px;
+  font-weight: bold;
 }
 
+/* Elementos individuales */
 .leyenda-item {
   display: flex;
   align-items: center;
-  margin: 6px 0;
+  margin-bottom: 6px;
 }
 
 .leyenda-item img {
-  width: 32px;
-  height: 32px;
-  margin-right: 10px;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+}
+
+/* Nombres */
+.leyenda-item span {
+  flex: 1;
+  font-size: 13px;
+  color: #333;
+}
+
+/* Categorías separadas (Biomas / Terrenos / Especiales) */
+.leyenda-seccion {
+  margin-bottom: 10px;
+}
+
+.leyenda-seccion h4 {
+  margin: 6px 0 4px 0;
+  font-size: 14px;
+  font-weight: bold;
+  color: #111;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 2px;
+}
+
+/* Scrollbar personalizado */
+.leyenda::-webkit-scrollbar {
+  width: 6px;
+}
+
+.leyenda::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 3px;
+}
+
+/* Placeholder de iconos si alguno falta */
+.icono-placeholder {
+  width: 24px;
+  height: 24px;
+  background-color: #aaa;
+  border-radius: 4px;
+  margin-right: 8px;
 }
