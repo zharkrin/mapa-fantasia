@@ -11,22 +11,22 @@
   <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
   <p>Terrenos, biomas y lugares singulares</p>
 
-  <!-- Contenedor principal del mapa -->
-  <div id="mapa-container">
-    <!-- Aquí se generarán los iconos del mapa -->
-  </div>
-
-  <!-- Panel de control fijo en pantalla -->
-  <div id="panel-controles">
+  <!-- Panel de control fijo -->
+  <div id="panel-controles" class="panel-fijo">
     <label for="tamano-mapa">Tamaño del mundo:</label>
     <select id="tamano-mapa">
-      <option value="1">1× Tierra (base)</option>
-      <option value="2">2× Tierra</option>
-      <option value="3">3× Tierra</option>
-      <option value="4">4× Tierra</option>
-      <option value="5">5× Tierra</option>
+      <option value="1">1x Tierra</option>
+      <option value="2">2x Tierra</option>
+      <option value="3">3x Tierra</option>
+      <option value="4">4x Tierra</option>
+      <option value="5">5x Tierra</option>
     </select>
+
     <button id="generar-mapa">Generar mapa</button>
+  </div>
+
+  <!-- Contenedor del mapa -->
+  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000;">
   </div>
 
   <!-- Leyenda de terrenos especiales -->
@@ -35,6 +35,26 @@
   <!-- Scripts -->
   <script src="frontend/js/mapa/terrenoEspecial.js"></script>
   <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
+
+  <script>
+    // Genera automáticamente al cambiar el tamaño del mapa
+    document.getElementById('tamano-mapa').addEventListener('change', function() {
+      const tamano = parseInt(this.value);
+      generarTerrenoEspecial(tamano);
+    });
+
+    // Genera manualmente al pulsar el botón
+    document.getElementById('generar-mapa').addEventListener('click', function() {
+      const tamano = parseInt(document.getElementById('tamano-mapa').value);
+      generarTerrenoEspecial(tamano);
+    });
+
+    // Generar mapa inicial
+    window.onload = function() {
+      const tamanoInicial = parseInt(document.getElementById('tamano-mapa').value);
+      generarTerrenoEspecial(tamanoInicial);
+    };
+  </script>
 
 </body>
 </html>
