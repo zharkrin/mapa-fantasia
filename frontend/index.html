@@ -11,88 +11,30 @@
   <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
   <p>Terrenos, biomas y lugares singulares</p>
 
-  <!-- Controles principales -->
+  <!-- Panel de controles fijo -->
   <div id="panel-controles">
     <label for="tamano-mapa">Tamaño del mundo:</label>
     <select id="tamano-mapa">
-      <option value="1">1x Tierra</option>
-      <option value="2">2x Tierra</option>
-      <option value="3">3x Tierra</option>
-      <option value="4">4x Tierra</option>
-      <option value="5">5x Tierra</option>
+      <option value="1">1x Tierra (pequeño)</option>
+      <option value="2">2x Tierra (mediano)</option>
+      <option value="3">3x Tierra (grande)</option>
+      <option value="4">4x Tierra (enorme)</option>
+      <option value="5">5x Tierra (colosal)</option>
     </select>
     <button id="generar-mapa">Generar mapa</button>
   </div>
 
   <!-- Contenedor del mapa -->
-  <div id="mapa-container">
-    <!-- Los iconos se colocarán aquí -->
+  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000;">
+    <!-- Los iconos se colocarán aquí de forma absoluta -->
   </div>
 
-  <!-- Leyenda general (en pantalla, fija esquina inferior izquierda) -->
-  <div id="leyenda-terreno-especial" class="leyenda">
-    <h3>Leyenda</h3>
-
-    <div class="leyenda-seccion">
-      <h4>Terrenos</h4>
-      <div class="leyenda-item">
-        <img src="frontend/static/img/icons/montanas.png" alt="Montañas">
-        <span>Montañas</span>
-      </div>
-      <div class="leyenda-item">
-        <img src="frontend/static/img/icons/desierto_calido.png" alt="Desierto cálido">
-        <span>Desierto cálido</span>
-      </div>
-    </div>
-
-    <div class="leyenda-seccion">
-      <h4>Biomas</h4>
-      <div class="leyenda-item">
-        <img src="frontend/static/img/icons/bosque_tropical.png" alt="Bosque tropical">
-        <span>Bosque tropical</span>
-      </div>
-      <div class="leyenda-item">
-        <img src="frontend/static/img/icons/pradera.png" alt="Pradera">
-        <span>Pradera</span>
-      </div>
-    </div>
-
-    <div class="leyenda-seccion">
-      <h4>Especiales</h4>
-      <div class="leyenda-item">
-        <img src="frontend/static/img/icons/volcan.png" alt="Volcán">
-        <span>Volcán</span>
-      </div>
-      <div class="leyenda-item">
-        <div class="icono-placeholder"></div>
-        <span>Ruinas antiguas</span>
-      </div>
-    </div>
-  </div>
+  <!-- Leyenda de terrenos especiales -->
+  <div id="leyenda-terreno-especial" class="leyenda"></div>
 
   <!-- Scripts -->
   <script src="frontend/js/mapa/terrenoEspecial.js"></script>
   <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
-  <script>
-    // Escucha el cambio de tamaño del mundo
-    const selectorTamano = document.getElementById('tamano-mapa');
-    const botonGenerar = document.getElementById('generar-mapa');
-
-    // Genera el mapa al cambiar tamaño automáticamente
-    selectorTamano.addEventListener('change', () => {
-      generarMapa();
-    });
-
-    // También permite hacerlo manualmente
-    botonGenerar.addEventListener('click', () => {
-      generarMapa();
-    });
-
-    function generarMapa() {
-      console.log('Generando mapa con escala:', selectorTamano.value + 'x Tierra');
-      // Aquí iría la función real de generación
-    }
-  </script>
 
 </body>
 </html>
