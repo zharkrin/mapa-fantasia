@@ -1,23 +1,48 @@
-// =======================================================
-// frontend/js/script.js
-// Script principal: genera y dibuja el mapa completo
-// =======================================================
+// ==============================
+// Generador de Mapa Fantástico
+// ==============================
 
-import { generarTerrenoBase } from "./mapa/generacionTerreno.js";
-import { generarBiomas } from "./mapa/biomas.js";
-import { dibujarMapa } from "./mapa/dibujarMapa.js";
-import { generarTerrenoEspecial } from "./mapa/terrenoEspecial.js";
+// Escala del mundo (1 = tamaño Tierra)
+let escalaMundo = 1;
 
-// Inicializar mapa al cargar
+// Referencias al DOM
+const selectorTamano = document.getElementById("tamano-mapa");
+const botonGenerar = document.getElementById("btn-generar");
+
+// Inicialización del mapa
 window.addEventListener("DOMContentLoaded", () => {
-  const ancho = 1000;
-  const alto = 600;
-
-  // Generar terrenos, biomas y especiales
-  const terrenos = generarTerrenoBase(ancho, alto, 25);
-  const biomas = generarBiomas(ancho, alto, 35);
-  const especiales = generarTerrenoEspecial(ancho, alto, 4);
-
-  // Dibujar mapa completo
-  dibujarMapa(terrenos, biomas, especiales);
+  generarMapa();
 });
+
+// Evento: cambio de tamaño del mundo
+selectorTamano.addEventListener("change", () => {
+  escalaMundo = parseInt(selectorTamano.value);
+  generarMapa();
+});
+
+// Evento: botón Generar manualmente
+botonGenerar.addEventListener("click", () => {
+  generarMapa();
+});
+
+// ==========================================
+// Función principal: generar el mapa completo
+// ==========================================
+function generarMapa() {
+  const mapaContainer = document.getElementById("mapa-container");
+
+  // Limpia el contenedor antes de generar
+  mapaContainer.innerHTML = "";
+
+  // Ajuste de tamaño del mapa según escala
+  const anchoBase = 1000;
+  const altoBase = 600;
+  mapaContainer.style.width = `${anchoBase * escalaMundo * 0.8}px`;
+  mapaContainer.style.height = `${altoBase * escalaMundo * 0.8}px`;
+
+  // Genera terrenos especiales
+  generarTerrenosEspeciales(mapaContainer, escalaMundo);
+
+  // Actualiza la leyenda
+  generarLeyendaTerrenosEspeciales();
+}
