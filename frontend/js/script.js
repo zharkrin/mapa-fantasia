@@ -8,37 +8,52 @@ let escalaMundo = 1;
 // Referencias al DOM
 const selectorTamano = document.getElementById("tamano-mapa");
 const botonGenerar = document.getElementById("btn-generar");
+const mapaContainer = document.getElementById("mapa-container");
 
-// Inicialización del mapa
+// ==============================
+// Inicialización
+// ==============================
 window.addEventListener("DOMContentLoaded", () => {
   generarMapa();
 });
 
-// Evento: cambio de tamaño del mundo
+// ==============================
+// Cambio de tamaño del mundo
+// ==============================
 selectorTamano.addEventListener("change", () => {
   escalaMundo = parseInt(selectorTamano.value);
   generarMapa();
 });
 
-// Evento: botón Generar manualmente
+// ==============================
+// Botón "Generar mapa"
+// ==============================
 botonGenerar.addEventListener("click", () => {
   generarMapa();
 });
 
-// ==========================================
-// Función principal: generar el mapa completo
-// ==========================================
+// ==============================
+// Función principal
+// ==============================
 function generarMapa() {
-  const mapaContainer = document.getElementById("mapa-container");
-
-  // Limpia el contenedor antes de generar
+  // Limpia el contenedor
   mapaContainer.innerHTML = "";
 
-  // Ajuste de tamaño del mapa según escala
+  // Tamaño base del mapa
   const anchoBase = 1000;
   const altoBase = 600;
-  mapaContainer.style.width = `${anchoBase * escalaMundo * 0.8}px`;
-  mapaContainer.style.height = `${altoBase * escalaMundo * 0.8}px`;
+
+  // Escala visual real: más grande según tamaño del mundo
+  const factorEscalaVisual = 0.6 + escalaMundo * 0.25;
+  const anchoFinal = anchoBase * factorEscalaVisual;
+  const altoFinal = altoBase * factorEscalaVisual;
+
+  // Aplica el nuevo tamaño
+  mapaContainer.style.width = `${anchoFinal}px`;
+  mapaContainer.style.height = `${altoFinal}px`;
+
+  // Centra el mapa en la pantalla
+  mapaContainer.style.margin = "0 auto";
 
   // Genera terrenos especiales
   generarTerrenosEspeciales(mapaContainer, escalaMundo);
