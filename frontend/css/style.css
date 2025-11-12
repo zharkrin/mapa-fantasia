@@ -31,3 +31,43 @@
 #panel-controles button:hover {
   background-color: #ddd;
 }
+
+/* ============================
+   PANEL DE CONTROLES FIJO
+   ============================ */
+.panel-controles {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(20, 20, 20, 0.85);
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  z-index: 1000;
+  font-family: 'Cinzel', serif;
+}
+
+.panel-controles label {
+  margin-right: 8px;
+}
+
+.panel-controles select,
+.panel-controles button {
+  margin-left: 5px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.panel-controles button {
+  background-color: #3a7c3a;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.panel-controles button:hover {
+  background-color: #4e9c4e;
+}
