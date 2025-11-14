@@ -1,40 +1,87 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Generador de Mapa Fantástico</title>
-  <link rel="stylesheet" href="frontend/css/style.css">
-  <link rel="stylesheet" href="frontend/css/leyenda.css">
+<meta charset="UTF-8">
+<title>Generador de Mapa Fantástico</title>
+
+<!-- CSS PRINCIPAL -->
+<link rel="stylesheet" href="frontend/css/style.css">
+
+<!-- CSS DE LEYENDA -->
+<link rel="stylesheet" href="frontend/css/leyenda.css">
+
 </head>
 <body>
 
-  <h1>GENERADOR DE MAPA FANTÁSTICO</h1>
-  <p>Terrenos, biomas y lugares singulares</p>
+<h1>GENERADOR DE MAPA FANTÁSTICO</h1>
+<p>Terrenos, biomas y lugares singulares</p>
 
-  <!-- Panel fijo de controles -->
-  <div class="panel-controles">
-    <label for="tamano-mapa">Tamaño del mundo:</label>
-    <select id="tamano-mapa">
+<!-- ============================
+     PANEL DE CONTROLES (FIJO)
+     ============================ -->
+<div class="panel-controles">
+  <label for="tamano-mapa">Tamaño del mundo:</label>
+
+  <select id="tamano-mapa">
       <option value="1">1x Tierra</option>
       <option value="2">2x Tierra</option>
       <option value="3">3x Tierra</option>
       <option value="4">4x Tierra</option>
       <option value="5">5x Tierra</option>
-    </select>
-    <button id="btn-generar">Generar mapa</button>
-  </div>
+  </select>
 
-  <!-- Contenedor del mapa -->
-  <div id="mapa-container" style="position: relative; width: 1000px; height: 600px; border: 1px solid #000;">
-    <!-- Los iconos se colocarán aquí -->
-  </div>
+  <button id="btn-generar">Generar mapa</button>
+</div>
 
-  <!-- Leyenda de terrenos especiales -->
-  <div id="leyenda-terreno-especial" class="leyenda"></div>
 
-  <!-- Scripts -->
-  <script src="frontend/js/mapa/terrenoEspecial.js"></script>
-  <script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
-  <script src="frontend/js/script.js"></script>
+<!-- ============================
+     CONTENEDOR DEL MAPA
+     ============================ -->
+<div id="mapa-container">
+    <!-- Aquí se colocan los iconos -->
+</div>
+
+
+<!-- ============================
+     LEYENDA
+     ============================ -->
+<div id="leyenda-terreno-especial" class="leyenda"></div>
+
+
+<!-- ============================
+     SCRIPTS
+     ============================ -->
+
+<!-- Generación de iconos especiales -->
+<script src="frontend/js/mapa/terrenoEspecial.js"></script>
+
+<!-- Auto-leyenda -->
+<script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
+
+<!-- Script principal del mapa -->
+<script>
+/* =========================================================
+   CONTROL PRINCIPAL DEL GENERADOR  
+   - Reacciona al botón
+   - Reacciona también al cambio de tamaño del mapa
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const selectorTamano = document.getElementById("tamano-mapa");
+    const btnGenerar = document.getElementById("btn-generar");
+
+    // Generar mapa al cambiar tamaño
+    selectorTamano.addEventListener("change", () => {
+        generarTerrenosEspeciales();  
+    });
+
+    // Generar mapa al pulsar botón
+    btnGenerar.addEventListener("click", () => {
+        generarTerrenosEspeciales();
+    });
+});
+</script>
+
 </body>
 </html>
