@@ -1,80 +1,68 @@
-// ======================================================================
+// ==================================================
 // Leyenda de Terrenos Especiales
-// frontend/js/mapa/leyendaTerrenoEspecial.js
-//
-// Genera automáticamente una leyenda visual con todos los iconos
-// definidos en TerrenoEspecial.js (ICONOS_TERRENO).
-// ======================================================================
+// Archivo: frontend/js/mapa/leyendaTerrenoEspecial.js
+// Se encarga ÚNICAMENTE de construir la leyenda visual
+// de lugares singulares (terreno especial).
+// ==================================================
 
+(function () {
+    "use strict";
 
-// Contenedor donde se incrustará la leyenda
-const contenedorLeyendaTerrenoEspecial = document.getElementById("leyenda-terreno-especial");
+    // Lista base de terrenos especiales disponibles
+    // (los nombres son genéricos, los mapas darán nombres propios después)
+    const TERRENOS_ESPECIALES = [
+        { id: "volcan_especial", nombre: "Volcán especial", icono: "volcan.png" },
+        { id: "glaciar_especial", nombre: "Glaciar especial", icono: "glaciar.png" },
+        { id: "bosque_especial", nombre: "Bosque especial", icono: "bosque.png" },
+        { id: "pantano_especial", nombre: "Pantano especial", icono: "pantano.png" },
+        { id: "lago_especial", nombre: "Lago especial", icono: "lago.png" },
+        { id: "crater_especial", nombre: "Cráter especial", icono: "crater.png" }
+    ];
 
-// Si no existe el contenedor, no seguimos
-if (!contenedorLeyendaTerrenoEspecial) {
-    console.error("⚠ No existe el div #leyenda-terreno-especial en el HTML.");
-}
+    // Ruta base de iconos de terreno especial
+    const ICON_PATH = "frontend/static/img/icons/terreno/";
 
+    /**
+     * Crea la leyenda de terrenos especiales
+     */
+    function crearLeyendaTerrenoEspecial() {
+        const contenedor = document.getElementById("leyenda-terreno-especial");
 
-// ------------------------------------------------------------
-// Crear leyenda de Terreno Especial
-// ------------------------------------------------------------
-function generarLeyendaTerrenoEspecial() {
-    if (!window.ICONOS_TERRENO) {
-        console.error("⚠ ICONOS_TERRENO no está disponible.");
-        return;
+        if (!contenedor) {
+            console.warn("No se encontró el contenedor de la leyenda de terreno especial");
+            return;
+        }
+
+        // Limpiar contenido previo
+        contenedor.innerHTML = "";
+
+        // Crear título
+        const titulo = document.createElement("h3");
+        titulo.textContent = "Terrenos especiales";
+        contenedor.appendChild(titulo);
+
+        // Crear lista
+        const lista = document.createElement("ul");
+
+        TERRENOS_ESPECIALES.forEach(terreno => {
+            const item = document.createElement("li");
+
+            const img = document.createElement("img");
+            img.src = ICON_PATH + terreno.icono;
+            img.alt = terreno.nombre;
+
+            const texto = document.createElement("span");
+            texto.textContent = terreno.nombre;
+
+            item.appendChild(img);
+            item.appendChild(texto);
+            lista.appendChild(item);
+        });
+
+        contenedor.appendChild(lista);
     }
 
-    // Crear el contenedor principal
-    const wrapper = document.createElement("div");
-    wrapper.className = "leyenda-wrapper";
+    // Crear leyenda al cargar el documento
+    document.addEventListener("DOMContentLoaded", crearLeyendaTerrenoEspecial);
 
-    // Título plegable
-    const titulo = document.createElement("div");
-    titulo.className = "leyenda-titulo";
-    titulo.textContent = "Terrenos Especiales";
-
-    // Cuerpo donde están los íconos
-    const cuerpo = document.createElement("div");
-    cuerpo.className = "leyenda-cuerpo";
-
-    // Evento para plegar / desplegar
-    titulo.addEventListener("click", () => {
-        cuerpo.classList.toggle("oculto");
-    });
-
-    // Agregar cada icono de terreno
-    Object.entries(ICONOS_TERRENO).forEach(([clave, icono]) => {
-        const fila = document.createElement("div");
-        fila.className = "leyenda-item";
-
-        const img = document.createElement("img");
-        img.src = icono.options.iconUrl;
-        img.className = "leyenda-icono";
-
-        const nombre = document.createElement("span");
-        nombre.textContent = formatearNombre(clave);
-
-        fila.appendChild(img);
-        fila.appendChild(nombre);
-        cuerpo.appendChild(fila);
-    });
-
-    wrapper.appendChild(titulo);
-    wrapper.appendChild(cuerpo);
-    contenedorLeyendaTerrenoEspecial.appendChild(wrapper);
-}
-
-
-// ------------------------------------------------------------
-// Helper: Formatear nombre
-// ------------------------------------------------------------
-function formatearNombre(nombre) {
-    return nombre.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
-}
-
-
-// ------------------------------------------------------------
-// Ejecutar generación automáticamente
-// ------------------------------------------------------------
-document.addEventListener("DOMContentLoaded", generarLeyendaTerrenoEspecial);
+})();
