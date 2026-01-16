@@ -1,0 +1,87 @@
+/* ======================================================================
+   LEYENDA DE TERRENOS
+   Archivo: frontend/css/leyendaTerreno.css
+   Uso exclusivo para terrenos (montañas, ríos, costas, etc.)
+   ====================================================================== */
+
+/* Contenedor principal de la leyenda de terrenos */
+.leyenda-terreno {
+    position: fixed;
+    top: 80px;              /* debajo del panel de controles */
+    right: 260px;           /* separada de otras leyendas */
+    width: 220px;
+    max-height: 70vh;
+
+    overflow-y: auto;
+    padding: 10px;
+
+    background: rgba(255, 255, 255, 0.40);
+    backdrop-filter: blur(4px);
+
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+
+    transition: background 0.2s ease;
+    z-index: 998;
+}
+
+/* Al pasar el cursor, se vuelve sólida */
+.leyenda-terreno:hover {
+    background: rgba(255, 255, 255, 0.92);
+}
+
+/* Wrapper interno */
+.leyenda-terreno .leyenda-wrapper {
+    margin-bottom: 12px;
+}
+
+/* Título plegable */
+.leyenda-terreno .leyenda-titulo {
+    font-size: 15px;
+    font-weight: bold;
+
+    padding: 6px;
+    margin-bottom: 6px;
+
+    cursor: pointer;
+    user-select: none;
+
+    background: rgba(0, 0, 0, 0.10);
+    border-radius: 6px;
+}
+
+.leyenda-terreno .leyenda-titulo:hover {
+    background: rgba(0, 0, 0, 0.18);
+}
+
+/* Cuerpo */
+.leyenda-terreno .leyenda-cuerpo {
+    padding-left: 5px;
+}
+
+/* Oculto (plegado) */
+.leyenda-terreno .oculto {
+    display: none;
+}
+
+/* Item individual */
+.leyenda-terreno .leyenda-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+/* Icono */
+.leyenda-terreno .leyenda-icono {
+    width: 26px;
+    height: 26px;
+    margin-right: 6px;
+
+    image-rendering: crisp-edges;
+}
+
+/* Texto */
+.leyenda-terreno span {
+    font-size: 13px;
+    line-height: 1.2;
+}
