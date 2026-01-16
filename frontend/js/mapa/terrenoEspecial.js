@@ -1,127 +1,84 @@
-// ======================================================================
-// TerrenoEspecial – Capa de íconos especiales del mapa
-// frontend/js/mapa/terrenoEspecial.js
-//
-// Renderiza íconos especiales sobre el mapa usando un GeoJSON externo.
-// Cada ícono representa un tipo de terreno especial (acantilado, costa,
-// pantano, lago, playa, meseta, etc.).
-// ======================================================================
+// ==================================================
+// Generación de Terrenos Especiales
+// Archivo: frontend/js/mapa/terrenoEspecial.js
+// Coloca iconos especiales en el mapa según el tamaño del mundo
+// ==================================================
 
+(function () {
+    "use strict";
 
-// ----------------------------------------------------------
-// Ruta del archivo GeoJSON con los puntos de terrenos especiales
-// ----------------------------------------------------------
-const RUTA_TERR_REALES = "frontend/data/terreno_especial.geojson";
+    // Contenedor del mapa
+    const MAPA_ID = "mapa-container";
 
+    // Tamaño visual aproximado de los iconos (px)
+    const ICON_SIZE = 32;
 
-// ----------------------------------------------------------
-// Definición de iconos
-// ----------------------------------------------------------
-const ICONOS_TERRENO = {
-    acantilado: crearIcono("acantilado.png"),
-    canon: crearIcono("canon.png"),
-    colina: crearIcono("colina.png"),
-    costa: crearIcono("costa.png"),
-    humedal: crearIcono("humedal.png"),
-    lago: crearIcono("lago.png"),
-    mar: crearIcono("mar.png"),
-    meseta: crearIcono("mesera.png"),
-    montanas: crearIcono("montanas.png"),
-    oceano: crearIcono("oceano.png"),
-    pantano: crearIcono("pantano.png"),
-    playa: crearIcono("playa.png"),
-    pradera: crearIcono("pradera.png"),
-    sabana: crearIcono("sabana.png"),
-    estepa: crearIcono("estepa.png"),
-    desierto_calido: crearIcono("desierto_calido.png"),
-    desierto_frio: crearIcono("desierto_frio.png")
-};
+    // Terrenos especiales disponibles
+    const TERRENOS_ESPECIALES = [
+        { tipo: "volcan", icono: "volcan.png" },
+        { tipo: "glaciar", icono: "glaciar.png" },
+        { tipo: "bosque", icono: "bosque.png" },
+        { tipo: "pantano", icono: "pantano.png" },
+        { tipo: "lago", icono: "lago.png" },
+        { tipo: "crater", icono: "crater.png" }
+    ];
 
+    const ICON_PATH = "frontend/static/img/icons/terreno/";
 
-// ----------------------------------------------------------
-// Helper: Crea un icono Leaflet a partir del nombre de archivo
-// ----------------------------------------------------------
-function crearIcono(nombreArchivo) {
-    return L.icon({
-        iconUrl: `frontend/static/img/icons/${nombreArchivo}`,
-        iconSize: [38, 38],
-        iconAnchor: [19, 19],
-        popupAnchor: [0, -15]
-    });
-}
-
-
-// ----------------------------------------------------------
-// Capa global para poder activarla/desactivarla
-// ----------------------------------------------------------
-let capaTerrenoEspecial = null;
-
-
-// ----------------------------------------------------------
-// Cargar y mostrar terrenos especiales
-// ----------------------------------------------------------
-async function cargarTerrenoEspecial(map) {
-    try {
-        const respuesta = await fetch(RUTA_TERR_REALES);
-        const geojson = await respuesta.json();
-
-        capaTerrenoEspecial = L.geoJSON(geojson, {
-            pointToLayer: (feature, latlng) => {
-                const tipo = feature.properties.tipo;
-                const icono = ICONOS_TERRENO[tipo];
-
-                return L.marker(latlng, {
-                    icon: icono || ICONOS_TERRENO["colina"] // fallback seguro
-                });
-            },
-
-            onEachFeature: (feature, layer) => {
-                const tipo = feature.properties.tipo;
-                layer.bindPopup(`
-                    <b>Terreno Especial:</b> ${formatearNombre(tipo)}
-                `);
-            }
-        });
-
-        capaTerrenoEspecial.addTo(map);
-
-    } catch (err) {
-        console.error("Error cargando TerrenoEspecial:", err);
+    /**
+     * Calcula cuántos terrenos especiales generar
+     * 1 = Tierra, 2 = 2x Tierra, etc.
+     */
+    function calcularCantidad(tamanoMundo) {
+        const BASE = 6; // para 1x Tierra
+        return BASE * tamanoMundo;
     }
-}
 
-
-// ----------------------------------------------------------
-// Helper: Capitaliza y limpia nombres
-// ----------------------------------------------------------
-function formatearNombre(nombre) {
-    return nombre
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, l => l.toUpperCase());
-}
-
-
-// ----------------------------------------------------------
-// Funciones para activar / desactivar la capa
-// ----------------------------------------------------------
-function mostrarTerrenoEspecial(map) {
-    if (capaTerrenoEspecial && !map.hasLayer(capaTerrenoEspecial)) {
-        capaTerrenoEspecial.addTo(map);
+    /**
+     * Limpia los terrenos especiales existentes
+     */
+    function limpiarTerrenosEspeciales() {
+        const mapa = document.getElementById(MAPA_ID);
+        const existentes = mapa.querySelectorAll(".terreno-especial");
+        existentes.forEach(e => e.remove());
     }
-}
 
-function ocultarTerrenoEspecial(map) {
-    if (capaTerrenoEspecial && map.hasLayer(capaTerrenoEspecial)) {
-        map.removeLayer(capaTerrenoEspecial);
+    /**
+     * Genera terrenos especiales en el mapa
+     */
+    function generarTerrenosEspeciales(tamanoMundo) {
+        const mapa = document.getElementById(MAPA_ID);
+        if (!mapa) return;
+
+        limpiarTerrenosEspeciales();
+
+        const cantidad = calcularCantidad(tamanoMundo);
+        const ancho = mapa.clientWidth;
+        const alto = mapa.clientHeight;
+
+        for (let i = 0; i < cantidad; i++) {
+            const terreno = TERRENOS_ESPECIALES[
+                Math.floor(Math.random() * TERRENOS_ESPECIALES.length)
+            ];
+
+            const icono = document.createElement("img");
+            icono.src = ICON_PATH + terreno.icono;
+            icono.className = "terreno-especial";
+
+            // Posición aleatoria dentro del mapa
+            const x = Math.random() * (ancho - ICON_SIZE);
+            const y = Math.random() * (alto - ICON_SIZE);
+
+            icono.style.left = `${x}px`;
+            icono.style.top = `${y}px`;
+
+            mapa.appendChild(icono);
+        }
     }
-}
 
+    // --------------------------------------------------
+    // EXPONER FUNCIÓN GLOBAL (para index.html)
+    // --------------------------------------------------
+    window.generarTerrenosEspeciales = generarTerrenosEspeciales;
 
-// ----------------------------------------------------------
-// Exportación pública
-// ----------------------------------------------------------
-window.TerrenoEspecial = {
-    cargarTerrenoEspecial,
-    mostrarTerrenoEspecial,
-    ocultarTerrenoEspecial
-};
+})();
