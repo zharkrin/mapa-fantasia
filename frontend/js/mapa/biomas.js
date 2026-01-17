@@ -1,7 +1,5 @@
 // ==================================================
-// Generación de Biomas
-// Archivo: frontend/js/mapa/biomas.js
-// Coloca iconos de biomas según el tamaño del mundo
+// Generación de Biomas con colisiones
 // ==================================================
 
 (function () {
@@ -9,8 +7,8 @@
 
     const MAPA_ID = "mapa-container";
     const ICON_SIZE = 32;
+    const MAX_INTENTOS = 30;
 
-    // Biomas disponibles
     const BIOMAS = [
         { tipo: "bosque", icono: "bosque.png" },
         { tipo: "bosque_boreal", icono: "bosque_boreal.png" },
@@ -25,27 +23,15 @@
 
     const ICON_PATH = "frontend/static/img/icons/";
 
-    /**
-     * Cantidad de biomas según tamaño del mundo
-     * 1x Tierra = base
-     */
     function calcularCantidadBiomas(tamanoMundo) {
-        const BASE = 20; // para 1x Tierra
-        return BASE * tamanoMundo;
+        return 20 * tamanoMundo;
     }
 
-    /**
-     * Limpia biomas existentes
-     */
     function limpiarBiomas() {
         const mapa = document.getElementById(MAPA_ID);
-        const existentes = mapa.querySelectorAll(".bioma");
-        existentes.forEach(b => b.remove());
+        mapa.querySelectorAll(".bioma").forEach(b => b.remove());
     }
 
-    /**
-     * Genera biomas en el mapa
-     */
     function generarBiomas(tamanoMundo) {
         const mapa = document.getElementById(MAPA_ID);
         if (!mapa) return;
@@ -57,27 +43,35 @@
         const alto = mapa.clientHeight;
 
         for (let i = 0; i < cantidad; i++) {
-            const bioma = BIOMAS[
-                Math.floor(Math.random() * BIOMAS.length)
-            ];
+            const bioma = BIOMAS[Math.floor(Math.random() * BIOMAS.length)];
+            let colocado = false;
+            let intentos = 0;
 
-            const icono = document.createElement("img");
-            icono.src = ICON_PATH + bioma.icono;
-            icono.className = "bioma";
+            while (!colocado && intentos < MAX_INTENTOS) {
+                const x = Math.random() * (ancho - ICON_SIZE);
+                const y = Math.random() * (alto - ICON_SIZE);
 
-            const x = Math.random() * (ancho - ICON_SIZE);
-            const y = Math.random() * (alto - ICON_SIZE);
+                if (window.colisionesMapa.posicionLibre(x, y, ICON_SIZE, ICON_SIZE)) {
+                    const icono = document.createElement("img");
+                    icono.src = ICON_PATH + bioma.icono;
+                    icono.className = "bioma";
+                    icono.style.left = `${x}px`;
+                    icono.style.top = `${y}px`;
 
-            icono.style.left = `${x}px`;
-            icono.style.top = `${y}px`;
+                    mapa.appendChild(icono);
 
-            mapa.appendChild(icono);
+                    window.colisionesMapa.registrarOcupado(
+                        x, y, ICON_SIZE, ICON_SIZE
+                    );
+
+                    colocado = true;
+                }
+
+                intentos++;
+            }
         }
     }
 
-    // --------------------------------------------------
-    // FUNCIÓN GLOBAL
-    // --------------------------------------------------
     window.generarBiomas = generarBiomas;
 
 })();
