@@ -1,5 +1,5 @@
 // ==================================================
-// Generación de Biomas con colisiones y reglas lógicas
+// Generación de Biomas con reglas climáticas y lógicas
 // ==================================================
 
 (function () {
@@ -74,9 +74,12 @@
                 const x = Math.random() * (ancho - ICON_SIZE);
                 const y = Math.random() * (alto - ICON_SIZE);
 
+                const zona = window.zonasClimaticas.obtenerZonaClimatica(y, alto);
+
                 if (
                     window.colisionesMapa.posicionLibre(x, y, ICON_SIZE, ICON_SIZE) &&
-                    biomaCompatibleConVecinos(bioma.tipo, x, y, existentes)
+                    biomaCompatibleConVecinos(bioma.tipo, x, y, existentes) &&
+                    window.zonasClimaticas.biomaCompatibleConZona(bioma.tipo, zona)
                 ) {
                     const icono = document.createElement("img");
                     icono.src = ICON_PATH + bioma.icono;
