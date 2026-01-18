@@ -1,5 +1,6 @@
 // ==================================================
-// Generación de Biomas con reglas climáticas y lógicas
+// Generación de Biomas (solo sobre tierra)
+// Archivo: frontend/js/mapa/biomas.js
 // ==================================================
 
 (function () {
@@ -8,7 +9,6 @@
     const MAPA_ID = "mapa-container";
     const ICON_SIZE = 32;
     const MAX_INTENTOS = 40;
-    const RADIO_INFLUENCIA = 80;
 
     const BIOMAS = [
         { tipo: "bosque", icono: "bosque.png" },
@@ -16,14 +16,10 @@
         { tipo: "bosque_tropical", icono: "bosque_tropical.png" },
         { tipo: "desierto_calido", icono: "desierto_calido.png" },
         { tipo: "desierto_frio", icono: "desierto_frio.png" },
-        { tipo: "tundra", icono: "tundra.png" },
-        { tipo: "sabana", icono: "sabana.png" },
+        { tipo: "estepa", icono: "estepa.png" },
         { tipo: "pradera", icono: "pradera.png" },
         { tipo: "humedal", icono: "humedal.png" },
-        { tipo: "pantano", icono: "pantano.png" },
-        { tipo: "selva_tropical", icono: "selva_tropical.png" },
-        { tipo: "manglar", icono: "manglar.png" },
-        { tipo: "glaciar", icono: "glaciar.png" }
+        { tipo: "pantano", icono: "pantano.png" }
     ];
 
     const ICON_PATH = "frontend/static/img/icons/biomas/";
@@ -37,30 +33,12 @@
         mapa.querySelectorAll(".bioma").forEach(b => b.remove());
     }
 
-    function distancia(a, b) {
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-
-    function biomaCompatibleConVecinos(tipo, x, y, existentes) {
-        for (const otro of existentes) {
-            if (distancia({ x, y }, otro) < RADIO_INFLUENCIA) {
-                if (!window.reglasBiomas.biomasCompatibles(tipo, otro.tipo)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     function generarBiomas(tamanoMundo) {
         const mapa = document.getElementById(MAPA_ID);
-        if (!mapa) return;
+        if (!mapa || !window.terrenoBase) return;
 
         limpiarBiomas();
 
-        const existentes = [];
         const cantidad = calcularCantidadBiomas(tamanoMundo);
         const ancho = mapa.clientWidth;
         const alto = mapa.clientHeight;
@@ -74,19 +52,24 @@
                 const x = Math.random() * (ancho - ICON_SIZE);
                 const y = Math.random() * (alto - ICON_SIZE);
 
-                const zona = window.zonasClimaticas.obtenerZonaClimatica(y, alto);
+                // 🔴 CONDICIÓN CLAVE: solo tierra
+                if (!window.terrenoBase.esTierra(x, y)) {
+                    intentos++;
+                    continue;
+                }
 
-                if (
-                    window.colisionesMapa.posicionLibre(x, y, ICON_SIZE, ICON_SIZE) &&
-                    biomaCompatibleConVecinos(bioma.tipo, x, y, existentes) &&
-                    window.zonasClimaticas.biomaCompatibleConZona(bioma.tipo, zona)
-                ) {
+                // 🔵 Colisiones
+                if (window.colisionesMapa.posicionLibre(x, y, ICON_SIZE, ICON_SIZE)) {
                     const icono = document.createElement("img");
                     icono.src = ICON_PATH + bioma.icono;
                     icono.className = "bioma";
-                    icono.dataset.tipo = bioma.tipo;
+                    icono.title = bioma.tipo.replace("_", " ");
+
+                    icono.style.position = "absolute";
                     icono.style.left = `${x}px`;
                     icono.style.top = `${y}px`;
+                    icono.style.width = `${ICON_SIZE}px`;
+                    icono.style.height = `${ICON_SIZE}px`;
 
                     mapa.appendChild(icono);
 
@@ -94,7 +77,6 @@
                         x, y, ICON_SIZE, ICON_SIZE
                     );
 
-                    existentes.push({ tipo: bioma.tipo, x, y });
                     colocado = true;
                 }
 
@@ -103,6 +85,7 @@
         }
     }
 
+    // Exponer función pública
     window.generarBiomas = generarBiomas;
 
 })();
