@@ -1,113 +1,133 @@
-// ==================================================
-// Generación de Ríos (tierra → mar)
-// Archivo: frontend/js/mapa/rios.js
-// ==================================================
+/**************************************************
+ * RÍOS - LÓGICA PURA
+ * Genera ríos como recorridos de puntos
+ **************************************************/
 
-(function () {
-    "use strict";
+// Configuración base
+const MAX_RIOS = 12;
+const LONGITUD_MIN_RIO = 6;
+const LONGITUD_MAX_RIO = 20;
 
-    const MAPA_ID = "mapa-container";
-    const MAX_RIOS_POR_ESCALA = 6;
-    const PASO = 12;
-    const MAX_LONGITUD = 120;
+/**
+ * Genera todos los ríos del mapa
+ * @param {Array} celdas - grid del mapa con altura y tipo
+ * @param {number} ancho
+ * @param {number} alto
+ * @returns {Array} rios
+ */
+function generarRios(celdas, ancho, alto) {
+  const rios = [];
+  const nacimientos = buscarZonasAltas(celdas);
 
-    function calcularCantidadRios(tamanoMundo) {
-        return Math.max(2, Math.floor(tamanoMundo * MAX_RIOS_POR_ESCALA));
+  shuffleArray(nacimientos);
+
+  for (let i = 0; i < nacimientos.length && rios.length < MAX_RIOS; i++) {
+    const inicio = nacimientos[i];
+    const rio = generarRioDesde(inicio, celdas, ancho, alto);
+
+    if (rio.length >= LONGITUD_MIN_RIO) {
+      rios.push(rio);
     }
+  }
 
-    function limpiarRios() {
-        const mapa = document.getElementById(MAPA_ID);
-        mapa.querySelectorAll(".rio-svg").forEach(r => r.remove());
+  return rios;
+}
+
+/**
+ * Busca posibles nacimientos (zonas altas)
+ */
+function buscarZonasAltas(celdas) {
+  return celdas.filter(celda =>
+    celda.altura >= 0.75 &&
+    celda.tipo !== "mar" &&
+    celda.tipo !== "oceano"
+  );
+}
+
+/**
+ * Genera un río desde una celda inicial
+ */
+function generarRioDesde(inicio, celdas, ancho, alto) {
+  const rio = [];
+  const visitadas = new Set();
+
+  let actual = inicio;
+
+  while (actual && rio.length < LONGITUD_MAX_RIO) {
+    const key = `${actual.x},${actual.y}`;
+    if (visitadas.has(key)) break;
+
+    rio.push(actual);
+    visitadas.add(key);
+
+    const siguiente = buscarCeldaMasBaja(actual, celdas, ancho, alto);
+    if (!siguiente) break;
+
+    actual = siguiente;
+
+    if (actual.tipo === "mar" || actual.tipo === "oceano") {
+      rio.push(actual);
+      break;
     }
+  }
 
-    function generarRios(tamanoMundo) {
-        const mapa = document.getElementById(MAPA_ID);
-        if (!mapa || !window.terrenoBase) return;
+  return rio;
+}
 
-        limpiarRios();
+/**
+ * Busca la celda vecina más baja
+ */
+function buscarCeldaMasBaja(celda, celdas, ancho, alto) {
+  const vecinos = obtenerVecinos(celda, celdas, ancho, alto);
 
-        const cantidad = calcularCantidadRios(tamanoMundo);
-        const ancho = mapa.clientWidth;
-        const alto = mapa.clientHeight;
+  let mejor = null;
+  let alturaMin = celda.altura;
 
-        for (let i = 0; i < cantidad; i++) {
-            const inicio = buscarInicioEnTierra(ancho, alto);
-            if (!inicio) continue;
-
-            const puntos = trazarRio(inicio.x, inicio.y, ancho, alto);
-            if (puntos.length > 3) {
-                dibujarRio(puntos);
-            }
-        }
+  for (const v of vecinos) {
+    if (v.altura < alturaMin) {
+      alturaMin = v.altura;
+      mejor = v;
     }
+  }
 
-    function buscarInicioEnTierra(ancho, alto) {
-        for (let i = 0; i < 40; i++) {
-            const x = Math.random() * ancho;
-            const y = Math.random() * alto;
+  return mejor;
+}
 
-            if (window.terrenoBase.esTierra(x, y)) {
-                return { x, y };
-            }
-        }
-        return null;
+/**
+ * Obtiene vecinos ortogonales
+ */
+function obtenerVecinos(celda, celdas, ancho, alto) {
+  const offsets = [
+    { x: 0, y: -1 },
+    { x: 1, y: 0 },
+    { x: 0, y: 1 },
+    { x: -1, y: 0 }
+  ];
+
+  const vecinos = [];
+
+  for (const o of offsets) {
+    const nx = celda.x + o.x;
+    const ny = celda.y + o.y;
+
+    if (nx >= 0 && ny >= 0 && nx < ancho && ny < alto) {
+      const index = ny * ancho + nx;
+      vecinos.push(celdas[index]);
     }
+  }
 
-    function trazarRio(x, y, ancho, alto) {
-        const puntos = [];
-        let dirX = (Math.random() - 0.5) * 2;
-        let dirY = Math.random();
+  return vecinos;
+}
 
-        for (let i = 0; i < MAX_LONGITUD; i++) {
-            if (!window.terrenoBase.esTierra(x, y)) break;
+/**
+ * Baraja un array (Fisher–Yates)
+ */
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 
-            puntos.push({ x, y });
-
-            // ligera variación natural
-            dirX += (Math.random() - 0.5) * 0.3;
-            dirY += Math.random() * 0.4;
-
-            const mag = Math.hypot(dirX, dirY) || 1;
-            dirX /= mag;
-            dirY /= mag;
-
-            x += dirX * PASO;
-            y += dirY * PASO;
-
-            if (x < 0 || y < 0 || x > ancho || y > alto) break;
-        }
-
-        return puntos;
-    }
-
-    function dibujarRio(puntos) {
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.classList.add("rio-svg");
-        svg.style.position = "absolute";
-        svg.style.left = 0;
-        svg.style.top = 0;
-        svg.style.width = "100%";
-        svg.style.height = "100%";
-        svg.style.pointerEvents = "none";
-
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-
-        let d = `M ${puntos[0].x} ${puntos[0].y}`;
-        for (let i = 1; i < puntos.length; i++) {
-            d += ` L ${puntos[i].x} ${puntos[i].y}`;
-        }
-
-        path.setAttribute("d", d);
-        path.setAttribute("stroke", "#2b6cff");
-        path.setAttribute("stroke-width", "2");
-        path.setAttribute("fill", "none");
-        path.setAttribute("opacity", "0.9");
-
-        svg.appendChild(path);
-        document.getElementById(MAPA_ID).appendChild(svg);
-    }
-
-    // Exponer función pública
-    window.generarRios = generarRios;
-
-})();
+// Exposición global (proyecto sin módulos ES)
+window.generarRios = generarRios;
