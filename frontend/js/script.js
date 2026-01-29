@@ -1,63 +1,59 @@
-// ==============================
-// Generador de Mapa Fantástico
-// ==============================
+/**************************************************
+ * GENERADOR PRINCIPAL DEL MAPA
+ **************************************************/
 
-// Escala del mundo (1 = tamaño Tierra)
-let escalaMundo = 1;
-
-// Referencias al DOM
 const selectorTamano = document.getElementById("tamano-mapa");
 const botonGenerar = document.getElementById("btn-generar");
-const mapaContainer = document.getElementById("mapa-container");
+const mapaContainer = document.getElementById("mapa");
 
-// ==============================
-// Inicialización
-// ==============================
-window.addEventListener("DOMContentLoaded", () => {
-  generarMapa();
-});
+const TAM_CELDA = 16;
 
-// ==============================
-// Cambio de tamaño del mundo
-// ==============================
-selectorTamano.addEventListener("change", () => {
-  escalaMundo = parseInt(selectorTamano.value);
-  generarMapa();
-});
+// Estado global del mapa
+let datosMapa = null;
+let riosGenerados = null;
 
-// ==============================
-// Botón "Generar mapa"
-// ==============================
-botonGenerar.addEventListener("click", () => {
-  generarMapa();
-});
+/**
+ * Genera TODO el mapa
+ */
+function generarMapaCompleto() {
+  const escala = parseInt(selectorTamano.value, 10);
 
-// ==============================
-// Función principal
-// ==============================
-function generarMapa() {
-  // Limpia el contenedor
+  // 1️⃣ Limpiar mapa
   mapaContainer.innerHTML = "";
 
-  // Tamaño base del mapa
-  const anchoBase = 1000;
-  const altoBase = 600;
+  // 2️⃣ Generar estructura base
+  datosMapa = generarMapaBase(escala);
 
-  // Escala visual real: más grande según tamaño del mundo
-  const factorEscalaVisual = 0.6 + escalaMundo * 0.25;
-  const anchoFinal = anchoBase * factorEscalaVisual;
-  const altoFinal = altoBase * factorEscalaVisual;
+  // 3️⃣ Biomas y terrenos
+  generarBiomas(datosMapa);
+  generarTerrenos(datosMapa);
 
-  // Aplica el nuevo tamaño
-  mapaContainer.style.width = `${anchoFinal}px`;
-  mapaContainer.style.height = `${altoFinal}px`;
+  // 4️⃣ Terrenos especiales
+  generarTerrenosEspeciales(datosMapa);
 
-  // Centra el mapa en la pantalla
-  mapaContainer.style.margin = "0 auto";
+  // 5️⃣ Dibujar mapa base
+  dibujarMapa(datosMapa, mapaContainer, TAM_CELDA);
 
-  // Genera terrenos especiales
-  generarTerrenosEspeciales(mapaContainer, escalaMundo);
+  // 6️⃣ Generar ríos (usa alturas)
+  riosGenerados = generarRios(datosMapa);
 
-  // Actualiza la leyenda
-  generarLeyendaTerrenosEspeciales();
+  // 7️⃣ Dibujar ríos
+  dibujarRios(riosGenerados, mapaContainer, TAM_CELDA);
 }
+
+/**************************************************
+ * EVENTOS
+ **************************************************/
+
+// Cambio de tamaño → genera automáticamente
+selectorTamano.addEventListener("change", () => {
+  generarMapaCompleto();
+});
+
+// Botón → regenerar con mismo tamaño
+botonGenerar.addEventListener("click", () => {
+  generarMapaCompleto();
+});
+
+// Generación inicial
+generarMapaCompleto();
