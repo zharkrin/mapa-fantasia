@@ -20,3 +20,4 @@ function dibujarLagos(lagos, mapaContainer, tamCelda) {
 }
 
 window.dibujarLagos = dibujarLagos;
+
