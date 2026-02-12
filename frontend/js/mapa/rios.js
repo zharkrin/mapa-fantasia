@@ -1,5 +1,5 @@
 /**************************************************
- * RÍOS - LÓGICA PURA
+ * RÍOS - LÓGICA PURA (VERSIÓN ORGÁNICA)
  * Genera ríos como recorridos de puntos
  **************************************************/
 
@@ -10,10 +10,6 @@ const LONGITUD_MAX_RIO = 20;
 
 /**
  * Genera todos los ríos del mapa
- * @param {Array} celdas - grid del mapa con altura y tipo
- * @param {number} ancho
- * @param {number} alto
- * @returns {Array} rios
  */
 function generarRios(celdas, ancho, alto) {
   const rios = [];
@@ -46,12 +42,14 @@ function buscarZonasAltas(celdas) {
 
 /**
  * Genera un río desde una celda inicial
+ * (Ahora con curvatura orgánica)
  */
 function generarRioDesde(inicio, celdas, ancho, alto) {
   const rio = [];
   const visitadas = new Set();
 
   let actual = inicio;
+  let direccionAnterior = null;
 
   while (actual && rio.length < LONGITUD_MAX_RIO) {
     const key = `${actual.x},${actual.y}`;
@@ -60,8 +58,20 @@ function generarRioDesde(inicio, celdas, ancho, alto) {
     rio.push(actual);
     visitadas.add(key);
 
-    const siguiente = buscarCeldaMasBaja(actual, celdas, ancho, alto);
+    const siguiente = buscarCeldaOrganica(
+      actual,
+      direccionAnterior,
+      celdas,
+      ancho,
+      alto
+    );
+
     if (!siguiente) break;
+
+    direccionAnterior = {
+      dx: siguiente.x - actual.x,
+      dy: siguiente.y - actual.y
+    };
 
     actual = siguiente;
 
@@ -75,17 +85,38 @@ function generarRioDesde(inicio, celdas, ancho, alto) {
 }
 
 /**
- * Busca la celda vecina más baja
+ * Selecciona siguiente celda con curvatura natural
  */
-function buscarCeldaMasBaja(celda, celdas, ancho, alto) {
+function buscarCeldaOrganica(celda, direccionAnterior, celdas, ancho, alto) {
   const vecinos = obtenerVecinos(celda, celdas, ancho, alto);
 
   let mejor = null;
-  let alturaMin = celda.altura;
+  let mejorScore = Infinity;
 
   for (const v of vecinos) {
-    if (v.altura < alturaMin) {
-      alturaMin = v.altura;
+
+    // Solo bajamos o nos mantenemos
+    if (v.altura > celda.altura) continue;
+
+    const dx = v.x - celda.x;
+    const dy = v.y - celda.y;
+
+    let penalizacionGiro = 0;
+
+    if (direccionAnterior) {
+      const cambio =
+        Math.abs(dx - direccionAnterior.dx) +
+        Math.abs(dy - direccionAnterior.dy);
+
+      penalizacionGiro = cambio * 0.05;
+    }
+
+    const ruido = Math.random() * 0.02;
+
+    const score = v.altura + penalizacionGiro + ruido;
+
+    if (score < mejorScore) {
+      mejorScore = score;
       mejor = v;
     }
   }
@@ -129,5 +160,5 @@ function shuffleArray(array) {
   }
 }
 
-// Exposición global (proyecto sin módulos ES)
+// Exposición global
 window.generarRios = generarRios;
