@@ -1,15 +1,28 @@
 /**************************************************
- * RÍOS - LÓGICA PURA (VERSIÓN ORGÁNICA)
- * Genera ríos como recorridos de puntos
+ * RÍOS - SISTEMA COMPLETO
+ * ORGÁNICO + EROSIÓN + MEANDROS
+ * CAUDAL ACUMULATIVO + CASCADAS
  **************************************************/
 
 // Configuración base
 const MAX_RIOS = 12;
 const LONGITUD_MIN_RIO = 6;
-const LONGITUD_MAX_RIO = 20;
+const LONGITUD_MAX_RIO = 25;
+
+// Erosión
+const EROSION_BASE = 0.01;
+const EROSION_EXTRA_BAJA_ALTURA = 0.015;
+const EROSION_CASCADA = 0.05;
+
+// Meandros
+const UMBRAL_PENDIENTE_PLANA = 0.03;
+const PROBABILIDAD_MEANDRO = 0.35;
+
+// Cascadas
+const UMBRAL_CASCADA = 0.15;
 
 /**
- * Genera todos los ríos del mapa
+ * Genera todos los ríos
  */
 function generarRios(celdas, ancho, alto) {
   const rios = [];
@@ -22,15 +35,18 @@ function generarRios(celdas, ancho, alto) {
     const rio = generarRioDesde(inicio, celdas, ancho, alto);
 
     if (rio.length >= LONGITUD_MIN_RIO) {
+      aplicarErosion(rio);
       rios.push(rio);
     }
   }
+
+  calcularCaudalGlobal(rios);
 
   return rios;
 }
 
 /**
- * Busca posibles nacimientos (zonas altas)
+ * Busca nacimientos en altura elevada
  */
 function buscarZonasAltas(celdas) {
   return celdas.filter(celda =>
@@ -41,8 +57,7 @@ function buscarZonasAltas(celdas) {
 }
 
 /**
- * Genera un río desde una celda inicial
- * (Ahora con curvatura orgánica)
+ * Genera un río
  */
 function generarRioDesde(inicio, celdas, ancho, alto) {
   const rio = [];
@@ -50,10 +65,14 @@ function generarRioDesde(inicio, celdas, ancho, alto) {
 
   let actual = inicio;
   let direccionAnterior = null;
+  let caudal = 1;
 
   while (actual && rio.length < LONGITUD_MAX_RIO) {
     const key = `${actual.x},${actual.y}`;
     if (visitadas.has(key)) break;
+
+    actual.rio = true;
+    actual.caudal = (actual.caudal || 0) + caudal;
 
     rio.push(actual);
     visitadas.add(key);
@@ -68,12 +87,20 @@ function generarRioDesde(inicio, celdas, ancho, alto) {
 
     if (!siguiente) break;
 
+    // 🌊 DETECTAR CASCADA
+    const salto = actual.altura - siguiente.altura;
+    if (salto > UMBRAL_CASCADA) {
+      actual.cascada = true;
+    }
+
     direccionAnterior = {
       dx: siguiente.x - actual.x,
       dy: siguiente.y - actual.y
     };
 
     actual = siguiente;
+
+    caudal += 0.5;
 
     if (actual.tipo === "mar" || actual.tipo === "oceano") {
       rio.push(actual);
@@ -85,7 +112,7 @@ function generarRioDesde(inicio, celdas, ancho, alto) {
 }
 
 /**
- * Selecciona siguiente celda con curvatura natural
+ * Selección orgánica
  */
 function buscarCeldaOrganica(celda, direccionAnterior, celdas, ancho, alto) {
   const vecinos = obtenerVecinos(celda, celdas, ancho, alto);
@@ -95,8 +122,9 @@ function buscarCeldaOrganica(celda, direccionAnterior, celdas, ancho, alto) {
 
   for (const v of vecinos) {
 
-    // Solo bajamos o nos mantenemos
     if (v.altura > celda.altura) continue;
+
+    const pendiente = celda.altura - v.altura;
 
     const dx = v.x - celda.x;
     const dy = v.y - celda.y;
@@ -111,9 +139,21 @@ function buscarCeldaOrganica(celda, direccionAnterior, celdas, ancho, alto) {
       penalizacionGiro = cambio * 0.05;
     }
 
+    let bonusMeandro = 0;
+
+    if (pendiente < UMBRAL_PENDIENTE_PLANA) {
+      if (Math.random() < PROBABILIDAD_MEANDRO) {
+        bonusMeandro = -0.02;
+      }
+    }
+
     const ruido = Math.random() * 0.02;
 
-    const score = v.altura + penalizacionGiro + ruido;
+    const score =
+      v.altura +
+      penalizacionGiro +
+      ruido +
+      bonusMeandro;
 
     if (score < mejorScore) {
       mejorScore = score;
@@ -125,7 +165,43 @@ function buscarCeldaOrganica(celda, direccionAnterior, celdas, ancho, alto) {
 }
 
 /**
- * Obtiene vecinos ortogonales
+ * Aplica erosión
+ */
+function aplicarErosion(rio) {
+  for (let i = 0; i < rio.length; i++) {
+    const celda = rio[i];
+
+    let erosion = EROSION_BASE;
+
+    if (celda.altura < 0.5) {
+      erosion += EROSION_EXTRA_BAJA_ALTURA;
+    }
+
+    if (celda.cascada) {
+      erosion += EROSION_CASCADA;
+    }
+
+    celda.altura = Math.max(0, celda.altura - erosion);
+  }
+}
+
+/**
+ * Recalcula caudal acumulado
+ */
+function calcularCaudalGlobal(rios) {
+  for (const rio of rios) {
+    for (let i = 0; i < rio.length; i++) {
+      const celda = rio[i];
+
+      if (!celda.caudal) celda.caudal = 1;
+
+      celda.anchoRio = Math.min(4, Math.floor(celda.caudal / 2));
+    }
+  }
+}
+
+/**
+ * Vecinos ortogonales
  */
 function obtenerVecinos(celda, celdas, ancho, alto) {
   const offsets = [
@@ -151,7 +227,7 @@ function obtenerVecinos(celda, celdas, ancho, alto) {
 }
 
 /**
- * Baraja un array (Fisher–Yates)
+ * Shuffle
  */
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -160,5 +236,4 @@ function shuffleArray(array) {
   }
 }
 
-// Exposición global
 window.generarRios = generarRios;
