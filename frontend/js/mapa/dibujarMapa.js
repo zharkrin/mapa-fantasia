@@ -1,6 +1,6 @@
 // =======================================================
 // frontend/js/mapa/dibujarMapa.js
-// Dibuja los iconos del terreno, biomas y lugares especiales
+// Dibuja terrenos, biomas, especiales y ríos
 // =======================================================
 
 import { tiposTerreno } from "./generacionTerreno.js";
@@ -9,12 +9,14 @@ import { tiposBiomas } from "./biomas.js";
 const rutaTerrenos = "frontend/static/img/icons/terreno/";
 const rutaBiomas = "frontend/static/img/icons/biomas/";
 const rutaEspeciales = "frontend/static/img/icons/terreno_especial/";
+const rutaRios = "frontend/static/img/icons/rios/";
 
-export function dibujarMapa(terrenos, biomas, especiales) {
+export function dibujarMapa(terrenos, biomas, especiales, rios) {
+
   const contenedor = document.getElementById("mapa-container");
   contenedor.innerHTML = "";
 
-  // Dibujar terrenos
+  // Terrenos
   terrenos.forEach(t => {
     const img = document.createElement("img");
     img.src = `${rutaTerrenos}${t.tipo}.png`;
@@ -24,7 +26,7 @@ export function dibujarMapa(terrenos, biomas, especiales) {
     contenedor.appendChild(img);
   });
 
-  // Dibujar biomas
+  // Biomas
   biomas.forEach(b => {
     const img = document.createElement("img");
     img.src = `${rutaBiomas}${b.tipo}.png`;
@@ -34,7 +36,7 @@ export function dibujarMapa(terrenos, biomas, especiales) {
     contenedor.appendChild(img);
   });
 
-  // Dibujar lugares especiales
+  // Especiales
   if (especiales && Array.isArray(especiales)) {
     especiales.forEach(e => {
       const img = document.createElement("img");
@@ -42,6 +44,18 @@ export function dibujarMapa(terrenos, biomas, especiales) {
       img.classList.add("icono-especial");
       img.style.left = `${e.x}px`;
       img.style.top = `${e.y}px`;
+      contenedor.appendChild(img);
+    });
+  }
+
+  // 🔵 RÍOS
+  if (rios && Array.isArray(rios)) {
+    rios.forEach(r => {
+      const img = document.createElement("img");
+      img.src = `${rutaRios}${r.tipo}.png`;
+      img.classList.add("icono-rio");
+      img.style.left = `${r.x}px`;
+      img.style.top = `${r.y}px`;
       contenedor.appendChild(img);
     });
   }
