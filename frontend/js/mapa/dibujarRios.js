@@ -1,42 +1,52 @@
-/**************************************************
- * DIBUJAR RÍOS CON ANCHURA PROGRESIVA
- **************************************************/
+// =======================================================
+// frontend/js/mapa/dibujarRios.js
+// Sistema 11 - Ríos con sprites direccionales
+// =======================================================
 
-function dibujarRios(rios, mapaContainer, tamCelda) {
-  const anteriores = mapaContainer.querySelectorAll(".rio");
-  anteriores.forEach(r => r.remove());
+const rutaRios = "frontend/static/img/icons/rio/";
+
+export function dibujarRios(rios) {
+  const contenedor = document.getElementById("mapa-container");
 
   rios.forEach(rio => {
-    const longitud = rio.length;
+    for (let i = 0; i < rio.length; i++) {
+      const actual = rio[i];
+      const anterior = rio[i - 1];
+      const siguiente = rio[i + 1];
 
-    rio.forEach((celda, index) => {
+      const img = document.createElement("img");
+      img.classList.add("icono-rio");
 
-      // Cálculo de grosor progresivo
-      const factor = index / longitud; // 0 → 1
-      const grosor = 1 + Math.floor(factor * 2); 
-      // mínimo 1 celda, máximo 3
+      img.src = rutaRios + obtenerSpriteRio(anterior, actual, siguiente);
+      img.style.left = `${actual.x}px`;
+      img.style.top = `${actual.y}px`;
 
-      pintarCeldaRio(celda, mapaContainer, tamCelda);
-
-      // Expandimos lateralmente según grosor
-      if (grosor > 1) {
-        const vecinos = obtenerVecinos(celda);
-        vecinos.slice(0, grosor - 1).forEach(v => {
-          pintarCeldaRio(v, mapaContainer, tamCelda);
-        });
-      }
-    });
+      contenedor.appendChild(img);
+    }
   });
 }
 
-function pintarCeldaRio(celda, mapaContainer, tamCelda) {
-  const div = document.createElement("div");
-  div.className = "rio";
-  div.style.left = `${celda.x * tamCelda}px`;
-  div.style.top = `${celda.y * tamCelda}px`;
-  div.style.width = `${tamCelda}px`;
-  div.style.height = `${tamCelda}px`;
-  mapaContainer.appendChild(div);
-}
+function obtenerSpriteRio(anterior, actual, siguiente) {
+  if (!anterior) return "rio_inicio.png";
+  if (!siguiente) return "rio_fin.png";
 
-window.dibujarRios = dibujarRios;
+  const dx1 = actual.x - anterior.x;
+  const dy1 = actual.y - anterior.y;
+
+  const dx2 = siguiente.x - actual.x;
+  const dy2 = siguiente.y - actual.y;
+
+  // Rectos
+  if (dx1 === dx2 && dy1 === dy2) {
+    if (dx1 !== 0) return "rio_horizontal.png";
+    if (dy1 !== 0) return "rio_vertical.png";
+  }
+
+  // Curvas
+  if (dx1 === 1 && dy2 === 1) return "rio_curva_se.png";
+  if (dx1 === -1 && dy2 === 1) return "rio_curva_so.png";
+  if (dx1 === 1 && dy2 === -1) return "rio_curva_ne.png";
+  if (dx1 === -1 && dy2 === -1) return "rio_curva_no.png";
+
+  return "rio_horizontal.png"; // fallback
+}
