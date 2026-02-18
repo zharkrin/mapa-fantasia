@@ -1,71 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Generador de Mapa Fantástico</title>
-
-<!-- CSS GENERAL -->
-<link rel="stylesheet" href="frontend/css/style.css">
-
-<!-- CSS LEYENDAS -->
-<link rel="stylesheet" href="frontend/css/leyenda.css">
-<link rel="stylesheet" href="frontend/css/leyendaBiomas.css">
-
+  <meta charset="UTF-8">
+  <title>Mapa Procedural</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<h1>GENERADOR DE MAPA FANTÁSTICO</h1>
-<p>Terrenos, biomas y lugares singulares</p>
+  <div id="mapa-container">
+    <canvas id="capa-rutas"></canvas>
+  </div>
 
-<!-- ================================
- PANEL DE CONTROL (FIJO EN PANTALLA)
-================================ -->
-<div id="panel-controles">
-    <label for="tamano-mapa">Tamaño del mundo:</label>
-    <select id="tamano-mapa">
-        <option value="1">1x Tierra</option>
-        <option value="2">2x Tierra</option>
-        <option value="3">3x Tierra</option>
-        <option value="4">4x Tierra</option>
-        <option value="5">5x Tierra</option>
-    </select>
-
-    <button id="btn-generar">Generar nuevo mapa</button>
-</div>
-
-<!-- ================================
- CONTENEDOR DEL MAPA
-================================ -->
-<div id="mapa-container"
-     style="position: relative; width: 1000px; height: 600px; border: 1px solid #000;">
-</div>
-
-
-<!-- ================================
- LEYENDAS
-================================ -->
-
-<!-- Leyenda terrenos especiales -->
-<div id="leyenda-terreno-especial" class="leyenda"></div>
-
-<!-- Leyenda biomas -->
-<div id="leyenda-biomas" class="leyenda"></div>
-
-
-<!-- ================================
-   SCRIPTS DEL MAPA
-================================ -->
-
-<!-- Terrenos especiales -->
-<script src="frontend/js/mapa/terrenoEspecial.js"></script>
-<script src="frontend/js/mapa/leyendaTerrenoEspecial.js"></script>
-
-<!-- Biomas -->
-<script src="frontend/js/mapa/biomas.js"></script>
-<script src="frontend/js/mapa/leyendaBiomas.js"></script>
-
-<!-- Script principal -->
-<script src="frontend/js/mapa/script.js"></script>
-
+  <script type="module" src="main.js"></script>
 </body>
 </html>
