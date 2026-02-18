@@ -1,116 +1,21 @@
-/* ============================
-   ESTILOS GENERALES
-   ============================ */
-
 body {
   margin: 0;
-  padding: 0;
-  background: #e8e2d2;
-  font-family: 'Cinzel', serif;
-  color: #2a2a2a;
+  background: #1e1e1e;
 }
-
-h1, p {
-  text-align: center;
-  margin-top: 10px;
-}
-
-/* ============================
-   MAPA
-   ============================ */
 
 #mapa-container {
   position: relative;
-  width: 1000px;
-  height: 600px;
-  margin: 40px auto;
-  border: 2px solid #000;
-  background-color: #d9d3c3;
-  background-size: cover;
-  background-position: center;
+  width: 1200px;
+  height: 800px;
+  margin: 20px auto;
+  background: #3c6e3c; /* fondo temporal */
+  overflow: hidden;
 }
 
-/* Iconos del mapa */
-.icono-mapa {
+#capa-rutas {
   position: absolute;
-  width: 48px;
-  height: 48px;
+  top: 0;
+  left: 0;
   pointer-events: none;
-}
-
-/* ============================
-   PANEL DE CONTROLES FIJO
-   ============================ */
-
-.panel-controles {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: rgba(20, 20, 20, 0.55);   /* semi-transparente */
-  color: #fff;
-  padding: 10px 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
-  z-index: 1000;
-  font-family: 'Cinzel', serif;
-  transition: background 0.3s ease;     /* transición suave */
-}
-
-/* Al posar el cursor: sólido */
-.panel-controles:hover {
-  background: rgba(20, 20, 20, 0.95);
-}
-
-.panel-controles label {
-  margin-right: 8px;
-}
-
-.panel-controles select,
-.panel-controles button {
-  margin-left: 5px;
-  padding: 4px 8px;
-  border: none;
-  border-radius: 4px;
-  font-family: inherit;
-}
-
-/* Botón */
-.panel-controles button {
-  background-color: #3a7c3a;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.panel-controles button:hover {
-  background-color: #4e9c4e;
-}
-
-/* ============================
-   LEYENDA
-   ============================ */
-
-.leyenda {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.75);
-  padding: 10px;
-  border-radius: 8px;
-  width: 160px;
-  font-size: 14px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
-}
-
-.leyenda img {
-  width: 28px;
-  height: 28px;
-  vertical-align: middle;
-  margin-right: 8px;
-}
-
-.leyenda-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 6px;
+  z-index: 3;
 }
