@@ -4,10 +4,10 @@
 // =======================================================
 
 export function dibujarRiosCanvas(rios, anchoMapa, altoMapa) {
+
   const canvas = document.getElementById("capa-rutas");
   const ctx = canvas.getContext("2d");
 
-  // Ajustar tamaño del canvas
   canvas.width = anchoMapa;
   canvas.height = altoMapa;
 
@@ -25,6 +25,7 @@ function dibujarRio(ctx, puntos) {
   ctx.lineJoin = "round";
 
   for (let i = 0; i < puntos.length - 1; i++) {
+
     const p1 = puntos[i];
     const p2 = puntos[i + 1];
 
@@ -38,7 +39,6 @@ function dibujarRio(ctx, puntos) {
     ctx.lineWidth = grosor;
     ctx.strokeStyle = "#3a7bd5";
 
-    // Sombra ligera para efecto profundidad
     ctx.shadowColor = "rgba(0,0,0,0.3)";
     ctx.shadowBlur = 4;
     ctx.shadowOffsetX = 2;
@@ -47,7 +47,6 @@ function dibujarRio(ctx, puntos) {
     ctx.stroke();
   }
 
-  // Reset sombras
   ctx.shadowColor = "transparent";
   ctx.shadowBlur = 0;
   ctx.shadowOffsetX = 0;
