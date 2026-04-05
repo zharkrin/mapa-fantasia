@@ -1,5 +1,5 @@
 // =======================================================
-// DIBUJAR DELTAS (CORREGIDO)
+// DIBUJAR DELTAS
 // =======================================================
 
 import { gridAPixel } from "../utils/coordenadas.js";
