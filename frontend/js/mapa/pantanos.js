@@ -1,68 +1,41 @@
-/**************************************************
- * GENERADOR DE PANTANOS
- **************************************************/
+// =======================================================
+// PANTANOS 
+// =======================================================
 
-/**
- * Genera pantanos en desembocaduras de ríos y bordes de lagos
- * @param {Array} rios
- * @param {Array} lagos
- * @param {Array} mapa
- * @returns {Array} pantanos
- */
-function generarPantanos(rios, lagos, mapa) {
-  const pantanos = [];
+import { obtenerVecinos } from "../utils/grid.js";
 
-  // 1️⃣ Desembocaduras de ríos
-  rios.forEach(rio => {
-    const final = rio[rio.length - 1];
+export function generarPantanos(rios, lagos, celdas, ancho, alto) {
 
-    if (esZonaPantanosa(final)) {
-      expandirPantano(final, mapa, pantanos);
-    }
-  });
+    const pantanos = [];
 
-  // 2️⃣ Bordes de lagos
-  lagos.forEach(lago => {
-    lago.forEach(celda => {
-      const vecinos = obtenerVecinos(celda, mapa);
-      vecinos.forEach(v => {
-        if (esZonaPantanosa(v)) {
-          expandirPantano(v, mapa, pantanos);
+    // RÍOS
+    rios.forEach(rio => {
+        const final = rio[rio.length - 1];
+
+        if (final.altura < 0.3) {
+            expandir(final);
         }
-      });
     });
-  });
 
-  return pantanos;
-}
+    // LAGOS
+    lagos.forEach(lago => {
+        lago.forEach(celda => {
+            const vecinos = obtenerVecinos(celda, celdas, ancho, alto);
+            vecinos.forEach(v => {
+                if (v.altura < 0.3) expandir(v);
+            });
+        });
+    });
 
-/**
- * Determina si una celda puede convertirse en pantano
- */
-function esZonaPantanosa(celda) {
-  return (
-    celda.altura < 0.28 &&
-    celda.bioma !== "desierto" &&
-    celda.terreno !== "montaña" &&
-    celda.terreno !== "mar"
-  );
-}
+    return pantanos;
 
-/**
- * Expande ligeramente el pantano alrededor de la celda
- */
-function expandirPantano(origen, mapa, listaPantanos) {
-  const vecinos = obtenerVecinos(origen, mapa);
+    function expandir(origen) {
+        const vecinos = obtenerVecinos(origen, celdas, ancho, alto);
 
-  vecinos.forEach(v => {
-    if (
-      v.altura < 0.30 &&
-      v.terreno !== "mar"
-    ) {
-      listaPantanos.push(v);
+        vecinos.forEach(v => {
+            if (v.altura < 0.32 && v.tipo !== "mar") {
+                pantanos.push(v);
+            }
+        });
     }
-  });
 }
-
-// Exposición global
-window.generarPantanos = generarPantanos;
