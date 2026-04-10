@@ -1,59 +1,88 @@
-/**************************************************
- * GENERADOR PRINCIPAL DEL MAPA
- **************************************************/
+// =======================================================
+// MAIN DEL MAPA (PIPELINE COMPLETO)
+// =======================================================
 
-const selectorTamano = document.getElementById("tamano-mapa");
-const botonGenerar = document.getElementById("btn-generar");
-const mapaContainer = document.getElementById("mapa");
+import { generarMapa } from "./mapa/generarMapa.js";
+import { dibujarMapa } from "./mapa/dibujarMapa.js";
 
-const TAM_CELDA = 16;
+// ⚠️ IMPORTANTE: estos deben existir en tu proyecto
+import { generarTerrenoBase } from "./mapa/terrenoBase.js";
+import { generarBiomas } from "./mapa/generacion-biomas.js";
+import { generarTerrenoEspecial } from "./mapa/terrenoEspecial.js";
 
-// Estado global del mapa
-let datosMapa = null;
-let riosGenerados = null;
+// =======================================================
+// CONFIG
+// =======================================================
 
-/**
- * Genera TODO el mapa
- */
-function generarMapaCompleto() {
-  const escala = parseInt(selectorTamano.value, 10);
+const ancho = 100;
+const alto = 100;
+const tamCelda = 32;
 
-  // 1️⃣ Limpiar mapa
-  mapaContainer.innerHTML = "";
+// =======================================================
+// INICIO
+// =======================================================
 
-  // 2️⃣ Generar estructura base
-  datosMapa = generarMapaBase(escala);
+window.addEventListener("DOMContentLoaded", () => {
+    generarYdibujar();
+});
 
-  // 3️⃣ Biomas y terrenos
-  generarBiomas(datosMapa);
-  generarTerrenos(datosMapa);
+// =======================================================
+// FUNCIÓN PRINCIPAL
+// =======================================================
 
-  // 4️⃣ Terrenos especiales
-  generarTerrenosEspeciales(datosMapa);
+function generarYdibujar() {
 
-  // 5️⃣ Dibujar mapa base
-  dibujarMapa(datosMapa, mapaContainer, TAM_CELDA);
+    // =====================================
+    // 1. GENERAR TERRENO BASE (GRID)
+    // =====================================
+    const celdas = generarTerrenoBase(ancho, alto);
 
-  // 6️⃣ Generar ríos (usa alturas)
-  riosGenerados = generarRios(datosMapa);
+    // =====================================
+    // 2. GENERAR BIOMAS
+    // =====================================
+    const biomas = generarBiomas(celdas, ancho, alto);
 
-  // 7️⃣ Dibujar ríos
-  dibujarRios(riosGenerados, mapaContainer, TAM_CELDA);
+    // =====================================
+    // 3. TERRENO ESPECIAL
+    // =====================================
+    const especiales = generarTerrenoEspecial(celdas);
+
+    // =====================================
+    // 4. HIDROLOGÍA (PIPELINE NUEVO)
+    // =====================================
+    const { rios, lagos, pantanos } = generarMapa(celdas, ancho, alto);
+
+    // =====================================
+    // 5. CONVERTIR A FORMATO DIBUJO
+    // =====================================
+
+    const terrenos = celdas.map(c => ({
+        x: c.x,
+        y: c.y,
+        tipo: c.tipo
+    }));
+
+    const biomasFlat = celdas.map(c => ({
+        x: c.x,
+        y: c.y,
+        tipo: c.bioma || "pradera"
+    }));
+
+    // =====================================
+    // 6. DIBUJAR TODO
+    // =====================================
+    dibujarMapa(
+        terrenos,
+        biomasFlat,
+        especiales,
+        rios,
+        tamCelda
+    );
+
+    // =====================================
+    // DEBUG (opcional)
+    // =====================================
+    console.log("Ríos:", rios.length);
+    console.log("Lagos:", lagos.length);
+    console.log("Pantanos:", pantanos.length);
 }
-
-/**************************************************
- * EVENTOS
- **************************************************/
-
-// Cambio de tamaño → genera automáticamente
-selectorTamano.addEventListener("change", () => {
-  generarMapaCompleto();
-});
-
-// Botón → regenerar con mismo tamaño
-botonGenerar.addEventListener("click", () => {
-  generarMapaCompleto();
-});
-
-// Generación inicial
-generarMapaCompleto();
