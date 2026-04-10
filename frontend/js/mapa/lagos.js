@@ -1,72 +1,54 @@
-/**************************************************
- * GENERADOR DE LAGOS
- **************************************************/
+// =======================================================
+// LAGOS (SIN GLOBALS)
+// =======================================================
 
-/**
- * Genera lagos a partir del final de los ríos
- * @param {Array} rios
- * @param {Array} mapa
- * @returns {Array} lagos
- */
-function generarLagos(rios, mapa) {
-  const lagos = [];
+import { obtenerVecinos } from "../utils/grid.js";
 
-  rios.forEach(rio => {
-    const ultimo = rio[rio.length - 1];
+export function generarLagos(rios, celdas, ancho, alto) {
 
-    // Si el río acaba en terreno bajo → lago
-    if (esZonaLacustre(ultimo, mapa)) {
-      const lago = crearLago(ultimo, mapa);
-      if (lago.length > 0) {
-        lagos.push(lago);
-      }
-    }
-  });
+    const lagos = [];
 
-  return lagos;
-}
+    rios.forEach(rio => {
 
-/**
- * Decide si una celda puede albergar un lago
- */
-function esZonaLacustre(celda, mapa) {
-  return (
-    celda.altura < 0.25 &&
-    celda.bioma !== "desierto" &&
-    celda.terreno !== "mar"
-  );
-}
+        const ultimo = rio[rio.length - 1];
 
-/**
- * Expande un lago desde una celda inicial
- */
-function crearLago(origen, mapa) {
-  const lago = [];
-  const visitadas = new Set();
-  const cola = [origen];
+        if (ultimo.altura < 0.25 && ultimo.tipo !== "mar") {
 
-  while (cola.length > 0 && lago.length < 25) {
-    const actual = cola.shift();
-    const key = `${actual.x},${actual.y}`;
+            const lago = expandirLago(ultimo, celdas, ancho, alto);
 
-    if (visitadas.has(key)) continue;
-    visitadas.add(key);
-
-    lago.push(actual);
-
-    const vecinos = obtenerVecinos(actual, mapa);
-    vecinos.forEach(v => {
-      if (
-        !visitadas.has(`${v.x},${v.y}`) &&
-        v.altura <= actual.altura + 0.02
-      ) {
-        cola.push(v);
-      }
+            if (lago.length > 0) {
+                lagos.push(lago);
+            }
+        }
     });
-  }
 
-  return lago;
+    return lagos;
 }
 
-// Exposición global
-window.generarLagos = generarLagos;
+function expandirLago(origen, celdas, ancho, alto) {
+
+    const lago = [];
+    const visitadas = new Set();
+    const cola = [origen];
+
+    while (cola.length && lago.length < 30) {
+
+        const actual = cola.shift();
+        const key = `${actual.x},${actual.y}`;
+
+        if (visitadas.has(key)) continue;
+        visitadas.add(key);
+
+        lago.push(actual);
+
+        const vecinos = obtenerVecinos(actual, celdas, ancho, alto);
+
+        vecinos.forEach(v => {
+            if (!visitadas.has(`${v.x},${v.y}`) && v.altura <= actual.altura + 0.02) {
+                cola.push(v);
+            }
+        });
+    }
+
+    return lago;
+}
